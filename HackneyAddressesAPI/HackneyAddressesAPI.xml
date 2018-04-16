@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HackneyAddressesAPI</name>
+    </assembly>
+    <members>
+        <member name="M:HackneyAddressesAPI.Controllers.PostcodeController.Get(System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+            <summary>
+            Search property details via post code. 
+            </summary>
+            <param name="postcode">The postcode parameter</param>
+            <param name="PropertyClassCode">Property class code to re-fine search results</param>
+            <param name="PropertyClass">Textual property class</param>
+            <param name="addressStatus">Address Status for historical/approved addresses, default is Approved Preferred</param>
+            <param name="offset">For pagination, set the offset of results, index inclusive</param>
+            <param name="limit">For pagination, set the amount of results returned</param>
+            <param name="Format">To change the return format, from either GIS or Default</param>
+            <returns>Returns either GIS or Default Format</returns>
+        </member>
+        <member name="M:HackneyAddressesAPI.Controllers.UPRNController.Get(System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+            <summary>
+            Search property details via UPRN.
+            </summary>
+            <param name="uprn">Unique Property Reference Number</param>
+            <param name="PropertyClassCode">Property class code to re-fine search results</param>
+            <param name="PropertyClass">Textual property class</param>
+            <param name="addressStatus">Address Status for historical/approved addresses, default is Approved Preferred</param>
+            <param name="offset">For pagination, set the offset of results, index inclusive</param>
+            <param name="limit">For pagination, set the amount of results returned</param>
+            <param name="Format">To change the return format, from either GIS or Default</param>
+            <returns>Returns either GIS or Default Format</returns>
+        </member>
+        <member name="M:HackneyAddressesAPI.Controllers.USRNController.Get(System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+            <summary>
+            Search property details via USRN.
+            </summary>
+            <param name="usrn">Unique Street Reference Number</param>
+            <param name="PropertyClassCode">Property class code to re-fine search results</param>
+            <param name="PropertyClass">Textual property class</param>
+            <param name="addressStatus">Address Status for historical/approved addresses, default is Approved Preferred</param>
+            <param name="offset">For pagination, set the offset of results, index inclusive</param>
+            <param name="limit">For pagination, set the amount of results returned</param>
+            <param name="Format">To change the return format, from either GIS or Default</param>
+            <returns>Returns either GIS or Default Format</returns>
+        </member>
+    </members>
+</doc>
