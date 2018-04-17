@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\UPRNController.cs" />
+    <Compile Remove="Controllers\USRNController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
