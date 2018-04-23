@@ -115,5 +115,18 @@ namespace HackneyAddressesAPI.Helpers
 
             return "Alternative";
         }
+
+        public AddressesQueryParams FormatQueryParams(AddressesQueryParams queryParams)
+        {
+            queryParams.Postcode = String.IsNullOrWhiteSpace(queryParams.Postcode) ? null : FormatPostcode(queryParams.Postcode);
+            queryParams.UPRN = String.IsNullOrWhiteSpace(queryParams.UPRN) ? null : FormatUPRN(queryParams.UPRN);
+            queryParams.USRN = String.IsNullOrWhiteSpace(queryParams.USRN) ? null : FormatUSRN(queryParams.USRN);
+
+            queryParams.PropertyClassCode = String.IsNullOrWhiteSpace(queryParams.PropertyClassCode) ? null : FormatUsageClassCode(queryParams.PropertyClassCode);
+            queryParams.PropertyClass = String.IsNullOrWhiteSpace(queryParams.PropertyClass) ? null : FormatUsageClassPrimary(queryParams.PropertyClass);
+            queryParams.AddressStatus = String.IsNullOrWhiteSpace(queryParams.AddressStatus) ? null : FormatAddressStatus(queryParams.AddressStatus);
+
+            return queryParams;
+        }
     }
 }

@@ -12,52 +12,73 @@ namespace HackneyAddressesAPI.Helpers
     public class Validator : IValidator
     {
         //List of errors returned make object wrapper with boolean & list of errors
-        public ValidationResult ValidateClassCodePrimaryAddressStatus(Dictionary<string, string> filtersToValidate)
+        public ValidationResult ValidateAddressesQueryParams(AddressesQueryParams filtersToValidate)
         {
             List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
 
             bool hasError = false;
 
-            string usageClassValue;
-            if (filtersToValidate.TryGetValue("usageClassCode", out usageClassValue))
+            //Postcode
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Postcode))
             {
-                if (!string.IsNullOrWhiteSpace(usageClassValue))
+                //Redundant
+            }
+
+            //UPRN
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.UPRN))
+            {
+                var error = ValidateUPRN(filtersToValidate.UPRN);
+            }
+
+            //USRN
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.USRN))
+            {
+                var error = ValidateUSRN(filtersToValidate.USRN);
+            }
+
+            //Property Class Code
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.PropertyClassCode))
+            {
+                var error = UsageClassCodeChecker(filtersToValidate.PropertyClassCode);
+                if (error != null)
                 {
-                    var error = UsageClassCodeChecker(usageClassValue);
-                    if (error != null)
-                    {
-                        myErrors.Add(error);
-                        hasError = true;
-                    }
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+            
+            //Property Class Primary
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.PropertyClass))
+            {
+                var error = UsageClassPrimaryChecker(filtersToValidate.PropertyClass);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+            
+            //Address Status
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.AddressStatus))
+            {
+                var error = AddressStatusChecker(filtersToValidate.AddressStatus);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
                 }
             }
 
-            string usageClassPrimary;
-            if (filtersToValidate.TryGetValue("usageClassPrimary", out usageClassPrimary))
+            //Format
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Format))
             {
-                if (!string.IsNullOrWhiteSpace(usageClassPrimary))
-                {
-                    var error = UsageClassPrimaryChecker(usageClassPrimary);
-                    if (error != null)
-                    {
-                        myErrors.Add(error);
-                        hasError = true;
-                    }
-                }
+                //?#? To Implement
             }
 
-            string addressStatus;
-            if (filtersToValidate.TryGetValue("addressStatus", out addressStatus))
+            //Gazetteer
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Gazetteer))
             {
-                if (!string.IsNullOrWhiteSpace(addressStatus))
-                {
-                    var error = AddressStatusChecker(addressStatus);
-                    if (error != null)
-                    {
-                        myErrors.Add(error);
-                        hasError = true;
-                    }
-                }
+                //?#? To Implement
             }
 
             ValidationResult validationObject = new ValidationResult();
@@ -171,32 +192,43 @@ namespace HackneyAddressesAPI.Helpers
             return myStr.Replace(" ", "").ToUpperInvariant();
         }
 
-        public bool ValidatePostcode(string postcode)
+        //Redundant function
+        public ApiErrorMessage ValidatePostcode(string postcode)
         {
-            if (string.IsNullOrWhiteSpace(postcode))
-                return false;
-            postcode = postcode.Replace(" ", "");
-            return true;
+            //postcode = postcode.Replace(" ", "");
+            return null;
         }
 
-        public bool ValidateUPRN(string uprn)
+        public ApiErrorMessage ValidateUPRN(string uprn)
         {
-            if (string.IsNullOrWhiteSpace(uprn))
-                return false;
             uprn = uprn.Replace(" ", "");
             var uprnPattern = "^[0-9]{10,12}$";
             var uprnReg = new Regex(uprnPattern, RegexOptions.IgnoreCase);
-            return uprnReg.IsMatch(uprn);
+            if  (!uprnReg.IsMatch(uprn))
+            {
+                return new ApiErrorMessage
+                {
+                    developerMessage = "UPRN is invalid, please input digits only length 10-12.",
+                    userMessage = "UPRN is invalid, please input digits only length 10-12."
+                };
+            }
+            return null;
         }
 
-        public bool ValidateUSRN(string usrn)
+        public ApiErrorMessage ValidateUSRN(string usrn)
         {
-            if (string.IsNullOrWhiteSpace(usrn))
-                return false;
             usrn = usrn.Replace(" ", "");
-            var uprnPattern = "^[0-9]{6,12}$";
-            var uprnReg = new Regex(uprnPattern, RegexOptions.IgnoreCase);
-            return uprnReg.IsMatch(usrn);
+            var usrnPattern = "^[0-9]{6,12}$";
+            var usrnReg = new Regex(usrnPattern, RegexOptions.IgnoreCase);
+            if (!usrnReg.IsMatch(usrn))
+            {
+                return new ApiErrorMessage
+                {
+                    developerMessage = "UPRN is invalid, please input digits only length 6-12.",
+                    userMessage = "UPRN is invalid, please input digits only length 6-12."
+                };
+            }
+            return null;
         }
     }
 }

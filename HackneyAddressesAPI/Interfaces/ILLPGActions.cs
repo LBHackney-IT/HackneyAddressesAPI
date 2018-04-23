@@ -8,29 +8,8 @@ namespace HackneyAddressesAPI.Interfaces
 {
     public interface ILLPGActions
     {
-        Task<object> GetLlpgAddressesByPostCode(
-            string postcode,
-            string usageClassCode,
-            string usageClassPrimary,
-            string addressStatus,
-            Pagination pagination,
-            string Format
-            );
-
-        Task<object> GetLlpgAddressesByUPRN(
-            string uprn,
-            string usageClassCode,
-            string usageClassPrimary,
-            string addressStatus,
-            Pagination pagination,
-            string Format
-            );
-
-        Task<object> GetLlpgAddressesByUSRN(
-            string usrn,
-            string usageClassCode,
-            string usageClassPrimary,
-            string addressStatus,
+        Task<object> GetLlpgAddresses(
+            AddressesQueryParams filters,
             Pagination pagination,
             string Format
             );

@@ -36,16 +36,13 @@ namespace HackneyAddressesAPI.Actions
                     {
                         aDetails.Line1 = (string)dt.Rows[i]["BUILDING_NUMBER"];
                     }
-                    else if (!dt.Rows[i].IsNull(""))
-                    {
-
-                    }
 
                     aDetails.Line2 = (string)dt.Rows[i]["STREET_DESCRIPTION"];
 
                     //I understand the code in the document, but I am unsure to what columns I need to use in the DB
                     aDetails.Line3 = "Locality 3?";
                     aDetails.Line4 = "Locality 4?";
+
                     addressDetailsList.Add(aDetails);
                 }
 

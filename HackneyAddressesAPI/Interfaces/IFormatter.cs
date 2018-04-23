@@ -20,5 +20,7 @@ namespace HackneyAddressesAPI.Interfaces
 
         string FormatAddressStatus(string code);
 
+        AddressesQueryParams FormatQueryParams(AddressesQueryParams queryParams);
+        
     }
 }

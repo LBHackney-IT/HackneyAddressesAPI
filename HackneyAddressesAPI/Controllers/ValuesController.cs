@@ -16,9 +16,23 @@ namespace HackneyAddressesAPI.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/values?id=5
+        [HttpGet("/get/{id}/{id2}")]
+        public string Get(int id, int id2)
+        {
+            return "value";
+        }
+
+        //get api/values?uprn=57658
+        [HttpGet("/get2/{id}/{id2}")]
+        public string Get2(int uprn, int uprn2)
+        {
+            return "value";
+        }
+
+        //get api/values?uprn=57658
+        [HttpGet("/get3/{id}/{id2}")]
+        public string Get3(int uprn, int uprn2)
         {
             return "value";
         }

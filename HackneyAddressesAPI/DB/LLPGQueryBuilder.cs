@@ -24,13 +24,15 @@ namespace HackneyAddressesAPI.DB
         
         private void setMappings()
         {
-            paramColumnNameMappings.Add("uprn", "UPRN");
-            paramColumnNameMappings.Add("postcode", "POSTCODE_NOSPACE");
-            paramColumnNameMappings.Add("usrn", "USRN");
+            //Set Mappings from the column attribute
+            //.Add(AttributeName, ColumnName in DB);
+            paramColumnNameMappings.Add("UPRN", "UPRN");
+            paramColumnNameMappings.Add("POSTCODE", "POSTCODE_NOSPACE");
+            paramColumnNameMappings.Add("USRN", "USRN");
 
-            paramColumnNameMappings.Add("usageClassCode", "BLPU_CLASS");
-            paramColumnNameMappings.Add("usageClassPrimary", "USAGE_PRIMARY");
-            paramColumnNameMappings.Add("addressStatus", "LPI_LOGICAL_STATUS");
+            paramColumnNameMappings.Add("PROPERTYCLASSCODE", "BLPU_CLASS");
+            paramColumnNameMappings.Add("PROPERTYCLASSPRIMARY", "USAGE_PRIMARY");
+            paramColumnNameMappings.Add("ADDRESSSTATUS", "LPI_LOGICAL_STATUS");
         }
 
         public Dictionary<string, string> GetColumnMappings()
@@ -63,8 +65,9 @@ namespace HackneyAddressesAPI.DB
         public string GetQuery(List<FilterObject> filterObjects, int offset, int limit)
         {
 
-            //wholeQuery{subQuery(innerQuery)}
+            //wholeQuery{ subQuery[ innerQuery( WhereClause ) ] }
 
+            //Where Clause
             string whereClause = CreateQueryWhereClause(filterObjects);
 
             //Actual Query for returning non paged results
