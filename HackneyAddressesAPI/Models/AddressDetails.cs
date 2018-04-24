@@ -5,12 +5,8 @@ using System.Threading.Tasks;
 
 namespace HackneyAddressesAPI.Models
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class AddressDetails
     {
-        //
         public Int64 uniquePropertyReferenceNumber { get; set; }
         public int uniqueStreetReferenceNumber { get; set; }
         public Int64 parentUniquePropertyReferenceNumber { get; set; }

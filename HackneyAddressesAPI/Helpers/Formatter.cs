@@ -12,8 +12,6 @@ namespace HackneyAddressesAPI.Helpers
         public string FormatPostcode(string postcode)
         {
             postcode = this.FormatRemoveSpacesAndCapitalise(postcode);
-            //Old way of formatting postcode which added a space.
-            //postcode = postcode.Insert(postcode.IndexOf(postcode.Substring(postcode.Length - 3)), " ");
             return postcode;
         }
 

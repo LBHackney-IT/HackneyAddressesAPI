@@ -6,14 +6,14 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Actions
+namespace HackneyAddressesAPI.Helpers
 {
 
     //Create Interface
     public class FilterObjectBuilder : IFilterObjectBuilder
     {
 
-        public List<FilterObject> ProcessFilterObjects(List<FilterObject> filterObjects, Dictionary<string, string> mappings)
+        private List<FilterObject> ProcessFilterObjects(List<FilterObject> filterObjects, Dictionary<string, string> mappings)
         {
             try
             {
@@ -75,13 +75,6 @@ namespace HackneyAddressesAPI.Actions
             var myProp = prop;
             var CustomAttr = myProp.GetCustomAttributes(typeof(DatabaseColumnAttribute), false).FirstOrDefault();
             CustomAttr = (DatabaseColumnAttribute) CustomAttr;
-            
-
-
-            //var attribute = (DatabaseColumnAttribute)
-            //           typeof(AddressesQueryParams)
-            //              .GetMethod(prop)
-            //              .GetCustomAttributes(typeof(DatabaseColumnAttribute), false).FirstOrDefault();
 
             var attribute = (DatabaseColumnAttribute) prop.GetCustomAttributes(typeof(DatabaseColumnAttribute), false).FirstOrDefault();
 

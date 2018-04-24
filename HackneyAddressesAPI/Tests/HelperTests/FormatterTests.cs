@@ -45,7 +45,7 @@ namespace HackneyAddressesAPI.Tests.HelperTests
         {
             var formatter = new Formatter();
             var result = formatter.FormatUsageClassCode(classCode);
-            Assert.Equal(expectedClassCode, classCode);
+            Assert.Equal(expectedClassCode, result);
         }
 
         //Not writing tests for these as they're fairly simple methods.

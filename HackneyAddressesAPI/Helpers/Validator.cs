@@ -21,19 +21,34 @@ namespace HackneyAddressesAPI.Helpers
             //Postcode
             if (!string.IsNullOrWhiteSpace(filtersToValidate.Postcode))
             {
-                //Redundant
+                var error = ValidatePostcode(filtersToValidate.Postcode);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
             }
 
             //UPRN
             if (!string.IsNullOrWhiteSpace(filtersToValidate.UPRN))
             {
                 var error = ValidateUPRN(filtersToValidate.UPRN);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
             }
 
             //USRN
             if (!string.IsNullOrWhiteSpace(filtersToValidate.USRN))
             {
                 var error = ValidateUSRN(filtersToValidate.USRN);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
             }
 
             //Property Class Code
@@ -88,7 +103,6 @@ namespace HackneyAddressesAPI.Helpers
             return validationObject;
         }
 
-        // Again, should I use OUT keyword, instead of returning null? 
         public ApiErrorMessage UsageClassPrimaryChecker(string classprimary)
         {
             List<string> classPrimaryList = new List<string>();
@@ -195,7 +209,15 @@ namespace HackneyAddressesAPI.Helpers
         //Redundant function
         public ApiErrorMessage ValidatePostcode(string postcode)
         {
-            //postcode = postcode.Replace(" ", "");
+            postcode = postcode.Replace(" ", "");
+            if (postcode.Length < 2 || postcode.Length > 7)
+            {
+                return new ApiErrorMessage
+                {
+                    developerMessage = "Postcode length invalid, allowed: 2-7 chars (spaces are automatically removed)",
+                    userMessage = "Postcode length invalid, allowed: 2-7 chars (spaces are automatically removed)"
+                };
+            }
             return null;
         }
 

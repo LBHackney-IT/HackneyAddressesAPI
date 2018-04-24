@@ -45,6 +45,7 @@ namespace HackneyAddressesAPI.Actions
             var resultset = new { resultset = pagination };
             var dataTable = await callDatabaseAsync(filterObjects, pagination);
 
+            //Read from the Global Constants/Enum class
             if (Format == "Detailed" || Format == "GIS")
             {
                 var result = _addressDetailsMapper.MapAddressDetailsGIS(dataTable);
@@ -66,7 +67,6 @@ namespace HackneyAddressesAPI.Actions
             return filterObjects;
         }
 
-
         private async Task<DataTable> callDatabaseAsync(List<FilterObject> filterObjects, Pagination pagination)
         {
             //Get Connection/config settings
@@ -74,7 +74,6 @@ namespace HackneyAddressesAPI.Actions
 
             //Set up Queries and params
             string queryNormal = _llpg_QueryBuilder.GetQuery(filterObjects, pagination.offset, pagination.limit);
-            //string queryCount = _llpg_QueryBuilder.GetCountQuery(filterObjects);
             DbParameter[] dbParamaters = _llpg_QueryBuilder.GetParameters(filterObjects);
 
             //Execute Database

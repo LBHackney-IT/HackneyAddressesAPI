@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.DB
+namespace HackneyAddressesAPI.Helpers
 {
     //Create Interface
     public class LLPGQueryBuilderOracle : ILLPGQueryBuilder
@@ -24,8 +24,10 @@ namespace HackneyAddressesAPI.DB
         
         private void setMappings()
         {
+            //Make this XML serializable
             //Set Mappings from the column attribute
-            //.Add(AttributeName, ColumnName in DB);
+            //(AttributeName, ColumnName in DB);
+
             paramColumnNameMappings.Add("UPRN", "UPRN");
             paramColumnNameMappings.Add("POSTCODE", "POSTCODE_NOSPACE");
             paramColumnNameMappings.Add("USRN", "USRN");
@@ -40,7 +42,7 @@ namespace HackneyAddressesAPI.DB
             return paramColumnNameMappings;
         }
 
-        public string CreateQueryWhereClause(List<FilterObject> filterObjects)
+        private string CreateQueryWhereClause(List<FilterObject> filterObjects)
         {
             StringBuilder queryWhereClause = new StringBuilder();
             queryWhereClause.Append("WHERE");
@@ -64,6 +66,7 @@ namespace HackneyAddressesAPI.DB
 
         public string GetQuery(List<FilterObject> filterObjects, int offset, int limit)
         {
+            //?#? Maybe Extract table names from config file.
 
             //wholeQuery{ subQuery[ innerQuery( WhereClause ) ] }
 

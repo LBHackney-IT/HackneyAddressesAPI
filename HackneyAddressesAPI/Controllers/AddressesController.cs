@@ -40,7 +40,7 @@ namespace HackneyAddressesAPI.Controllers
         /// </summary>
         /// <param name="Postcode">Full or partial post code. 
         /// Acceptable inputs: 'E8 2HH', 'E8', 'E8 2', 'e82hh', 'e82'.</param>
-        /// /// <param name="USRN">USRN.</param>
+        /// <param name="USRN">USRN.</param>
         /// <param name="UPRN">UPRN.</param>
         /// <param name="PropertyClass">Primary usage of the property. 
         /// Accepted Values: 'Commercial', 'Features', 'Land', 'Object of Interest', 'Parent Shell', 'Residential', 'Military', 'Dual Use', 'Unclassified'.</param>
@@ -77,7 +77,6 @@ namespace HackneyAddressesAPI.Controllers
             [FromQuery]int? Limit = GlobalConstants.LIMIT,
             [FromQuery]int? Offset = GlobalConstants.OFFSET)
         {
-            //BLPU UsageClassCode optional, UsageClassPrimary optional, AddressStatus optional, gazzetteer is optional (sort at end)
             try
             {
                 AddressesQueryParams queryParams = new AddressesQueryParams();
@@ -91,22 +90,16 @@ namespace HackneyAddressesAPI.Controllers
 
                 ValidationResult validatorFilterErrors = _validator.ValidateAddressesQueryParams(queryParams);
 
-                var value = Format.ToString();
-
-                // Code review with Sachin
-                // Make Enum list for constants 
-                // ValidationResult validatorFilterErrors = _validator.ValidateAddressesQueryParams(queryParams);
-
                 if (!validatorFilterErrors.ErrorOccurred)
                 {
                     Pagination pagination = new Pagination();
                     pagination.limit = Limit ?? default(int);
                     pagination.offset = Offset ?? default(int);
-                    //Pass in object from the start
+
                     var result = await _LLPGActions.GetLlpgAddresses(
                         queryParams,
                         pagination,
-                        value);
+                        Format.ToString());
 
                     var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
                     json.StatusCode = 200;
@@ -141,6 +134,6 @@ namespace HackneyAddressesAPI.Controllers
                 return json;
             }
         }
-        
+
     } // Class Bracket
 } // Namespace Bracket
