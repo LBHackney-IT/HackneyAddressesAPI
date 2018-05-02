@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 namespace HackneyAddressesAPI.Helpers
 {
     //Create Interface
-    public class LLPGQueryBuilderOracle : ILLPGQueryBuilder
+    public class AddressesQueryBuilderOracle : ILLPGQueryBuilder
     {
         Dictionary<string, string> paramColumnNameMappings = new Dictionary<string, string>();
 
-        public LLPGQueryBuilderOracle()
+        public AddressesQueryBuilderOracle()
         {
             setMappings();
         }
@@ -60,13 +60,14 @@ namespace HackneyAddressesAPI.Helpers
                     }
                 }
             }
-            queryWhereClause.Append(" ROWNUM >= " + 0);
+            queryWhereClause.Append(" ROWNUM >= 0");
             return queryWhereClause.ToString();
         }
 
-        public string GetQuery(List<FilterObject> filterObjects, int offset, int limit)
+        public string GetQuery(List<FilterObject> filterObjects, Pagination pagination, string tableName)
         {
-            //?#? Maybe Extract table names from config file.
+            var offset = pagination.offset;
+            var limit = pagination.limit;
 
             //wholeQuery{ subQuery[ innerQuery( WhereClause ) ] }
 
@@ -74,10 +75,12 @@ namespace HackneyAddressesAPI.Helpers
             string whereClause = CreateQueryWhereClause(filterObjects);
 
             //Actual Query for returning non paged results
-            string innerQuery = "SELECT * FROM LLPG.LLPG_REST_API " + whereClause;
+            // FROM NLPG.NLPG_REST_API
+            string innerQuery = "SELECT * FROM " + tableName + " " + whereClause;
 
             //Sub Query which has innerquery nested to set limit
             string subQuery = "SELECT rownum rnum, a.* FROM ( " + innerQuery + " ) a WHERE rownum <= " + (offset + limit);
+            subQuery += " ORDER BY STREET_DESCRIPTION, BUILDING_NUMBER";
 
             //Whole Query which has sub query, and therefore inner query nested, to set the offset
             string wholeQuery = "SELECT * FROM ( " + subQuery + " ) WHERE rnum >= " + offset;
@@ -85,15 +88,14 @@ namespace HackneyAddressesAPI.Helpers
             return wholeQuery;
         }
 
-        public string GetCountQuery(List<FilterObject> filterObjects)
+        public string GetCountQuery(List<FilterObject> filterObjects, string tableName)
         {
             string query =
                     "SELECT COUNT(*) " +
-                    "FROM LLPG.LLPG_REST_API ";
+                    "FROM " + tableName + " ";
             return query + CreateQueryWhereClause(filterObjects);
         }
 
-        
         private OracleParameter[] GetOracleParameters(List<FilterObject> filterObjects)
         {
             List<OracleParameter> oparams = new List<OracleParameter>();
@@ -111,5 +113,41 @@ namespace HackneyAddressesAPI.Helpers
             return GetOracleParameters(filterObjects);
         }
 
+        public string GetQueryBoth(List<FilterObject> filterObjects, Pagination pagination, string tableName1, string tableName2)
+        {
+            var offset = pagination.offset;
+            var limit = pagination.limit;
+
+            //wholeQuery{ subQuery[ innerQueryCombined< innerQuery1( WhereClause ) UNION ALL innerQuery2( WhereClause ) > ] }
+
+            //Where Clause
+            string whereClause = CreateQueryWhereClause(filterObjects);
+
+            //Actual Query for returning non paged results
+            string innerQuery1 = "SELECT * FROM " + tableName1 + " " + whereClause;
+            string innerQuery2 = "SELECT * FROM " + tableName2 + " " + whereClause;
+
+            string innerQueryCombined = "SELECT * FROM ( " + innerQuery1 + " UNION ALL " + innerQuery2 + " ) a order by a.STREET_DESCRIPTION, a.BUILDING_NUMBER";
+
+            //Sub Query which has innerquery nested to set limit
+            string subQuery = "SELECT rownum rnum, a.* FROM ( " + innerQueryCombined + " ) a WHERE rownum <= " + (offset + limit);
+
+            //Whole Query which has sub query, and therefore inner query nested, to set the offset
+            string wholeQuery = "SELECT * FROM ( " + subQuery + " ) WHERE rnum >= " + offset;
+
+            return wholeQuery;
+        }
+
+        public string GetCountQueryBoth(List<FilterObject> filterObjects, string tableName1, string tableName2)
+        {
+            string whereClause = CreateQueryWhereClause(filterObjects);
+
+            string innerQuery1 = "SELECT * FROM " + tableName1 + " " + whereClause;
+            string innerQuery2 = "SELECT * FROM " + tableName2 + " " + whereClause;
+
+            string countQueryCombined = "SELECT COUNT (*) FROM ( " + innerQuery1 + " UNION ALL " + innerQuery2 + " )";
+
+            return countQueryCombined;
+        }
     }
 }

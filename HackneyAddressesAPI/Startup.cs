@@ -65,6 +65,7 @@ namespace HackneyAddressesAPI
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackney Addresses API v1");
+                c.RoutePrefix = "";
             });
 
             app.UseCors("AllowAny");

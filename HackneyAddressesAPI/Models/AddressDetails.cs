@@ -22,7 +22,7 @@ namespace HackneyAddressesAPI.Models
         public string commercialOccupier { get; set; }
         public string royalMailPostTown { get; set; }
         public string landPropertyUsage { get; set; }
-        public bool isNonLocalAddressInLocalGazetteer { get; set; } //for LLPG results; should be null in results for NLPG
+        public bool? isNonLocalAddressInLocalGazetteer { get; set; } //for LLPG results; should be null in results for NLPG
         public double easting { get; set; }
         public double northing { get; set; }
         public double longitude { get; set; }

@@ -11,6 +11,7 @@ namespace HackneyAddressesAPI.Helpers
 {
     public class Validator : IValidator
     {
+
         //List of errors returned make object wrapper with boolean & list of errors
         public ValidationResult ValidateAddressesQueryParams(AddressesQueryParams filtersToValidate)
         {
@@ -251,6 +252,32 @@ namespace HackneyAddressesAPI.Helpers
                 };
             }
             return null;
+        }
+
+        public ValidationResult ValidateAddressesLPIKey(string lpikey)
+        {
+            List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
+
+            bool hasError = false;
+
+            lpikey = lpikey.Replace(" ", "");
+
+            if (lpikey.Length < 10)
+            {
+                var error =  new ApiErrorMessage
+                {
+                    developerMessage = "LPIKey is invalid, length should be > 10.",
+                    userMessage = "LPIKey is invalid, length should be > 10."
+                };
+
+                myErrors.Add(error);
+            }
+
+            ValidationResult validationObject = new ValidationResult();
+            validationObject.ErrorOccurred = hasError;
+            validationObject.ErrorMessages = myErrors;
+
+            return validationObject;
         }
     }
 }

@@ -10,6 +10,8 @@ namespace HackneyAddressesAPI.Interfaces
     {
         string FormatPostcode(string postcode);
 
+        string FormatLPIKey(string lpikey);
+
         string FormatUPRN(string uprn);
 
         string FormatUSRN(string uprn);

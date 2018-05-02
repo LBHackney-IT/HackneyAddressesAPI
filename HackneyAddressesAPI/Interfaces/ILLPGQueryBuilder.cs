@@ -8,9 +8,13 @@ namespace HackneyAddressesAPI.Interfaces
     {
         Dictionary<string, string> GetColumnMappings();
 
-        string GetCountQuery(List<FilterObject> filterObjects);
+        string GetQuery(List<FilterObject> filterObjects, Pagination pagination, string tableName);
 
-        string GetQuery(List<FilterObject> filterObjects, int offset, int limit);
+        string GetQueryBoth(List<FilterObject> filterObjects, Pagination pagination, string tableName1, string tableName2);
+
+        string GetCountQuery(List<FilterObject> filterObjects, string tableName);
+
+        string GetCountQueryBoth(List<FilterObject> filterObjects, string tableName1, string tableName2);
 
         DbParameter[] GetParameters(List<FilterObject> filterObjects);
 

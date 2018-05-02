@@ -23,7 +23,7 @@ namespace HackneyAddressesAPI
             services.AddTransient<IFilterObjectBuilder, FilterObjectBuilder>();
 
             services.AddTransient<IDB_Helper, OracleHelper>();
-            services.AddTransient<ILLPGQueryBuilder, LLPGQueryBuilderOracle>();
+            services.AddTransient<ILLPGQueryBuilder, AddressesQueryBuilderOracle>();
 
             services.AddScoped<IConfigReader, ConfigReader>();
 

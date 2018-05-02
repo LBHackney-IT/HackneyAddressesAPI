@@ -19,7 +19,7 @@ namespace HackneyAddressesAPI.Helpers
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     AddressDetailsSimple aDetails = new AddressDetailsSimple();
-                    aDetails.AddressID = CheckNull(dt, i, "LPI_KEY"); // LPI KEY
+                    aDetails.AddressID = CheckNullString(dt, i, "LPI_KEY"); // LPI KEY
 
                     if (!dt.Rows[i].IsNull("POSTTOWN"))
                     {
@@ -32,29 +32,29 @@ namespace HackneyAddressesAPI.Helpers
                     }
 
 
-                    if (!dt.Rows[i].IsNull("UNIT_NUMBER") && !dt.Rows[i].IsNull("PAO_TEXT"))
+                    if (!dt.Rows[i].IsNull("SAO_TEXT") && (!dt.Rows[i].IsNull("UNIT_NUMBER") || !dt.Rows[i].IsNull("PAO_TEXT")))
                     {
-                        aDetails.Line1 = CheckNull(dt, i, "UNIT_NUMBER");
-                        aDetails.Line2 = CheckNull(dt, i, "PAO_TEXT");
+                        aDetails.Line1 = CheckNullString(dt, i, "SAO_TEXT");
+                        aDetails.Line2 = AddIfDataExists(dt, i, "UNIT_NUMBER", "PAO_TEXT");
                         aDetails.Line3 = AddIfDataExists(dt, i, "BUILDING_NUMBER", "STREET_DESCRIPTION");
-                        aDetails.Line4 = CheckNull(dt, i, "LOCALITY");
+                        aDetails.Line4 = CheckNullString(dt, i, "LOCALITY");
                     }
-                    else if (!dt.Rows[i].IsNull("UNIT_NUMBER"))
+                    else if (!dt.Rows[i].IsNull("SAO_TEXT"))
                     {
-                        aDetails.Line1 = CheckNull(dt, i, "UNIT_NUMBER");
+                        aDetails.Line1 = CheckNullString(dt, i, "SAO_TEXT");
                         aDetails.Line2 = AddIfDataExists(dt, i, "BUILDING_NUMBER", "STREET_DESCRIPTION");
-                        aDetails.Line3 = CheckNull(dt, i, "LOCALITY");
+                        aDetails.Line3 = CheckNullString(dt, i, "LOCALITY");
                     }
-                    else if (!dt.Rows[i].IsNull("PAO_TEXT"))
+                    else if (!dt.Rows[i].IsNull("UNIT_NUMBER") || !dt.Rows[i].IsNull("PAO_TEXT"))
                     {
-                        aDetails.Line1 = CheckNull(dt, i, "PAO_TEXT");
+                        aDetails.Line1 = AddIfDataExists(dt, i, "UNIT_NUMBER", "PAO_TEXT");
                         aDetails.Line2 = AddIfDataExists(dt, i, "BUILDING_NUMBER", "STREET_DESCRIPTION");
-                        aDetails.Line3 = CheckNull(dt, i, "LOCALITY");
+                        aDetails.Line3 = CheckNullString(dt, i, "LOCALITY");
                     }
                     else
                     {
                         aDetails.Line1 = AddIfDataExists(dt, i, "BUILDING_NUMBER", "STREET_DESCRIPTION");
-                        aDetails.Line2 = CheckNull(dt, i, "LOCALITY");
+                        aDetails.Line2 = CheckNullString(dt, i, "LOCALITY");
                     }
 
                     addressDetailsList.Add(aDetails);
@@ -107,23 +107,27 @@ namespace HackneyAddressesAPI.Helpers
                         aDetails.parentUniquePropertyReferenceNumber = Convert.ToInt64(dt.Rows[i]["PARENT_UPRN"]);
                     }
 
-                    aDetails.addressStatus = CheckNull(dt, i, "LPI_LOGICAL_STATUS");
-                    aDetails.unitName = CheckNull(dt, i, "SAO_TEXT");
-                    aDetails.buildingName = CheckNull(dt, i, "PAO_TEXT");
-                    aDetails.street = CheckNull(dt, i, "STREET_DESCRIPTION");
-                    aDetails.postcode = CheckNull(dt, i, "POSTCODE");
-                    aDetails.locality = ""; //relevant for NLPG results; should be empty or null for LLPG results
-                    aDetails.gazetteer = "hackney";
-                    aDetails.commercialOccupier = CheckNull(dt, i, "ORGANISATION");
-                    aDetails.royalMailPostTown = CheckNull(dt, i, "POSTTOWN");
+                    aDetails.addressStatus = CheckNullString(dt, i, "LPI_LOGICAL_STATUS");
+                    aDetails.unitName = CheckNullString(dt, i, "SAO_TEXT");
+                    aDetails.buildingName = CheckNullString(dt, i, "PAO_TEXT");
+                    aDetails.street = CheckNullString(dt, i, "STREET_DESCRIPTION");
+                    aDetails.postcode = CheckNullString(dt, i, "POSTCODE");
+                    aDetails.locality = CheckNullString(dt, i, "LOCALITY");
+                    aDetails.gazetteer = "Hackney";
+                    if (aDetails.locality.Trim() == "")
+                    {
+                        aDetails.gazetteer = "National";
+                    }
+                    aDetails.commercialOccupier = CheckNullString(dt, i, "ORGANISATION");
+                    aDetails.royalMailPostTown = CheckNullString(dt, i, "POSTTOWN");
                     // aDetails.landPropertyUsage = (string)rows[i]["USAGE"]; //not in the source view yet
-                    aDetails.isNonLocalAddressInLocalGazetteer = Convert.ToBoolean(dt.Rows[i]["NEVEREXPORT"]); //for LLPG results; should be null in results for NLPG
+                    aDetails.isNonLocalAddressInLocalGazetteer = CheckNullBool(dt, i, "NEVEREXPORT"); //for LLPG results; should be null in results for NLPG
                     aDetails.easting = Convert.ToDouble(dt.Rows[i]["EASTING"]);
                     aDetails.northing = Convert.ToDouble(dt.Rows[i]["NORTHING"]);
                     aDetails.longitude = Convert.ToDouble(dt.Rows[i]["LONGITUDE"]);
                     aDetails.latitude = Convert.ToDouble(dt.Rows[i]["LATITUDE"]);
-                    aDetails.buildingNumber = CheckNull(dt, i, "BUILDING_NUMBER");
-                    aDetails.unitNumber = CheckNull(dt, i, "UNIT_NUMBER");
+                    aDetails.buildingNumber = CheckNullString(dt, i, "BUILDING_NUMBER");
+                    aDetails.unitNumber = CheckNullString(dt, i, "UNIT_NUMBER");
 
                     addressDetailsList.Add(aDetails);
             
@@ -136,21 +140,32 @@ namespace HackneyAddressesAPI.Helpers
                 throw;
             }
         }
-        private string CheckNull(DataTable dt, int rowindex, string fieldName)
+        private string CheckNullString(DataTable dt, int rowindex, string columnName)
         {
             string strRetVal = "";
-            if (!dt.Rows[rowindex].IsNull(fieldName))
+
+            if (dt.Columns.Contains(columnName))
             {
-                strRetVal = (string)dt.Rows[rowindex][fieldName];
+                if (!dt.Rows[rowindex].IsNull(columnName))
+                {
+                    strRetVal = (string)dt.Rows[rowindex][columnName];
+                }
             }
+
             return strRetVal;
+        }
+
+        private bool? CheckNullBool(DataTable dt, int rowindex, string columnName)
+        {
+            string strRetVal = CheckNullString(dt, rowindex, columnName);
+
+            if (strRetVal == "")
+            {
+                return null;
+            }
+
+            return Convert.ToBoolean(strRetVal);
         }
     }
 
 }
-
-
-
-
-
-

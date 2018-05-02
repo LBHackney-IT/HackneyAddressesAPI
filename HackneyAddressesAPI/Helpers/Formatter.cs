@@ -53,6 +53,11 @@ namespace HackneyAddressesAPI.Helpers
             return uprn.Replace(" ", "");
         }
 
+        public string FormatLPIKey(string lpikey)
+        {
+            return lpikey.Replace(" ", "");
+        }
+
         public string FormatUSRN(string usrn)
         {
             return usrn.Replace(" ", "");

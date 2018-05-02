@@ -37,25 +37,45 @@ namespace HackneyAddressesAPI.Actions
             _config = config ?? throw new ArgumentNullException("config");
         }
 
-        public async Task<object> GetLlpgAddresses(AddressesQueryParams queryParams, Pagination pagination, string Format)
+        public async Task<object> GetLlpgAddresses(AddressesQueryParams queryParams, Pagination pagination)
         {
             List<FilterObject> filterObjects = formatAndAddToFilter(queryParams);
 
-            pagination = await callDatabaseAsyncPagination(filterObjects, pagination);
-            var resultset = new { resultset = pagination };
-            var dataTable = await callDatabaseAsync(filterObjects, pagination);
+            string jsonConnString1 = GlobalConstants.LLPGJSONSTRING;
+            string jsonConnString2 = GlobalConstants.NLPGJSONSTRING;
 
-            //Read from the Global Constants/Enum class
-            if (Format == "Detailed" || Format == "GIS")
+            Object resultset = null;
+            Object dataTable = null;
+
+            if (queryParams.Gazetteer == "National")
             {
-                var result = _addressDetailsMapper.MapAddressDetailsGIS(dataTable);
-                return new { Addresses = result, metadata = resultset };
+                pagination = await callDatabaseAsyncPagination(filterObjects, pagination, jsonConnString2);
+                dataTable = await callDatabaseAsync(filterObjects, pagination, jsonConnString2);
+            }
+            else if (queryParams.Gazetteer == "Both")
+            {
+                pagination = await callDatabaseAsyncPaginationBoth(filterObjects, pagination, jsonConnString1, jsonConnString2);
+                dataTable = await callDatabaseAsyncBoth(filterObjects, pagination, jsonConnString1, jsonConnString2);
             }
             else
             {
-                var result = _addressDetailsMapper.MapAddressDetailsSimple(dataTable);
-                return new { Addresses = result, metadata = resultset };
+                pagination = await callDatabaseAsyncPagination(filterObjects, pagination, jsonConnString1);
+                dataTable = await callDatabaseAsync(filterObjects, pagination, jsonConnString1);
             }
+
+            resultset = new { resultset = pagination };
+
+            Object result = null;
+            if (queryParams.Format == "GIS")
+            {
+                result = _addressDetailsMapper.MapAddressDetailsGIS((DataTable)dataTable);
+            }
+            else
+            {
+                result = _addressDetailsMapper.MapAddressDetailsSimple((DataTable)dataTable);
+            }
+
+            return new { Addresses = result, metadata = resultset };
         }
 
         private List<FilterObject> formatAndAddToFilter(AddressesQueryParams queryParams)
@@ -67,26 +87,28 @@ namespace HackneyAddressesAPI.Actions
             return filterObjects;
         }
 
-        private async Task<DataTable> callDatabaseAsync(List<FilterObject> filterObjects, Pagination pagination)
+        private async Task<DataTable> callDatabaseAsync(List<FilterObject> filterObjects, Pagination pagination, string jsonConnString)
         {
             //Get Connection/config settings
-            string conn = _config.getConfigurationSetting("ConnectionSettings:LLPG:LLPG_DEV:ConnectionString").ToString();
+            string conn = _config.getConfigurationSetting(jsonConnString + ":ConnectionString").ToString();
+            string tableName = _config.getConfigurationSetting(jsonConnString + ":TableName").ToString();
 
             //Set up Queries and params
-            string queryNormal = _llpg_QueryBuilder.GetQuery(filterObjects, pagination.offset, pagination.limit);
+            string queryNormal = _llpg_QueryBuilder.GetQuery(filterObjects, pagination, tableName);
             DbParameter[] dbParamaters = _llpg_QueryBuilder.GetParameters(filterObjects);
 
             //Execute Database
             return _db_Helper.ExecuteToDataTable(conn, queryNormal, dbParamaters);
         }
 
-        private async Task<Pagination> callDatabaseAsyncPagination(List<FilterObject> filterObjects, Pagination pagination)
+        private async Task<Pagination> callDatabaseAsyncPagination(List<FilterObject> filterObjects, Pagination pagination, string jsonConnString)
         {
             //Get Connection/config settings
-            string conn = _config.getConfigurationSetting("ConnectionSettings:LLPG:LLPG_DEV:ConnectionString").ToString();
+            string conn = _config.getConfigurationSetting(jsonConnString + ":ConnectionString").ToString();
+            string tableName = _config.getConfigurationSetting(jsonConnString + ":TableName").ToString();
 
             //Set up Queries and params
-            string queryCount = _llpg_QueryBuilder.GetCountQuery(filterObjects);
+            string queryCount = _llpg_QueryBuilder.GetCountQuery(filterObjects, tableName);
             DbParameter[] dbParamaters = _llpg_QueryBuilder.GetParameters(filterObjects);
 
             //Execute Database
@@ -96,7 +118,67 @@ namespace HackneyAddressesAPI.Actions
             return pagination;
         }
 
-        
+        private async Task<Pagination> callDatabaseAsyncPaginationBoth(List<FilterObject> filterObjects, Pagination pagination, string jsonConnString1, string jsonConnString2)
+        {
+            //Get Connection/config settings
+            string conn = _config.getConfigurationSetting(jsonConnString1 + ":ConnectionString").ToString();
 
+            string tableName1 = _config.getConfigurationSetting(jsonConnString1 + ":TableName").ToString();
+            string tableName2 = _config.getConfigurationSetting(jsonConnString2 + ":TableName").ToString();
+
+            //Set up Queries and params
+            string queryCount = _llpg_QueryBuilder.GetCountQueryBoth(filterObjects, tableName1, tableName2);
+            DbParameter[] dbParamaters = _llpg_QueryBuilder.GetParameters(filterObjects);
+
+            //Execute Database
+            int count = _db_Helper.ExecuteScalarToInt(conn, queryCount, dbParamaters);
+            pagination.count = count;
+
+            return pagination;
+        }
+
+        private async Task<DataTable> callDatabaseAsyncBoth(List<FilterObject> filterObjects, Pagination pagination, string jsonConnString1, string jsonConnString2)
+        {
+            //Get Connection/config settings
+            string conn = _config.getConfigurationSetting(jsonConnString1 + ":ConnectionString").ToString();
+
+            string tableName1 = _config.getConfigurationSetting(jsonConnString1 + ":TableName").ToString();
+            string tableName2 = _config.getConfigurationSetting(jsonConnString2 + ":TableName").ToString();
+
+            //Set up Queries and params
+            string queryNormal = _llpg_QueryBuilder.GetQueryBoth(filterObjects, pagination, tableName1, tableName2);
+            DbParameter[] dbParamaters = _llpg_QueryBuilder.GetParameters(filterObjects);
+
+            //Execute Database
+            return _db_Helper.ExecuteToDataTable(conn, queryNormal, dbParamaters);
+        }
+
+        public async Task<object> GetLlpgAddressesLpikey(string lpikey)
+        {
+            lpikey = _formatter.FormatLPIKey(lpikey);
+
+            Pagination pagination = new Pagination();
+            pagination.offset = 0;
+            pagination.limit = 1;
+
+            List<FilterObject> filterObjects = new List<FilterObject>();
+            filterObjects.Add(new FilterObject { ColumnName = "LPI_KEY", isWildCard = false, Value = lpikey});
+
+            string jsonConnString = GlobalConstants.LLPGJSONSTRING;
+
+            pagination = await callDatabaseAsyncPagination(filterObjects, pagination, jsonConnString);
+
+            if (pagination.count < 1)
+            {
+                jsonConnString = GlobalConstants.NLPGJSONSTRING;
+                pagination = await callDatabaseAsyncPagination(filterObjects, pagination, jsonConnString);
+            }
+
+            var resultset = new { resultset = pagination };
+            var dataTable = await callDatabaseAsync(filterObjects, pagination, jsonConnString);
+
+            var result = _addressDetailsMapper.MapAddressDetailsGIS(dataTable);
+            return new { Addresses = result, metadata = resultset };
+        }
     }
 }

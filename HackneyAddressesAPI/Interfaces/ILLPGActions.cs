@@ -10,8 +10,11 @@ namespace HackneyAddressesAPI.Interfaces
     {
         Task<object> GetLlpgAddresses(
             AddressesQueryParams filters,
-            Pagination pagination,
-            string Format
+            Pagination pagination
+            );
+
+        Task<object> GetLlpgAddressesLpikey(
+            string lpikey
             );
     }
 }

@@ -9,5 +9,6 @@ namespace HackneyAddressesAPI.Interfaces
     public interface IValidator
     {
         ValidationResult ValidateAddressesQueryParams(AddressesQueryParams filtersToValidate);
+        ValidationResult ValidateAddressesLPIKey(string lpikey);
     }
 }

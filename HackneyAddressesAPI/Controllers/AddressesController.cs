@@ -40,8 +40,8 @@ namespace HackneyAddressesAPI.Controllers
         /// </summary>
         /// <param name="Postcode">Full or partial post code. 
         /// Acceptable inputs: 'E8 2HH', 'E8', 'E8 2', 'e82hh', 'e82'.</param>
-        /// <param name="USRN">USRN.</param>
-        /// <param name="UPRN">UPRN.</param>
+        /// <param name="USRN">Unique street reference number.</param>
+        /// <param name="UPRN">Unique property reference number.</param>
         /// <param name="PropertyClass">Primary usage of the property. 
         /// Accepted Values: 'Commercial', 'Features', 'Land', 'Object of Interest', 'Parent Shell', 'Residential', 'Military', 'Dual Use', 'Unclassified'.</param>
         /// <param name="PropertyClassCode">Code specifying usage of the property at a more granular level.
@@ -65,15 +65,16 @@ namespace HackneyAddressesAPI.Controllers
         /// <returns>Returns a list of Addresses depending upon the input format specified above i.e. 'Simple' or 'Detailed'.
         /// For details see: <a href = '#' target='_new'>Insert Link here</a>.
         /// </returns>
+        
         [HttpGet]
-        public async Task<JsonResult> GetPostcode([FromQuery]string Postcode = null,
+        public async Task<JsonResult> GetAddresses([FromQuery]string Postcode = null,
             [FromQuery]string USRN = null,
             [FromQuery]string UPRN = null,
             [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
             [FromQuery]string PropertyClassCode = null,
-            [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred, // Enum this
-            [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple, //Enum this
-            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local, //Enum this 
+            [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
+            [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
+            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
             [FromQuery]int? Limit = GlobalConstants.LIMIT,
             [FromQuery]int? Offset = GlobalConstants.OFFSET)
         {
@@ -87,6 +88,8 @@ namespace HackneyAddressesAPI.Controllers
                 queryParams.PropertyClassCode = WebUtility.UrlDecode(PropertyClassCode);
                 queryParams.PropertyClass = WebUtility.UrlDecode(PropertyClass.ToString());
                 queryParams.AddressStatus = WebUtility.UrlDecode(AddressStatus.ToString());
+                queryParams.Gazetteer = WebUtility.UrlDecode(Gazetteer.ToString());
+                queryParams.Format = WebUtility.UrlDecode(Format.ToString());
 
                 ValidationResult validatorFilterErrors = _validator.ValidateAddressesQueryParams(queryParams);
 
@@ -98,8 +101,7 @@ namespace HackneyAddressesAPI.Controllers
 
                     var result = await _LLPGActions.GetLlpgAddresses(
                         queryParams,
-                        pagination,
-                        Format.ToString());
+                        pagination);
 
                     var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
                     json.StatusCode = 200;
@@ -111,6 +113,54 @@ namespace HackneyAddressesAPI.Controllers
                 {
                     var errors = validatorFilterErrors.ErrorMessages;
 
+                    var json = Json(errors);
+                    json.StatusCode = 400;
+                    json.ContentType = "application/json";
+                    return json;
+                }
+            }
+            catch (Exception ex)
+            {
+                var errors = new List<ApiErrorMessage>
+                {
+                    new ApiErrorMessage
+                    {
+                        developerMessage = ex.Message,
+                        userMessage = "We had some problems processing your request"
+                    }
+                };
+                _logger.LogError(ex.Message);
+                var json = Json(errors);
+                json.StatusCode = 500;
+                json.ContentType = "application/json";
+                return json;
+            }
+        }
+
+        [Route("{lpikey}")]
+        [HttpGet]
+        public async Task<JsonResult> GetAddressesByLPI(string lpikey)
+        {
+            try
+            {
+                lpikey = WebUtility.UrlDecode(lpikey);
+
+                ValidationResult validatorFilterErrors = _validator.ValidateAddressesLPIKey(lpikey);
+
+                if (!validatorFilterErrors.ErrorOccurred)
+                {
+
+                    var result = await _LLPGActions.GetLlpgAddressesLpikey(lpikey);
+
+                    var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
+                    json.StatusCode = 200;
+                    json.ContentType = "application/json";
+
+                    return json;
+                }
+                else
+                {
+                    var errors = validatorFilterErrors.ErrorMessages;
                     var json = Json(errors);
                     json.StatusCode = 400;
                     json.ContentType = "application/json";
