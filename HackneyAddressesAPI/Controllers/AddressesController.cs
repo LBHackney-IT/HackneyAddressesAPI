@@ -21,15 +21,15 @@ namespace HackneyAddressesAPI.Controllers
     public class AddressesController : Controller
     {
         private IValidator _validator;
-        private ILLPGActions _LLPGActions;
+        private IAddressesActions _addressesActions;
         private ILoggerAdapter<AddressesController> _logger;
 
         public AddressesController(IValidator validator,
-            ILLPGActions LLPGActions,
+            IAddressesActions addressesActions,
             ILoggerAdapter<AddressesController> logger)
         {
             _validator = validator ?? throw new ArgumentNullException("validator");
-            _LLPGActions = LLPGActions ?? throw new ArgumentNullException("LLPGActions");
+            _addressesActions = addressesActions ?? throw new ArgumentNullException("addressesActions");
             _logger = logger;
         }
 
@@ -99,7 +99,7 @@ namespace HackneyAddressesAPI.Controllers
                     pagination.limit = Limit ?? default(int);
                     pagination.offset = Offset ?? default(int);
 
-                    var result = await _LLPGActions.GetLlpgAddresses(
+                    var result = await _addressesActions.GetAddresses(
                         queryParams,
                         pagination);
 
@@ -150,7 +150,7 @@ namespace HackneyAddressesAPI.Controllers
                 if (!validatorFilterErrors.ErrorOccurred)
                 {
 
-                    var result = await _LLPGActions.GetLlpgAddressesLpikey(lpikey);
+                    var result = await _addressesActions.GetAddressesLpikey(lpikey);
 
                     var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
                     json.StatusCode = 200;

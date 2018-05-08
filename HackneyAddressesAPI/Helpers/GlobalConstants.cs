@@ -13,9 +13,11 @@ namespace HackneyAddressesAPI.Helpers
 
         public const int OFFSET = 0;
 
-        public const string LLPGJSONSTRING = "ConnectionSettings:LLPG:LLPG_DEV";
+        public const string LLPG_ADDRESSES_JSON = "ConnectionSettings:LLPG:DEV";
 
-        public const string NLPGJSONSTRING = "ConnectionSettings:NLPG:NLPG_DEV";
+        public const string NLPG_ADDRESSES_JSON = "ConnectionSettings:NLPG:DEV";
+
+        public const string NLPGCOMBINED_ADDRESSES_JSON = "ConnectionSettings:NLPG_COMBINED:DEV";
 
 
 

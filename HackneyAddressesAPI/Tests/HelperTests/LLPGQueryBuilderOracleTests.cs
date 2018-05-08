@@ -30,13 +30,13 @@ namespace HackneyAddressesAPI.Tests.HelperTests
             pagination.offset = 0;
             pagination.limit = 5;
 
-            ILLPGQueryBuilder _queryBuilder = new AddressesQueryBuilderOracle();
+            IQueryBuilder _queryBuilder = new AddressesQueryBuilderOracle();
 
             //Expected
             var expected = "SELECT * FROM ( SELECT rownum rnum, a.* FROM ( SELECT * FROM LLPG.LLPG_REST_API WHERE POSTCODE_NOSPACE LIKE :POSTCODE_NOSPACE|| '%' AND UPRN = :UPRN AND USRN = :USRN AND BLPU_CLASS LIKE :BLPU_CLASS|| '%' AND USAGE_PRIMARY = :USAGE_PRIMARY AND LPI_LOGICAL_STATUS = :LPI_LOGICAL_STATUS AND ROWNUM >= 0 ) a WHERE rownum <= 5 ) WHERE rnum >= 0";
 
             //--Act--
-            var result = _queryBuilder.GetQuery(filterObjects, pagination, "LLPG.LLPG_REST_API");
+            var result = _queryBuilder.GetAddressesQuery(filterObjects, pagination, "LLPG.LLPG_REST_API");
 
             //--Assert--
             Assert.Equal(expected, result);
@@ -56,7 +56,7 @@ namespace HackneyAddressesAPI.Tests.HelperTests
             filterObjects.Add(new FilterObject { Name = "PROPERTYCLASSPRIMARY", ColumnName = "USAGE_PRIMARY", isWildCard = false, Value = "Residential" });
             filterObjects.Add(new FilterObject { Name = "ADDRESSSTATUS", ColumnName = "LPI_LOGICAL_STATUS", isWildCard = false, Value = "Approved Preferred" });
 
-            ILLPGQueryBuilder _queryBuilder = new AddressesQueryBuilderOracle();
+            IQueryBuilder _queryBuilder = new AddressesQueryBuilderOracle();
 
             //Expected
             var expected = "SELECT COUNT(*) FROM LLPG.LLPG_REST_API WHERE POSTCODE_NOSPACE LIKE :POSTCODE_NOSPACE|| '%' AND UPRN = :UPRN AND USRN = :USRN AND BLPU_CLASS LIKE :BLPU_CLASS|| '%' AND USAGE_PRIMARY = :USAGE_PRIMARY AND LPI_LOGICAL_STATUS = :LPI_LOGICAL_STATUS AND ROWNUM >= 0";

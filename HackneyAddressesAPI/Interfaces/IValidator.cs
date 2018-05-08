@@ -10,5 +10,6 @@ namespace HackneyAddressesAPI.Interfaces
     {
         ValidationResult ValidateAddressesQueryParams(AddressesQueryParams filtersToValidate);
         ValidationResult ValidateAddressesLPIKey(string lpikey);
+        ValidationResult ValidateStreetsQueryParams(StreetsQueryParams filtersToValidate);
     }
 }

@@ -254,6 +254,50 @@ namespace HackneyAddressesAPI.Helpers
             return null;
         }
 
+        public ValidationResult ValidateStreetsQueryParams(StreetsQueryParams filtersToValidate)
+        {
+            List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
+
+            bool hasError = false;
+
+            //StreetName
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.StreetName))
+            {
+                var error = ValidateStreetName(filtersToValidate.StreetName);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+
+            //Gazetteer
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Gazetteer))
+            {
+                //?#? To Implement
+            }
+
+            ValidationResult validationObject = new ValidationResult();
+            validationObject.ErrorOccurred = hasError;
+            validationObject.ErrorMessages = myErrors;
+
+            return validationObject;
+        }
+
+        public ApiErrorMessage ValidateStreetName(string streetName)
+        {
+            if (streetName.Length > 100 || streetName.Length < 3)
+            {
+                var error = new ApiErrorMessage
+                {
+                    developerMessage = "Street Name is invalid, length should be < 100 Char and > 3 Char.",
+                    userMessage = "Street Name is invalid, length should be < 100 Char and > 3 Char."
+                };
+                return error;
+            }
+            return null;
+        }
+
         public ValidationResult ValidateAddressesLPIKey(string lpikey)
         {
             List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();

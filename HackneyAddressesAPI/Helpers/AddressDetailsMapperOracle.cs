@@ -31,7 +31,6 @@ namespace HackneyAddressesAPI.Helpers
                         aDetails.Postcode = (string)dt.Rows[i]["POSTCODE"];
                     }
 
-
                     if (!dt.Rows[i].IsNull("SAO_TEXT") && (!dt.Rows[i].IsNull("UNIT_NUMBER") || !dt.Rows[i].IsNull("PAO_TEXT")))
                     {
                         aDetails.Line1 = CheckNullString(dt, i, "SAO_TEXT");
@@ -140,6 +139,7 @@ namespace HackneyAddressesAPI.Helpers
                 throw;
             }
         }
+
         private string CheckNullString(DataTable dt, int rowindex, string columnName)
         {
             string strRetVal = "";
@@ -148,7 +148,7 @@ namespace HackneyAddressesAPI.Helpers
             {
                 if (!dt.Rows[rowindex].IsNull(columnName))
                 {
-                    strRetVal = (string)dt.Rows[rowindex][columnName];
+                    strRetVal = dt.Rows[rowindex][columnName].ToString();
                 }
             }
 
@@ -162,6 +162,16 @@ namespace HackneyAddressesAPI.Helpers
             if (strRetVal == "")
             {
                 return null;
+            }
+
+            if (strRetVal == "0")
+            {
+                return false;
+            }
+            
+            if (strRetVal == "1")
+            {
+                return true;
             }
 
             return Convert.ToBoolean(strRetVal);

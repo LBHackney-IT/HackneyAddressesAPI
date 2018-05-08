@@ -6,14 +6,14 @@ using HackneyAddressesAPI.Models;
 
 namespace HackneyAddressesAPI.Interfaces
 {
-    public interface ILLPGActions
+    public interface IAddressesActions
     {
-        Task<object> GetLlpgAddresses(
+        Task<object> GetAddresses(
             AddressesQueryParams filters,
             Pagination pagination
             );
 
-        Task<object> GetLlpgAddressesLpikey(
+        Task<object> GetAddressesLpikey(
             string lpikey
             );
     }

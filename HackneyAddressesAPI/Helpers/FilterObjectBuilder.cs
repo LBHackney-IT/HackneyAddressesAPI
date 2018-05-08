@@ -12,7 +12,6 @@ namespace HackneyAddressesAPI.Helpers
     //Create Interface
     public class FilterObjectBuilder : IFilterObjectBuilder
     {
-
         private List<FilterObject> ProcessFilterObjects(List<FilterObject> filterObjects, Dictionary<string, string> mappings)
         {
             try
@@ -40,7 +39,7 @@ namespace HackneyAddressesAPI.Helpers
             }
         }
 
-        public List<FilterObject> ProcessQueryParamsToFilterObjects(AddressesQueryParams queryParams, Dictionary<string, string> mappings)
+        public List<FilterObject> ProcessQueryParamsToFilterObjects<T>(T queryParams, Dictionary<string, string> mappings)
         {
             List<FilterObject> filterObjects = new List<FilterObject>();
                               
