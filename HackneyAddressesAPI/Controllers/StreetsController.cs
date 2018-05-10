@@ -30,7 +30,6 @@ namespace HackneyAddressesAPI.Controllers
 
         [HttpGet]
         public async Task<JsonResult> GetStreets([FromQuery]string StreetName = null,
-            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
             [FromQuery]int? Limit = GlobalConstants.LIMIT,
             [FromQuery]int? Offset = GlobalConstants.OFFSET)
         {
@@ -39,7 +38,7 @@ namespace HackneyAddressesAPI.Controllers
                 StreetsQueryParams queryParams = new StreetsQueryParams();
 
                 queryParams.StreetName = WebUtility.UrlDecode(StreetName);
-                queryParams.Gazetteer = WebUtility.UrlDecode(Gazetteer.ToString());
+                //queryParams.Gazetteer = WebUtility.UrlDecode(Gazetteer.ToString());
 
                 ValidationResult validatorFilterErrors = _validator.ValidateStreetsQueryParams(queryParams);
 
@@ -49,11 +48,9 @@ namespace HackneyAddressesAPI.Controllers
                     pagination.limit = Limit ?? default(int);
                     pagination.offset = Offset ?? default(int);
 
-                    //var result = await _addressesActions.GetLlpgAddresses(
-                    //    queryParams,
-                    //    pagination);
-
-                    var result = "";
+                    var result = await _streetsActions.GetStreets(
+                        queryParams,
+                        pagination);
 
                     var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
                     json.StatusCode = 200;

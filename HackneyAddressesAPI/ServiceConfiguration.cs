@@ -19,11 +19,13 @@ namespace HackneyAddressesAPI
             services.AddTransient<IFormatter, Formatter>();
 
             services.AddTransient<IAddressesActions, AddressesActions>();
-            services.AddTransient<IAddressDetailsMapper, AddressDetailsMapperOracle>();
+            services.AddTransient<IStreetsActions, StreetsActions>();
+
+            services.AddTransient<IDetailsMapper, DetailsMapperOracle>();
             services.AddTransient<IFilterObjectBuilder, FilterObjectBuilder>();
 
             services.AddTransient<IDB_Helper, OracleHelper>();
-            services.AddTransient<IQueryBuilder, AddressesQueryBuilderOracle>();
+            services.AddTransient<IQueryBuilder, QueryBuilderOracle>();
 
             services.AddScoped<IConfigReader, ConfigReader>();
 

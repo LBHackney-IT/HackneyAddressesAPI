@@ -18,32 +18,32 @@ namespace HackneyAddressesAPI.Actions
         private IDB_Helper _db_Helper;
         private IFormatter _formatter;
         private IFilterObjectBuilder _fob;
-        private IAddressDetailsMapper _addressDetailsMapper;
+        private IDetailsMapper _detailsMapper;
         private IConfigReader _config;
-        private IQueryBuilder _addressesQueryBuilder;
+        private IQueryBuilder _queryBuilder;
+
+        private string llpgConnString = GlobalConstants.LLPG_ADDRESSES_JSON;
+        private string nlpgBothConnString = GlobalConstants.NLPGCOMBINED_ADDRESSES_JSON;
+        private string nlpgOnlyConnString = GlobalConstants.NLPG_ADDRESSES_JSON;
 
         public AddressesActions(IDB_Helper db_Helper,
-            IQueryBuilder addressesQueryBuilder,
+            IQueryBuilder queryBuilder,
             IConfigReader config,
             IFormatter formatter,
             IFilterObjectBuilder filterObjectBuilder,
-            IAddressDetailsMapper addressDetailsMapper)
+            IDetailsMapper detailsMapper)
         {
             _db_Helper = db_Helper ?? throw new ArgumentNullException("db_Helper");
-            _addressesQueryBuilder = addressesQueryBuilder ?? throw new ArgumentNullException("llpg_QueryBuilder");
+            _queryBuilder = queryBuilder ?? throw new ArgumentNullException("llpg_QueryBuilder");
             _formatter = formatter ?? throw new ArgumentNullException("formatter");
             _fob = filterObjectBuilder ?? throw new ArgumentNullException("filterObjectBuilder");
-            _addressDetailsMapper = addressDetailsMapper ?? throw new ArgumentNullException("addressDetailsMapper");
+            _detailsMapper = detailsMapper ?? throw new ArgumentNullException("addressDetailsMapper");
             _config = config ?? throw new ArgumentNullException("config");
         }
 
         public async Task<object> GetAddresses(AddressesQueryParams queryParams, Pagination pagination)
         {
             List<FilterObject> filterObjects = formatAndAddToFilter(queryParams);
-
-            string llpgConnString = GlobalConstants.LLPG_ADDRESSES_JSON;
-            string nlpgBothConnString = GlobalConstants.NLPGCOMBINED_ADDRESSES_JSON;
-            string nlpgOnlyConnString = GlobalConstants.NLPG_ADDRESSES_JSON;
 
             string connString = llpgConnString;
 
@@ -60,15 +60,14 @@ namespace HackneyAddressesAPI.Actions
             DataTable dataTable = await callDatabaseAsync(filterObjects, pagination, connString);
 
             var resultset = new { resultset = pagination };
-
-            Object result = null;
+            IEnumerable<IAddressTypes> result;
             if (queryParams.Format == "Detailed")
             {
-                result = _addressDetailsMapper.MapAddressDetailsGIS((DataTable)dataTable);
+                result = _detailsMapper.MapAddressDetailsGIS(dataTable);
             }
             else
             {
-                result = _addressDetailsMapper.MapAddressDetailsSimple((DataTable)dataTable);
+                result = _detailsMapper.MapAddressDetailsSimple(dataTable);
             }
 
             return new { Addresses = result, metadata = resultset };
@@ -78,7 +77,7 @@ namespace HackneyAddressesAPI.Actions
         {
             queryParams = _formatter.FormatAddressesQueryParams(queryParams);
 
-            List<FilterObject> filterObjects = _fob.ProcessQueryParamsToFilterObjects(queryParams, _addressesQueryBuilder.GetColumnMappings());
+            List<FilterObject> filterObjects = _fob.ProcessQueryParamsToFilterObjects(queryParams, _queryBuilder.GetColumnMappings());
 
             return filterObjects;
         }
@@ -90,8 +89,8 @@ namespace HackneyAddressesAPI.Actions
             string tableName = _config.getConfigurationSetting(jsonConnString + ":TableName").ToString();
 
             //Set up Queries and params
-            string queryNormal = _addressesQueryBuilder.GetAddressesQuery(filterObjects, pagination, tableName);
-            DbParameter[] dbParamaters = _addressesQueryBuilder.GetParameters(filterObjects);
+            string queryNormal = _queryBuilder.GetAddressesQuery(filterObjects, pagination, tableName);
+            DbParameter[] dbParamaters = _queryBuilder.GetParameters(filterObjects);
 
             //Execute Database
             return _db_Helper.ExecuteToDataTable(conn, queryNormal, dbParamaters);
@@ -104,8 +103,8 @@ namespace HackneyAddressesAPI.Actions
             string tableName = _config.getConfigurationSetting(jsonConnString + ":TableName").ToString();
 
             //Set up Queries and params
-            string queryCount = _addressesQueryBuilder.GetCountQuery(filterObjects, tableName);
-            DbParameter[] dbParamaters = _addressesQueryBuilder.GetParameters(filterObjects);
+            string queryCount = _queryBuilder.GetCountQuery(filterObjects, tableName);
+            DbParameter[] dbParamaters = _queryBuilder.GetParameters(filterObjects);
 
             //Execute Database
             int count = _db_Helper.ExecuteScalarToInt(conn, queryCount, dbParamaters);
@@ -125,20 +124,20 @@ namespace HackneyAddressesAPI.Actions
             List<FilterObject> filterObjects = new List<FilterObject>();
             filterObjects.Add(new FilterObject { ColumnName = "LPI_KEY", isWildCard = false, Value = lpikey});
 
-            string jsonConnString = GlobalConstants.LLPG_ADDRESSES_JSON;
+            string connString = llpgConnString;
 
-            pagination = await callDatabaseAsyncPagination(filterObjects, pagination, jsonConnString);
+            pagination = await callDatabaseAsyncPagination(filterObjects, pagination, connString);
 
             if (pagination.count < 1)
             {
-                jsonConnString = GlobalConstants.NLPG_ADDRESSES_JSON;
-                pagination = await callDatabaseAsyncPagination(filterObjects, pagination, jsonConnString);
+                connString = nlpgOnlyConnString;
+                pagination = await callDatabaseAsyncPagination(filterObjects, pagination, connString);
             }
 
             var resultset = new { resultset = pagination };
-            var dataTable = await callDatabaseAsync(filterObjects, pagination, jsonConnString);
+            var dataTable = await callDatabaseAsync(filterObjects, pagination, connString);
 
-            var result = _addressDetailsMapper.MapAddressDetailsGIS(dataTable);
+            var result = _detailsMapper.MapAddressDetailsGIS(dataTable);
             return new { Addresses = result, metadata = resultset };
         }
     }

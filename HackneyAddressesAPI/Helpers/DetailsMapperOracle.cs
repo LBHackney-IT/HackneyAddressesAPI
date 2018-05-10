@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace HackneyAddressesAPI.Helpers
 {
-    public class AddressDetailsMapperOracle : IAddressDetailsMapper
+    public class DetailsMapperOracle : IDetailsMapper
     {
-
         public List<AddressDetailsSimple> MapAddressDetailsSimple(DataTable dt)
         {
             try
@@ -175,6 +174,41 @@ namespace HackneyAddressesAPI.Helpers
             }
 
             return Convert.ToBoolean(strRetVal);
+        }
+
+        public List<StreetDetails> MapStreetDetails(DataTable dt)
+        {
+            try
+            {
+                List<StreetDetails> streetDetailsList = new List<StreetDetails>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    StreetDetails sDetails = new StreetDetails();
+                    sDetails.county = CheckNullString(dt, i, "COUNTY_NAME");
+                    sDetails.locality = CheckNullString(dt, i, "LOCALITY_NAME");
+                    sDetails.streetDescription = CheckNullString(dt, i, "STREET_DESCRIPTOR");
+                    sDetails.streetEndEasting = CheckNullString(dt, i, "STREET_END_X");
+                    sDetails.streetEndLatitude = CheckNullString(dt, i, "STREET_END_LAT");
+                    sDetails.streetEndLongitude = CheckNullString(dt, i, "STREET_END_LON");
+
+                    sDetails.streetEndNorthing = CheckNullString(dt, i, "STREET_END_Y");
+                    sDetails.streetStartEasting = CheckNullString(dt, i, "STREET_START_X");
+                    sDetails.streetStartLatitude = CheckNullString(dt, i, "STREET_START_LAT");
+                    sDetails.streetStartLongitude = CheckNullString(dt, i, "STREET_START_LON");
+                    sDetails.streetStartNorthing = CheckNullString(dt, i, "STREET_START_Y");
+                    sDetails.town = CheckNullString(dt, i, "TOWN_NAME");
+                    sDetails.uniqueStreetReferenceNumber = Convert.ToInt32(dt.Rows[i]["USRN"]);
+
+                    streetDetailsList.Add(sDetails);
+                }
+
+                return streetDetailsList;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 

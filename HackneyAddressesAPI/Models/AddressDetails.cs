@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HackneyAddressesAPI.Interfaces;
+
 
 namespace HackneyAddressesAPI.Models
 {
-    public class AddressDetails
+    public class AddressDetails : IAddressTypes
     {
         public Int64 uniquePropertyReferenceNumber { get; set; }
         public int uniqueStreetReferenceNumber { get; set; }

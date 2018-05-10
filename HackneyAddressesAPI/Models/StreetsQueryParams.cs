@@ -7,7 +7,7 @@ namespace HackneyAddressesAPI.Models
 {
     public class StreetsQueryParams
     {
-        [DatabaseColumn("STREET_NAME", IsWildCardAttr = true)]
+        [DatabaseColumn("STREETNAME", IsWildCardAttr = true)]
         public string StreetName { get; set; }
 
         public string Gazetteer { get; set; }

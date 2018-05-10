@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 namespace HackneyAddressesAPI.Helpers
 {
     //Create Interface
-    public class AddressesQueryBuilderOracle : IQueryBuilder
+    public class QueryBuilderOracle : IQueryBuilder
     {
         Dictionary<string, string> paramColumnNameMappings = new Dictionary<string, string>();
 
-        public AddressesQueryBuilderOracle()
+        public QueryBuilderOracle()
         {
             setMappings();
         }
@@ -35,6 +35,7 @@ namespace HackneyAddressesAPI.Helpers
             paramColumnNameMappings.Add("PROPERTYCLASSCODE", "BLPU_CLASS");
             paramColumnNameMappings.Add("PROPERTYCLASSPRIMARY", "USAGE_PRIMARY");
             paramColumnNameMappings.Add("ADDRESSSTATUS", "LPI_LOGICAL_STATUS");
+            paramColumnNameMappings.Add("STREETNAME", "STREET_DESCRIPTOR_NOSPACE");
         }
 
         public Dictionary<string, string> GetColumnMappings()

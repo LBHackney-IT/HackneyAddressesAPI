@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace HackneyAddressesAPI.Interfaces
 {
-    public interface IStreetDetailsMapper
+
+    public interface IDetailsMapper
     {
+
+        List<AddressDetails> MapAddressDetailsGIS(DataTable dt);
+        List<AddressDetailsSimple> MapAddressDetailsSimple(DataTable dt);
+
         List<StreetDetails> MapStreetDetails(DataTable dt);
     }
 }
