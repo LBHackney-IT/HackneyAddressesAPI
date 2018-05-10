@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HackneyAddressesAPI.Interfaces;
+
 
 namespace HackneyAddressesAPI.Models
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class AddressDetails
+    public class AddressDetails : IAddressTypes
     {
-        //
         public Int64 uniquePropertyReferenceNumber { get; set; }
         public int uniqueStreetReferenceNumber { get; set; }
         public Int64 parentUniquePropertyReferenceNumber { get; set; }
@@ -26,7 +24,7 @@ namespace HackneyAddressesAPI.Models
         public string commercialOccupier { get; set; }
         public string royalMailPostTown { get; set; }
         public string landPropertyUsage { get; set; }
-        public bool isNonLocalAddressInLocalGazetteer { get; set; } //for LLPG results; should be null in results for NLPG
+        public bool? isNonLocalAddressInLocalGazetteer { get; set; } //for LLPG results; should be null in results for NLPG
         public double easting { get; set; }
         public double northing { get; set; }
         public double longitude { get; set; }

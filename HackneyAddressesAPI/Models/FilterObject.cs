@@ -15,5 +15,31 @@ namespace HackneyAddressesAPI.Models
 
         public bool isWildCard { get; set; }
 
+
+        public override bool Equals(object obj)
+        {
+            var objCompare = (FilterObject)obj;
+
+            bool equal = true;
+
+            equal = objCompare.ColumnName == this.ColumnName;
+            if (equal)
+                equal = objCompare.isWildCard == this.isWildCard;
+            if (equal)
+                equal = objCompare.Name == this.Name;
+            if (equal)
+                equal = objCompare.Value == this.Value;
+
+            return equal;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ColumnName.GetHashCode() + this.isWildCard.GetHashCode() + this.Name.GetHashCode() + this.Value.GetHashCode();
+        }
+
+
+
     }
+
 }

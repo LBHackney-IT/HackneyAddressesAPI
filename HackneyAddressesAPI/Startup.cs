@@ -42,6 +42,8 @@ namespace HackneyAddressesAPI
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Hackney Addresses API", Version = "v1" });
 
+                c.DescribeAllEnumsAsStrings();
+
                 var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, @"HackneyAddressesAPI.xml");
                 c.IncludeXmlComments(filePath);
             });
@@ -63,6 +65,7 @@ namespace HackneyAddressesAPI
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackney Addresses API v1");
+                c.RoutePrefix = "";
             });
 
             app.UseCors("AllowAny");

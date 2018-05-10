@@ -18,12 +18,14 @@ namespace HackneyAddressesAPI
             services.AddTransient<IValidator, Validator>();
             services.AddTransient<IFormatter, Formatter>();
 
-            services.AddTransient<ILLPGActions, LLPGActions>();
-            services.AddTransient<IAddressDetailsMapper, AddressDetailsMapperOracle>();
+            services.AddTransient<IAddressesActions, AddressesActions>();
+            services.AddTransient<IStreetsActions, StreetsActions>();
+
+            services.AddTransient<IDetailsMapper, DetailsMapperOracle>();
             services.AddTransient<IFilterObjectBuilder, FilterObjectBuilder>();
 
             services.AddTransient<IDB_Helper, OracleHelper>();
-            services.AddTransient<ILLPGQueryBuilder, LLPGQueryBuilderOracle>();
+            services.AddTransient<IQueryBuilder, QueryBuilderOracle>();
 
             services.AddScoped<IConfigReader, ConfigReader>();
 

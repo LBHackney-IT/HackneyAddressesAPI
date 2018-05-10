@@ -8,17 +8,12 @@ namespace HackneyAddressesAPI.Interfaces
 {
     public interface IFormatter
     {
-        string FormatPostcode(string postcode);
+        AddressesQueryParams FormatAddressesQueryParams(AddressesQueryParams queryParams);
 
-        string FormatUPRN(string uprn);
+        StreetsQueryParams FormatStreetsQueryParams(StreetsQueryParams queryParams);
 
-        string FormatUSRN(string uprn);
+        string FormatLPIKey(string lpikey);
 
-        string FormatUsageClassCode(string code);
-
-        string FormatUsageClassPrimary(string code);
-
-        string FormatAddressStatus(string code);
-
+        string FormatUSRN(string usrn);
     }
 }
