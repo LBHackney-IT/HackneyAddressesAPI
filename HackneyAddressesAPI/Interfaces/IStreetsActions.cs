@@ -12,5 +12,9 @@ namespace HackneyAddressesAPI.Interfaces
             StreetsQueryParams filters,
             Pagination pagination
             );
+
+        Task<object> GetStreetsByUSRN(
+            string USRN
+            );
     }
 }

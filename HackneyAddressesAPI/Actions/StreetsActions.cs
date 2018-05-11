@@ -112,7 +112,7 @@ namespace HackneyAddressesAPI.Actions
             var resultset = new { resultset = pagination };
             var dataTable = await callDatabaseAsync(filterObjects, pagination, connString);
 
-            var result = _detailsMapper.MapAddressDetailsGIS(dataTable);
+            var result = _detailsMapper.MapStreetDetails(dataTable);
             return new { Addresses = result, metadata = resultset };
 
         }

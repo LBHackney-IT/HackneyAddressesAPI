@@ -323,5 +323,29 @@ namespace HackneyAddressesAPI.Helpers
 
             return validationObject;
         }
+
+        public ValidationResult ValidateStreetsUSRN(string USRN)
+        {
+            List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
+
+            bool hasError = false;
+
+            if (!string.IsNullOrWhiteSpace(USRN))
+            {
+                var error = ValidateUSRN(USRN);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+            
+
+            ValidationResult validationObject = new ValidationResult();
+            validationObject.ErrorOccurred = hasError;
+            validationObject.ErrorMessages = myErrors;
+
+            return validationObject;
+        }
     }
 }

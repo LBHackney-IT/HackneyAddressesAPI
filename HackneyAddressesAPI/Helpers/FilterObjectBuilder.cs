@@ -71,8 +71,7 @@ namespace HackneyAddressesAPI.Helpers
         {
             FilterObject fo = new FilterObject();
 
-            var myProp = prop;
-            var CustomAttr = myProp.GetCustomAttributes(typeof(DatabaseColumnAttribute), false).FirstOrDefault();
+            var CustomAttr = prop.GetCustomAttributes(typeof(DatabaseColumnAttribute), false).FirstOrDefault();
             CustomAttr = (DatabaseColumnAttribute) CustomAttr;
 
             var attribute = (DatabaseColumnAttribute) prop.GetCustomAttributes(typeof(DatabaseColumnAttribute), false).FirstOrDefault();
