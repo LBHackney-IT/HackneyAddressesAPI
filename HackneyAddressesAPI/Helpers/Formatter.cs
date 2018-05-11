@@ -12,8 +12,6 @@ namespace HackneyAddressesAPI.Helpers
         public string FormatPostcode(string postcode)
         {
             postcode = this.FormatRemoveSpacesAndCapitalise(postcode);
-            //Old way of formatting postcode which added a space.
-            //postcode = postcode.Insert(postcode.IndexOf(postcode.Substring(postcode.Length - 3)), " ");
             return postcode;
         }
 
@@ -53,6 +51,11 @@ namespace HackneyAddressesAPI.Helpers
         public string FormatUPRN(string uprn)
         {
             return uprn.Replace(" ", "");
+        }
+
+        public string FormatLPIKey(string lpikey)
+        {
+            return lpikey.Replace(" ", "");
         }
 
         public string FormatUSRN(string usrn)
@@ -114,6 +117,31 @@ namespace HackneyAddressesAPI.Helpers
             }
 
             return "Alternative";
+        }
+
+        public string FormatStreetName(string streetName)
+        {
+            streetName = this.FormatRemoveSpacesAndCapitalise(streetName);
+            return streetName;
+        }
+
+        public AddressesQueryParams FormatAddressesQueryParams(AddressesQueryParams queryParams)
+        {
+            queryParams.Postcode = String.IsNullOrWhiteSpace(queryParams.Postcode) ? null : FormatPostcode(queryParams.Postcode);
+            queryParams.UPRN = String.IsNullOrWhiteSpace(queryParams.UPRN) ? null : FormatUPRN(queryParams.UPRN);
+            queryParams.USRN = String.IsNullOrWhiteSpace(queryParams.USRN) ? null : FormatUSRN(queryParams.USRN);
+
+            queryParams.PropertyClassCode = String.IsNullOrWhiteSpace(queryParams.PropertyClassCode) ? null : FormatUsageClassCode(queryParams.PropertyClassCode);
+            queryParams.PropertyClass = String.IsNullOrWhiteSpace(queryParams.PropertyClass) ? null : FormatUsageClassPrimary(queryParams.PropertyClass);
+            queryParams.AddressStatus = String.IsNullOrWhiteSpace(queryParams.AddressStatus) ? null : FormatAddressStatus(queryParams.AddressStatus);
+
+            return queryParams;
+        }
+
+        public StreetsQueryParams FormatStreetsQueryParams(StreetsQueryParams queryParams)
+        {
+            queryParams.StreetName = String.IsNullOrWhiteSpace(queryParams.StreetName) ? null : FormatStreetName(queryParams.StreetName);
+            return queryParams;
         }
     }
 }

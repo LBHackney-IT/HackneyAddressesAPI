@@ -8,12 +8,10 @@ namespace HackneyAddressesAPI.Interfaces
 {
     public interface IValidator
     {
-        bool ValidatePostcode(string postcode);
+        ValidationResult ValidateAddressesQueryParams(AddressesQueryParams filtersToValidate);
+        ValidationResult ValidateAddressesLPIKey(string lpikey);
+        ValidationResult ValidateStreetsQueryParams(StreetsQueryParams filtersToValidate);
 
-        bool ValidateUPRN(string UPRN);
-
-        bool ValidateUSRN(string USRN);
-
-        ValidationResult ValidateClassCodePrimaryAddressStatus(Dictionary<string, string> filtersToValidate);
+        ValidationResult ValidateStreetsUSRN(string USRN);
     }
 }

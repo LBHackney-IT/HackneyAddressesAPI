@@ -11,53 +11,90 @@ namespace HackneyAddressesAPI.Helpers
 {
     public class Validator : IValidator
     {
+
         //List of errors returned make object wrapper with boolean & list of errors
-        public ValidationResult ValidateClassCodePrimaryAddressStatus(Dictionary<string, string> filtersToValidate)
+        public ValidationResult ValidateAddressesQueryParams(AddressesQueryParams filtersToValidate)
         {
             List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
 
             bool hasError = false;
 
-            string usageClassValue;
-            if (filtersToValidate.TryGetValue("usageClassCode", out usageClassValue))
+            //Postcode
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Postcode))
             {
-                if (!string.IsNullOrWhiteSpace(usageClassValue))
+                var error = ValidatePostcode(filtersToValidate.Postcode);
+                if (error != null)
                 {
-                    var error = UsageClassCodeChecker(usageClassValue);
-                    if (error != null)
-                    {
-                        myErrors.Add(error);
-                        hasError = true;
-                    }
+                    myErrors.Add(error);
+                    hasError = true;
                 }
             }
 
-            string usageClassPrimary;
-            if (filtersToValidate.TryGetValue("usageClassPrimary", out usageClassPrimary))
+            //UPRN
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.UPRN))
             {
-                if (!string.IsNullOrWhiteSpace(usageClassPrimary))
+                var error = ValidateUPRN(filtersToValidate.UPRN);
+                if (error != null)
                 {
-                    var error = UsageClassPrimaryChecker(usageClassPrimary);
-                    if (error != null)
-                    {
-                        myErrors.Add(error);
-                        hasError = true;
-                    }
+                    myErrors.Add(error);
+                    hasError = true;
                 }
             }
 
-            string addressStatus;
-            if (filtersToValidate.TryGetValue("addressStatus", out addressStatus))
+            //USRN
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.USRN))
             {
-                if (!string.IsNullOrWhiteSpace(addressStatus))
+                var error = ValidateUSRN(filtersToValidate.USRN);
+                if (error != null)
                 {
-                    var error = AddressStatusChecker(addressStatus);
-                    if (error != null)
-                    {
-                        myErrors.Add(error);
-                        hasError = true;
-                    }
+                    myErrors.Add(error);
+                    hasError = true;
                 }
+            }
+
+            //Property Class Code
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.PropertyClassCode))
+            {
+                var error = UsageClassCodeChecker(filtersToValidate.PropertyClassCode);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+            
+            //Property Class Primary
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.PropertyClass))
+            {
+                var error = UsageClassPrimaryChecker(filtersToValidate.PropertyClass);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+            
+            //Address Status
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.AddressStatus))
+            {
+                var error = AddressStatusChecker(filtersToValidate.AddressStatus);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+
+            //Format
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Format))
+            {
+                //?#? To Implement
+            }
+
+            //Gazetteer
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Gazetteer))
+            {
+                //?#? To Implement
             }
 
             ValidationResult validationObject = new ValidationResult();
@@ -67,7 +104,6 @@ namespace HackneyAddressesAPI.Helpers
             return validationObject;
         }
 
-        // Again, should I use OUT keyword, instead of returning null? 
         public ApiErrorMessage UsageClassPrimaryChecker(string classprimary)
         {
             List<string> classPrimaryList = new List<string>();
@@ -171,32 +207,145 @@ namespace HackneyAddressesAPI.Helpers
             return myStr.Replace(" ", "").ToUpperInvariant();
         }
 
-        public bool ValidatePostcode(string postcode)
+        //Redundant function
+        public ApiErrorMessage ValidatePostcode(string postcode)
         {
-            if (string.IsNullOrWhiteSpace(postcode))
-                return false;
             postcode = postcode.Replace(" ", "");
-            return true;
+            if (postcode.Length < 2 || postcode.Length > 7)
+            {
+                return new ApiErrorMessage
+                {
+                    developerMessage = "Postcode length invalid, allowed: 2-7 chars (spaces are automatically removed)",
+                    userMessage = "Postcode length invalid, allowed: 2-7 chars (spaces are automatically removed)"
+                };
+            }
+            return null;
         }
 
-        public bool ValidateUPRN(string uprn)
+        public ApiErrorMessage ValidateUPRN(string uprn)
         {
-            if (string.IsNullOrWhiteSpace(uprn))
-                return false;
             uprn = uprn.Replace(" ", "");
             var uprnPattern = "^[0-9]{10,12}$";
             var uprnReg = new Regex(uprnPattern, RegexOptions.IgnoreCase);
-            return uprnReg.IsMatch(uprn);
+            if  (!uprnReg.IsMatch(uprn))
+            {
+                return new ApiErrorMessage
+                {
+                    developerMessage = "UPRN is invalid, please input digits only length 10-12.",
+                    userMessage = "UPRN is invalid, please input digits only length 10-12."
+                };
+            }
+            return null;
         }
 
-        public bool ValidateUSRN(string usrn)
+        public ApiErrorMessage ValidateUSRN(string usrn)
         {
-            if (string.IsNullOrWhiteSpace(usrn))
-                return false;
             usrn = usrn.Replace(" ", "");
-            var uprnPattern = "^[0-9]{6,12}$";
-            var uprnReg = new Regex(uprnPattern, RegexOptions.IgnoreCase);
-            return uprnReg.IsMatch(usrn);
+            var usrnPattern = "^[0-9]{6,12}$";
+            var usrnReg = new Regex(usrnPattern, RegexOptions.IgnoreCase);
+            if (!usrnReg.IsMatch(usrn))
+            {
+                return new ApiErrorMessage
+                {
+                    developerMessage = "UPRN is invalid, please input digits only length 6-12.",
+                    userMessage = "UPRN is invalid, please input digits only length 6-12."
+                };
+            }
+            return null;
+        }
+
+        public ValidationResult ValidateStreetsQueryParams(StreetsQueryParams filtersToValidate)
+        {
+            List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
+
+            bool hasError = false;
+
+            //StreetName
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.StreetName))
+            {
+                var error = ValidateStreetName(filtersToValidate.StreetName);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+
+            //Gazetteer
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.Gazetteer))
+            {
+                //?#? To Implement
+            }
+
+            ValidationResult validationObject = new ValidationResult();
+            validationObject.ErrorOccurred = hasError;
+            validationObject.ErrorMessages = myErrors;
+
+            return validationObject;
+        }
+
+        public ApiErrorMessage ValidateStreetName(string streetName)
+        {
+            if (streetName.Length > 100 || streetName.Length < 3)
+            {
+                var error = new ApiErrorMessage
+                {
+                    developerMessage = "Street Name is invalid, length should be < 100 Char and > 3 Char.",
+                    userMessage = "Street Name is invalid, length should be < 100 Char and > 3 Char."
+                };
+                return error;
+            }
+            return null;
+        }
+
+        public ValidationResult ValidateAddressesLPIKey(string lpikey)
+        {
+            List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
+
+            bool hasError = false;
+
+            lpikey = lpikey.Replace(" ", "");
+
+            if (lpikey.Length < 10)
+            {
+                var error =  new ApiErrorMessage
+                {
+                    developerMessage = "LPIKey is invalid, length should be > 10.",
+                    userMessage = "LPIKey is invalid, length should be > 10."
+                };
+
+                myErrors.Add(error);
+            }
+
+            ValidationResult validationObject = new ValidationResult();
+            validationObject.ErrorOccurred = hasError;
+            validationObject.ErrorMessages = myErrors;
+
+            return validationObject;
+        }
+
+        public ValidationResult ValidateStreetsUSRN(string USRN)
+        {
+            List<ApiErrorMessage> myErrors = new List<ApiErrorMessage>();
+
+            bool hasError = false;
+
+            if (!string.IsNullOrWhiteSpace(USRN))
+            {
+                var error = ValidateUSRN(USRN);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
+            }
+            
+
+            ValidationResult validationObject = new ValidationResult();
+            validationObject.ErrorOccurred = hasError;
+            validationObject.ErrorMessages = myErrors;
+
+            return validationObject;
         }
     }
 }

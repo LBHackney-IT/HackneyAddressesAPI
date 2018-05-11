@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Actions
+namespace HackneyAddressesAPI.Helpers
 {
     public class ConfigReader : IConfigReader
     {
