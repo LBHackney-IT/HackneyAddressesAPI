@@ -10,6 +10,9 @@ namespace HackneyAddressesAPI.Models
         [DatabaseColumn("STREETNAME", IsWildCardAttr = true)]
         public string StreetName { get; set; }
 
+        [DatabaseColumn("TOWNNAME", IsWildCardAttr = true)]
+        public string TownName { get; set; }
+
         public string Gazetteer { get; set; }
 
 

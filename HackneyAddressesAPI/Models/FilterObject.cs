@@ -15,6 +15,12 @@ namespace HackneyAddressesAPI.Models
 
         public bool isWildCard { get; set; }
 
+        public bool? isOr { get; set; }
+
+        //For use if "isOr" is true,  example when searching over locality over town_name and locality_name... e.g. ...Where TOWN_NAME = Hackney or LOCALITY_NAME = Hackney
+        public List<String> ColumnNames { get; set; }
+
+
 
         public override bool Equals(object obj)
         {
@@ -29,13 +35,15 @@ namespace HackneyAddressesAPI.Models
                 equal = objCompare.Name == this.Name;
             if (equal)
                 equal = objCompare.Value == this.Value;
+            if (equal)
+                equal = objCompare.isOr == this.isOr;
 
             return equal;
         }
 
         public override int GetHashCode()
         {
-            return this.ColumnName.GetHashCode() + this.isWildCard.GetHashCode() + this.Name.GetHashCode() + this.Value.GetHashCode();
+            return this.ColumnName.GetHashCode() + this.isWildCard.GetHashCode() + this.Name.GetHashCode() + this.Value.GetHashCode() + this.isOr.GetHashCode();
         }
 
 

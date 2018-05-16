@@ -125,6 +125,12 @@ namespace HackneyAddressesAPI.Helpers
             return streetName;
         }
 
+        public string FormatTownName(string townName)
+        {
+            townName = this.FormatRemoveSpacesAndCapitalise(townName);
+            return townName;
+        }
+
         public AddressesQueryParams FormatAddressesQueryParams(AddressesQueryParams queryParams)
         {
             queryParams.Postcode = String.IsNullOrWhiteSpace(queryParams.Postcode) ? null : FormatPostcode(queryParams.Postcode);
@@ -141,6 +147,8 @@ namespace HackneyAddressesAPI.Helpers
         public StreetsQueryParams FormatStreetsQueryParams(StreetsQueryParams queryParams)
         {
             queryParams.StreetName = String.IsNullOrWhiteSpace(queryParams.StreetName) ? null : FormatStreetName(queryParams.StreetName);
+            queryParams.TownName = String.IsNullOrWhiteSpace(queryParams.TownName) ? null : FormatTownName(queryParams.TownName);
+
             return queryParams;
         }
     }

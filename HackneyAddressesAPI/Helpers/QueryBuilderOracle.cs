@@ -35,6 +35,7 @@ namespace HackneyAddressesAPI.Helpers
             paramColumnNameMappings.Add("PROPERTYCLASSCODE", "BLPU_CLASS");
             paramColumnNameMappings.Add("PROPERTYCLASSPRIMARY", "USAGE_PRIMARY");
             paramColumnNameMappings.Add("ADDRESSSTATUS", "LPI_LOGICAL_STATUS");
+
             paramColumnNameMappings.Add("STREETNAME", "STREET_DESCRIPTOR_NOSPACE");
         }
 
@@ -98,7 +99,43 @@ namespace HackneyAddressesAPI.Helpers
             {
                 foreach (var item in filterObjects)
                 {
-                    if (item.isWildCard)
+                    if (item.isOr == true && item.isWildCard)
+                    {
+                        for (int i = 0; i < item.ColumnNames.Count; i++)
+                        {
+                            if (i == 0)
+                            {
+                                queryWhereClause.Append(" (");
+                            }
+
+                            if (i == item.ColumnNames.Count - 1)
+                            {
+                                queryWhereClause.Append(" " + item.ColumnNames[i] + " LIKE :" + item.ColumnNames[i] + "|| '%') AND");
+                            }
+                            else
+                            {
+                                queryWhereClause.Append(" " + item.ColumnNames[i] + " LIKE :" + item.ColumnNames[i] + "|| '%' OR");
+                            }
+                        }
+                    }
+                    else if (item.isOr == true)
+                    {
+                        for (int i = 0; i < item.ColumnNames.Count; i++)
+                        {
+                            if (i == 0)
+                            {
+                                queryWhereClause.Append(" (");
+                            }
+
+                            queryWhereClause.Append(" " + item.ColumnNames[i] + " = :" + item.ColumnNames[i] + " OR");
+
+                            if (i == item.ColumnNames.Count - 1)
+                            {
+                                queryWhereClause.Append(" " + item.ColumnNames[i] + " = :" + item.ColumnNames[i] + ") OR");
+                            }
+                        }
+                    }
+                    else if (item.isWildCard)
                     {
                         queryWhereClause.Append(" " + item.ColumnName + " LIKE :" + item.ColumnName + "|| '%' AND");
                     }
@@ -138,7 +175,17 @@ namespace HackneyAddressesAPI.Helpers
 
             foreach (var item in filterObjects)
             {
-                oparams.Add(new OracleParameter(item.ColumnName, item.Value));
+                if (item.isOr == true)
+                {
+                    foreach (var colName in item.ColumnNames)
+                    {
+                        oparams.Add(new OracleParameter(colName, item.Value));
+                    }
+                }
+                else
+                {
+                    oparams.Add(new OracleParameter(item.ColumnName, item.Value));
+                }
             }
 
             return oparams.ToArray();

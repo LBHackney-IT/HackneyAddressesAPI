@@ -30,6 +30,7 @@ namespace HackneyAddressesAPI.Controllers
 
         [HttpGet]
         public async Task<JsonResult> GetStreets([FromQuery]string StreetName = null,
+            string TownName = null,
             [FromQuery]int? Limit = GlobalConstants.LIMIT,
             [FromQuery]int? Offset = GlobalConstants.OFFSET)
         {
@@ -38,6 +39,7 @@ namespace HackneyAddressesAPI.Controllers
                 StreetsQueryParams queryParams = new StreetsQueryParams();
 
                 queryParams.StreetName = WebUtility.UrlDecode(StreetName);
+                queryParams.TownName = WebUtility.UrlDecode(TownName);
                 //queryParams.Gazetteer = WebUtility.UrlDecode(Gazetteer.ToString());
 
                 ValidationResult validatorFilterErrors = _validator.ValidateStreetsQueryParams(queryParams);

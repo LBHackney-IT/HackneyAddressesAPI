@@ -57,7 +57,18 @@ namespace HackneyAddressesAPI.Actions
         {
             queryParams = _formatter.FormatStreetsQueryParams(queryParams);
 
-            List<FilterObject> filterObjects = _fob.ProcessQueryParamsToFilterObjects(queryParams, _queryBuilder.GetColumnMappings());
+            //List<FilterObject> filterObjects = _fob.ProcessQueryParamsToFilterObjects(queryParams, _queryBuilder.GetColumnMappings());
+
+            List<FilterObject> filterObjects = new List<FilterObject>();
+
+            filterObjects.Add(new FilterObject { ColumnName = "STREET_DESCRIPTOR_NOSPACE", isWildCard = true, Value = queryParams.StreetName });
+
+            List<String> columnNames = new List<String>();
+
+            columnNames.Add("TOWN_NAME");
+            columnNames.Add("LOCALITY_NAME");
+
+            filterObjects.Add(new FilterObject { ColumnNames = columnNames, isWildCard = true, Value = queryParams.TownName, isOr = true });
 
             return filterObjects;
         }

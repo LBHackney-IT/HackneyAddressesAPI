@@ -271,10 +271,15 @@ namespace HackneyAddressesAPI.Helpers
                 }
             }
 
-            //Gazetteer
-            if (!string.IsNullOrWhiteSpace(filtersToValidate.Gazetteer))
+            //TownName
+            if (!string.IsNullOrWhiteSpace(filtersToValidate.TownName))
             {
-                //?#? To Implement
+                var error = ValidateTownName(filtersToValidate.TownName);
+                if (error != null)
+                {
+                    myErrors.Add(error);
+                    hasError = true;
+                }
             }
 
             ValidationResult validationObject = new ValidationResult();
@@ -292,6 +297,20 @@ namespace HackneyAddressesAPI.Helpers
                 {
                     developerMessage = "Street Name is invalid, length should be < 100 Char and > 3 Char.",
                     userMessage = "Street Name is invalid, length should be < 100 Char and > 3 Char."
+                };
+                return error;
+            }
+            return null;
+        }
+
+        public ApiErrorMessage ValidateTownName(string townName)
+        {
+            if (townName.Length > 80 || townName.Length < 4)
+            {
+                var error = new ApiErrorMessage
+                {
+                    developerMessage = "Town Name is invalid, length should be < 80 Char and > 4 Char.",
+                    userMessage = "Town Name is invalid, length should be < 80 Char and > 4 Char."
                 };
                 return error;
             }
