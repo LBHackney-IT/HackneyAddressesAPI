@@ -1,4 +1,5 @@
-﻿using HackneyAddressesAPI.Interfaces;
+﻿using System;
+using HackneyAddressesAPI.Interfaces;
 
 namespace HackneyAddressesAPI.Models
 {
@@ -13,6 +14,7 @@ namespace HackneyAddressesAPI.Models
 
         public string Postcode { get; set; }
 
+        public Int64 UPRN { get; set; }
         public string AddressID { get; set; }
 
     }

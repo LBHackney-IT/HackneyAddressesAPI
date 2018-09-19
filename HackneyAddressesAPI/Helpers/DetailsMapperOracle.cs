@@ -10,6 +10,7 @@ namespace HackneyAddressesAPI.Helpers
 {
     public class DetailsMapperOracle : IDetailsMapper
     {
+        //for the simple address format
         public List<AddressDetailsSimple> MapAddressDetailsSimple(DataTable dt)
         {
             try
@@ -19,6 +20,7 @@ namespace HackneyAddressesAPI.Helpers
                 {
                     AddressDetailsSimple aDetails = new AddressDetailsSimple();
                     aDetails.AddressID = CheckNullString(dt, i, "LPI_KEY"); // LPI KEY
+                    aDetails.UPRN = Convert.ToInt64(dt.Rows[i]["UPRN"]); //doing an explicit cast e.g. (Int64)rows[i]["UPRN"] doesn't work for some reason
 
                     if (!dt.Rows[i].IsNull("POSTTOWN"))
                     {
@@ -83,6 +85,7 @@ namespace HackneyAddressesAPI.Helpers
             return strRetVal.Trim();
         }
 
+        //for the detailed address format
         public List<AddressDetails> MapAddressDetailsGIS(DataTable dt)
         {
             try
@@ -97,12 +100,13 @@ namespace HackneyAddressesAPI.Helpers
                 {
                     AddressDetails aDetails = new AddressDetails();
 
-                    aDetails.uniquePropertyReferenceNumber = Convert.ToInt64(dt.Rows[i]["UPRN"]); //doing an explicit cast e.g. (Int64)rows[i]["UPRN"] doesn't work for some reason
-                    aDetails.uniqueStreetReferenceNumber = Convert.ToInt32(dt.Rows[i]["USRN"]);
+                    aDetails.AddressID = CheckNullString(dt, i, "LPI_KEY"); // LPI KEY
+                    aDetails.UPRN = Convert.ToInt64(dt.Rows[i]["UPRN"]); //doing an explicit cast e.g. (Int64)rows[i]["UPRN"] doesn't work for some reason
+                    aDetails.USRN = Convert.ToInt32(dt.Rows[i]["USRN"]);
 
                     if (!dt.Rows[i].IsNull("PARENT_UPRN"))
                     {
-                        aDetails.parentUniquePropertyReferenceNumber = Convert.ToInt64(dt.Rows[i]["PARENT_UPRN"]);
+                        aDetails.parentUPRN = Convert.ToInt64(dt.Rows[i]["PARENT_UPRN"]);
                     }
 
                     aDetails.addressStatus = CheckNullString(dt, i, "LPI_LOGICAL_STATUS");
@@ -118,7 +122,8 @@ namespace HackneyAddressesAPI.Helpers
                     }
                     aDetails.commercialOccupier = CheckNullString(dt, i, "ORGANISATION");
                     aDetails.royalMailPostTown = CheckNullString(dt, i, "POSTTOWN");
-                    // aDetails.landPropertyUsage = (string)rows[i]["USAGE"]; //not in the source view yet
+                    //aDetails.primaryUsage = CheckNullString(dt, i, "USAGE_PRIMARY");
+                    aDetails.landPropertyUsage = CheckNullString(dt, i, "USAGE_DESCRIPTION");
                     aDetails.isNonLocalAddressInLocalGazetteer = CheckNullBool(dt, i, "NEVEREXPORT"); //for LLPG results; should be null in results for NLPG
                     aDetails.easting = Convert.ToDouble(dt.Rows[i]["EASTING"]);
                     aDetails.northing = Convert.ToDouble(dt.Rows[i]["NORTHING"]);
@@ -197,7 +202,7 @@ namespace HackneyAddressesAPI.Helpers
                     sDetails.streetStartLongitude = CheckNullString(dt, i, "STREET_START_LON");
                     sDetails.streetStartNorthing = CheckNullString(dt, i, "STREET_START_Y");
                     sDetails.town = CheckNullString(dt, i, "TOWN_NAME");
-                    sDetails.uniqueStreetReferenceNumber = Convert.ToInt32(dt.Rows[i]["USRN"]);
+                    sDetails.USRN = Convert.ToInt32(dt.Rows[i]["USRN"]);
 
                     streetDetailsList.Add(sDetails);
                 }
