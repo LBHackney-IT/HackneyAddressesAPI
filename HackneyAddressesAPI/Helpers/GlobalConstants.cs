@@ -23,8 +23,6 @@ namespace HackneyAddressesAPI.Helpers
 
         public const string LLPG_STREETS_JSON = "ConnectionSettings:LLPG_STREETS:DEV"; 
 
-
-
         public enum Format
         {
             Simple,
@@ -34,12 +32,13 @@ namespace HackneyAddressesAPI.Helpers
         public enum PropertyClassPrimary
         {
             Residential,
+            Commercial,
+            DualUse,
             ObjectOfInterest,
             Land,
             Features,
             Unclassified,
-            ParentShell,
-            Commercial
+            ParentShell
         };
 
         public enum AddressStatus

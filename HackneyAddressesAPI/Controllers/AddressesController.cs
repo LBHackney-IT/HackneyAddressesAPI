@@ -43,7 +43,7 @@ namespace HackneyAddressesAPI.Controllers
         /// <param name="USRN">Unique street reference number.</param>
         /// <param name="UPRN">Unique property reference number.</param>
         /// <param name="PropertyClass">Primary usage of the property. 
-        /// Accepted Values: 'Commercial', 'Features', 'Land', 'Object of Interest', 'Parent Shell', 'Residential', 'Military', 'Dual Use', 'Unclassified'.</param>
+        /// Accepted Values: 'Residential', 'Commercial', 'Dual Use', 'Object of Interest', 'Land', 'Features', 'Unclassified', 'Parent Shell'.</param>
         /// <param name="PropertyClassCode">Code specifying usage of the property at a more granular level.
         /// For details see: <a href='https://www.geoplace.co.uk/documents/10181/38204/Appendix+C+-+Classifications/' target='_blank'>Geoplace classifications</a>. 
         /// Acceptable inputs: 'RD07', 'RD', 'R', 'rd07, 'rd 2'.</param>
@@ -65,7 +65,7 @@ namespace HackneyAddressesAPI.Controllers
         /// <returns>Returns a list of Addresses depending upon the input format specified above i.e. 'Simple' or 'Detailed'.
         /// For details see: <a href = '#' target='_new'>Insert Link here</a>.
         /// </returns>
-        
+
         [HttpGet]
         public async Task<JsonResult> GetAddresses([FromQuery]string Postcode = null,
             [FromQuery]string USRN = null,

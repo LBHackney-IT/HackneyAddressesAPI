@@ -114,6 +114,7 @@ namespace HackneyAddressesAPI.Helpers
             classPrimaryList.Add("Unclassified");
             classPrimaryList.Add("ParentShell");
             classPrimaryList.Add("Commercial");
+            classPrimaryList.Add("DualUse");
 
             classprimary = this.RemoveSpacesAndCapitalize(classprimary);
 
