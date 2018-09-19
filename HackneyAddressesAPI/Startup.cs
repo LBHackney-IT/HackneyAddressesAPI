@@ -62,10 +62,11 @@ namespace HackneyAddressesAPI
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            // don't use preceding slash in endpoint path
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hackney Addresses API v1");
-                c.RoutePrefix = "";
+                c.SwaggerEndpoint("v1/swagger.json", "Hackney Addresses API v1");
+                c.RoutePrefix = "swagger";
             });
 
             app.UseCors("AllowAny");
