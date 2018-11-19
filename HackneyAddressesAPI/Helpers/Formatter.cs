@@ -67,12 +67,13 @@ namespace HackneyAddressesAPI.Helpers
         {
             Dictionary<string, string> classPrimaryMapping = new Dictionary<string, string>();
             classPrimaryMapping.Add("RESIDENTIAL","Residential");
-            classPrimaryMapping.Add("OBJECT","Object Of Interest");
+            classPrimaryMapping.Add("OBJECT", "Object of Interest");
             classPrimaryMapping.Add("LAND","Land");
             classPrimaryMapping.Add("FEATURES","Features");
             classPrimaryMapping.Add("UNCLASSIFIED","Unclassified");
-            classPrimaryMapping.Add("PARENT","ParentShell");
+            classPrimaryMapping.Add("PARENT","Parent Shell");
             classPrimaryMapping.Add("COMMERCIAL","Commercial");
+            classPrimaryMapping.Add("DUAL", "Dual Use");
 
             classPrimary = FormatRemoveSpacesAndCapitalise(classPrimary);
 

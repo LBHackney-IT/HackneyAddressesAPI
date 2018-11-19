@@ -7,7 +7,7 @@ namespace HackneyAddressesAPI.Models
 {
     public class StreetDetails
     {
-        public int uniqueStreetReferenceNumber { get; set; }
+        public int USRN { get; set; }
 
         public string streetDescription { get; set; }
 
