@@ -67,7 +67,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="$(ProjectDir)Hackney.ConfigEncryptor.exe /d: $(ProjectDir)appsettings.jsonencrypted $(ProjectDir)appsettings.json" />
+    <Exec Command="REM $(ProjectDir)Hackney.ConfigEncryptor.exe /d: $(ProjectDir)appsettings.jsonencrypted $(ProjectDir)appsettings.json" />
   </Target>
 
 </Project>
