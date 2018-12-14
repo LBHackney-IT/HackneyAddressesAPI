@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using HackneyAddressesAPI.Interfaces;
 
 namespace HackneyAddressesAPI.Tests.Actions
 {
     public class AddressActionsTests
     {
         [Fact]
-        public async Task get_addresses_by_postcode_default_no_filters_return_simple_addresses()
+        public async Task Get_addresses_by_postcode_default_no_filters_return_simple_addresses()
         {
+
             /*Search for address via postcode. Default search.
             Should return local and national (and out of borough - which overrides equivalent NLPG approved preferred address)
             Simple format
@@ -21,7 +23,7 @@ namespace HackneyAddressesAPI.Tests.Actions
         }
 
         [Fact]
-        public async Task get_addresses_by_postcode_default_no_filters_return_no_addresses()
+        public async Task Get_addresses_by_postcode_default_no_filters_return_no_addresses()
         {
             /*Search for address via invalid postcode. Default search.
             Should return no addresses
@@ -29,8 +31,9 @@ namespace HackneyAddressesAPI.Tests.Actions
         }
 
         [Fact]
-        public async Task get_addres_by_lpikey_return_address()
+        public async Task Get_address_by_lpikey_return_address()
         {
+             
             /*Retrieve an address via lpi_key.
                 Return a single address detailed format.
                 */
