@@ -25,8 +25,9 @@ namespace LBHAddressesAPI.Gateways.V1
         {
             var result = new AddressDetails();
 
-            string query = "select LPI_KEY as AddressID, UPRN, USRN, PARENT_UPRN as parentUPRN, LPI_LOGICAL_STATUS as addressStatus, SAO_TEXT as unitName, '' as unitNumber, PAO_TEXT as buildingName, BUILDING_NUMBER as buildingNumber, STREET_DESCRIPTION as street, POSTCODE as postcode, LOCALITY as locality, GAZETTEER as gazeteer, ORGANISATION as commercialOccupier, POSTTOWN as royalMailPostTown, '' as landPropertyUsage, NEVEREXPORT as isNonLocalAddressInLocalGazeteer, EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude  from dbo.combined_address WHERE LPI_KEY = @key";
-
+            //string query = "select LPI_KEY as AddressID, UPRN, USRN, PARENT_UPRN as parentUPRN, LPI_LOGICAL_STATUS as addressStatus, SAO_TEXT as unitName, '' as unitNumber, PAO_TEXT as buildingName, BUILDING_NUMBER as buildingNumber, STREET_DESCRIPTION as street, POSTCODE as postcode, LOCALITY as locality, GAZETTEER as gazeteer, ORGANISATION as commercialOccupier, POSTTOWN as royalMailPostTown, '' as landPropertyUsage, NEVEREXPORT as isNonLocalAddressInLocalGazeteer, EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude  from dbo.combined_address WHERE LPI_KEY = @key";
+            string query = "LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazeteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode,'' as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazeteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude";
+            query += " from dbo.combined_address WHERE LPI_KEY = @key";
             using (var conn = new SqlConnection(_connectionString))
             {
                 //open connection explicity
