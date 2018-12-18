@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBHAddressesAPI", "HackneyAddressesAPI\LBHAddressesAPI.csproj", "{8967A8FF-D46B-4AA6-AD09-22EBDC78C4D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBHAddressesAPITest", "LBHAddressesAPITest\LBHAddressesAPITest.csproj", "{F9FCB021-B2F9-49DB-AC26-204D10F4FD14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBHAddressesAPITest", "LBHAddressesAPITest\LBHAddressesAPITest.csproj", "{F9FCB021-B2F9-49DB-AC26-204D10F4FD14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StubAddressDB", "StubAddressDB\StubAddressDB.csproj", "{C06BF839-45D7-48B7-A898-BCB36C78F1C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F9FCB021-B2F9-49DB-AC26-204D10F4FD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9FCB021-B2F9-49DB-AC26-204D10F4FD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9FCB021-B2F9-49DB-AC26-204D10F4FD14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06BF839-45D7-48B7-A898-BCB36C78F1C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06BF839-45D7-48B7-A898-BCB36C78F1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06BF839-45D7-48B7-A898-BCB36C78F1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06BF839-45D7-48B7-A898-BCB36C78F1C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
