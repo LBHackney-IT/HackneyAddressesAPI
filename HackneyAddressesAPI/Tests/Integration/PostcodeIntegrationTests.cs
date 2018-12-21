@@ -6,12 +6,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using HackneyAddressesAPI;
+using LBHAddressesAPI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
-namespace HackneyAddressesAPI.Tests.Integration
+namespace LBHAddressesAPI.Tests.Integration
 {
     public class PostcodeIntegrationTests
     {

@@ -2,7 +2,7 @@
 using System.Data.Common;
 using Oracle.ManagedDataAccess.Client;
 
-namespace HackneyAddressesAPI.Interfaces
+namespace LBHAddressesAPI.Interfaces
 {
     public interface IDB_Helper
     {

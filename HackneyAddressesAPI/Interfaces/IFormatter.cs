@@ -1,10 +1,10 @@
-﻿using HackneyAddressesAPI.Models;
+﻿using LBHAddressesAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Interfaces
+namespace LBHAddressesAPI.Interfaces
 {
     public interface IFormatter
     {

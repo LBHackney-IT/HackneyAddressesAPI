@@ -1,15 +1,15 @@
-﻿using HackneyAddressesAPI.Models;
+﻿using LBHAddressesAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Moq;
-using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Actions;
+using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Actions;
 using Newtonsoft.Json;
 
-namespace HackneyAddressesAPI.Tests.Actions
+namespace LBHAddressesAPI.Tests.Actions
 {
     public class PostcodeActionsTests
     {

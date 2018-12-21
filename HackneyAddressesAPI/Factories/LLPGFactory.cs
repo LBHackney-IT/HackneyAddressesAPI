@@ -1,12 +1,12 @@
-﻿using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Tests;
+﻿using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.DB;
+using LBHAddressesAPI.DB;
 
-namespace HackneyAddressesAPI.Factories
+namespace LBHAddressesAPI.Factories
 {
     internal class LLPGFactory
     {

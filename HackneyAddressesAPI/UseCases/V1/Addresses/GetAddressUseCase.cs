@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Models;
 using LBHAddressesAPI.Gateways.V1;
 
 namespace LBHAddressesAPI.UseCases.V1.Addresses

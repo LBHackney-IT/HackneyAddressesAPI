@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Helpers;
-using HackneyAddressesAPI.Actions;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Helpers;
+using LBHAddressesAPI.Actions;
+using LBHAddressesAPI.Models;
 using Microsoft.Extensions.Configuration;
-using HackneyAddressesAPI.DB;
+using LBHAddressesAPI.DB;
 using System.IO;
 using Microsoft.Extensions.Logging;
 
-namespace HackneyAddressesAPI.Controllers
+namespace LBHAddressesAPI.Controllers
 {
     [Produces("application/json")]
     [Route("v1/[controller]")]

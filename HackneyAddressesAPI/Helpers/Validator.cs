@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Interfaces;
+using LBHAddressesAPI.Interfaces;
 using System.Text.RegularExpressions;
 using System.Text;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Models;
 
-namespace HackneyAddressesAPI.Helpers
+namespace LBHAddressesAPI.Helpers
 {
     public class Validator : IValidator
     {

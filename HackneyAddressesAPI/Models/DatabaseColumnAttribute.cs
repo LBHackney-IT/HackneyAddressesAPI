@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HackneyAddressesAPI.Models
+namespace LBHAddressesAPI.Models
 {
     [AttributeUsage(AttributeTargets.All)]
     public class DatabaseColumnAttribute : Attribute

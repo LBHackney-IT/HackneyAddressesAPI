@@ -6,7 +6,7 @@ using FluentAssertions;
 using Xunit;
 using System.Data.SqlClient;
 using LBHAddressesAPI.Gateways.V1;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Models;
 using LBHAddressesAPITest.Helpers.Stub;
 
 namespace LBHAddressesAPITest.Test.Gateways.V1

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Actions;
-using HackneyAddressesAPI.DB;
-using HackneyAddressesAPI.Helpers;
-using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Logging;
+using LBHAddressesAPI.Actions;
+using LBHAddressesAPI.DB;
+using LBHAddressesAPI.Helpers;
+using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HackneyAddressesAPI
+namespace LBHAddressesAPI
 {
     public static class ServiceConfiguration
     {

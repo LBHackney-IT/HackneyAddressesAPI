@@ -1,17 +1,17 @@
-﻿using HackneyAddressesAPI.Interfaces;
+﻿using LBHAddressesAPI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Models;
-using HackneyAddressesAPI.DB;
-using HackneyAddressesAPI.Factories;
+using LBHAddressesAPI.Models;
+using LBHAddressesAPI.DB;
+using LBHAddressesAPI.Factories;
 using System.Data;
-using HackneyAddressesAPI.Helpers;
+using LBHAddressesAPI.Helpers;
 using System.Data.Common;
 using System.Collections.Specialized;
 
-namespace HackneyAddressesAPI.Actions
+namespace LBHAddressesAPI.Actions
 {
     public class AddressesActions : IAddressesActions
     {

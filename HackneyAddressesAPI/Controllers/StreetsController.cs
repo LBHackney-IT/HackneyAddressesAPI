@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Helpers;
-using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Helpers;
+using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HackneyAddressesAPI.Controllers
+namespace LBHAddressesAPI.Controllers
 {
     [Produces("application/json")]
     [Route("v1/[controller]")]

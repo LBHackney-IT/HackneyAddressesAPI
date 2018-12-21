@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Interfaces;
+using LBHAddressesAPI.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace HackneyAddressesAPI.Logging
+namespace LBHAddressesAPI.Logging
 {
     public class LoggerAdapter<T> : ILoggerAdapter<T>
     {

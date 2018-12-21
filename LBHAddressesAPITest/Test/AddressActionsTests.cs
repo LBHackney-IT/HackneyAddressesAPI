@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace HackneyAddressesAPI.Tests.Actions
+namespace LBHAddressesAPI.Tests.Actions
 {
     public class AddressActionsTests
     {
