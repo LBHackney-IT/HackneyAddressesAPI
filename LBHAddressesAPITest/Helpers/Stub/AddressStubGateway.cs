@@ -27,7 +27,7 @@ namespace LBHAddressesAPITest.Helpers.Stub
 
             var result = new AddressDetails();
 
-            string query = "LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazeteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode,'' as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazeteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude";
+            string query = "select LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazeteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode,'' as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazeteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude";
             query += " from dbo.combined_address WHERE LPI_KEY = @key";
 
             command = new SqlCommand(query, _db);
