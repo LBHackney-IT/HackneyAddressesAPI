@@ -17,6 +17,12 @@ namespace LBHAddressesAPI.Controllers.V1
             _addressByID = addressByID;
         }
 
+
+        /// <summary>
+        /// Returns an address from the given addressID or LPI_Key
+        /// </summary>
+        /// <param name="addressID"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{addressID}")]
         [ProducesResponseType(typeof(AddressDetails), 200)]
