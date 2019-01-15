@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Helpers
+namespace LBHAddressesAPI.Helpers
 {
     public static class GlobalConstants
     {

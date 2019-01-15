@@ -1,5 +1,5 @@
-﻿using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Models;
+﻿using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Helpers
+namespace LBHAddressesAPI.Helpers
 {
     //Create Interface
     public class QueryBuilderOracle : IQueryBuilder

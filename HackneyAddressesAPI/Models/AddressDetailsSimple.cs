@@ -1,7 +1,7 @@
 ﻿using System;
-using HackneyAddressesAPI.Interfaces;
+using LBHAddressesAPI.Interfaces;
 
-namespace HackneyAddressesAPI.Models
+namespace LBHAddressesAPI.Models
 {
     public class AddressDetailsSimple : IAddressTypes
     {

@@ -1,4 +1,4 @@
-﻿using HackneyAddressesAPI.Interfaces;
+﻿using LBHAddressesAPI.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Helpers
+namespace LBHAddressesAPI.Helpers
 {
     public class ConfigReader : IConfigReader
     {

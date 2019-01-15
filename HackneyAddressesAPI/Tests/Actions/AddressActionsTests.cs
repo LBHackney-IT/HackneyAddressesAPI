@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using HackneyAddressesAPI.Interfaces;
+using LBHAddressesAPI.Interfaces;
 
-namespace HackneyAddressesAPI.Tests.Actions
+namespace LBHAddressesAPI.Tests.Actions
 {
     public class AddressActionsTests
     {

@@ -1,4 +1,4 @@
-﻿namespace HackneyAddressesAPI.Interfaces
+﻿namespace LBHAddressesAPI.Interfaces
 {
     public interface IAddressTypes
     {

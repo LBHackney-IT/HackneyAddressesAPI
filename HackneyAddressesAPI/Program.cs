@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Web;
 
-namespace HackneyAddressesAPI
+namespace LBHAddressesAPI
 {
     public class Program
     {

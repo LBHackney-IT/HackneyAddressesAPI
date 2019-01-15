@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Models;
 using System.Data.SqlClient;
 using Dapper;
 using System.Data;
-using HackneyAddressesAPI.Interfaces;
+using LBHAddressesAPI.Interfaces;
 using Oracle.ManagedDataAccess.Client;
 using System.Text;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +14,7 @@ using System.Collections.Specialized;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 
-namespace HackneyAddressesAPI.DB
+namespace LBHAddressesAPI.DB
 {
     public class OracleHelper : IDB_Helper
     {

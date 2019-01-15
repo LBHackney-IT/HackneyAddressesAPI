@@ -1,6 +1,6 @@
-﻿using HackneyAddressesAPI.Helpers;
-using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Models;
+﻿using LBHAddressesAPI.Helpers;
+using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +8,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Actions
+namespace LBHAddressesAPI.Actions
 {
     public class StreetsActions : IStreetsActions
     {

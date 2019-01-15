@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Tests;
+using LBHAddressesAPI.Tests;
 using Microsoft.AspNetCore.Hosting;
 
-namespace HackneyAddressesAPI
+namespace LBHAddressesAPI
 {
     //public class TestStartup : Startup
     //{

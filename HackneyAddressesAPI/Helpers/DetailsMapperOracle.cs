@@ -1,12 +1,12 @@
-﻿using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Models;
+﻿using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HackneyAddressesAPI.Helpers
+namespace LBHAddressesAPI.Helpers
 {
     public class DetailsMapperOracle : IDetailsMapper
     {

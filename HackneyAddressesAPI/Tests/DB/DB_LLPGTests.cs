@@ -1,18 +1,18 @@
-﻿using HackneyAddressesAPI.Models;
+﻿using LBHAddressesAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Moq;
-using HackneyAddressesAPI.Interfaces;
-using HackneyAddressesAPI.Actions;
+using LBHAddressesAPI.Interfaces;
+using LBHAddressesAPI.Actions;
 using Newtonsoft.Json;
-using HackneyAddressesAPI.DB;
-using HackneyAddressesAPI.Logging;
+using LBHAddressesAPI.DB;
+using LBHAddressesAPI.Logging;
 using Microsoft.Extensions.Logging;
 
-namespace HackneyAddressesAPI.Tests.DB
+namespace LBHAddressesAPI.Tests.DB
 {
     public class DB_LLPGTests
     {

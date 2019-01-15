@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Interfaces;
+using LBHAddressesAPI.Interfaces;
 
 
-namespace HackneyAddressesAPI.Models
+namespace LBHAddressesAPI.Models
 {
     public class AddressDetails : IAddressTypes
     {

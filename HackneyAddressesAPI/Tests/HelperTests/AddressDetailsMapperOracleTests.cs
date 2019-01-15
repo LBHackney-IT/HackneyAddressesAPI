@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HackneyAddressesAPI.Helpers;
-using HackneyAddressesAPI.Interfaces;
+using LBHAddressesAPI.Helpers;
+using LBHAddressesAPI.Interfaces;
 using Xunit;
 using Moq;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Models;
 
-namespace HackneyAddressesAPI.Tests.HelperTests
+namespace LBHAddressesAPI.Tests.HelperTests
 {
     public class AddressDetailsMapperOracleTests
     {

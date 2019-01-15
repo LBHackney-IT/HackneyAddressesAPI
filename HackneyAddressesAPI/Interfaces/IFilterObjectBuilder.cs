@@ -1,8 +1,8 @@
-﻿using HackneyAddressesAPI.Models;
+﻿using LBHAddressesAPI.Models;
 using System;
 using System.Collections.Generic;
 
-namespace HackneyAddressesAPI.Interfaces
+namespace LBHAddressesAPI.Interfaces
 {
     public interface IFilterObjectBuilder
     {

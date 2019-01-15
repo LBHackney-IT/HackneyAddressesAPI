@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
-using HackneyAddressesAPI.Models;
+using LBHAddressesAPI.Models;
 
-namespace HackneyAddressesAPI.Interfaces
+namespace LBHAddressesAPI.Interfaces
 {
     public interface IQueryBuilder
     {
