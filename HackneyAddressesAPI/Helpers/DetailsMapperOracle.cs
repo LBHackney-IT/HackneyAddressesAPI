@@ -123,7 +123,7 @@ namespace HackneyAddressesAPI.Helpers
                     aDetails.commercialOccupier = CheckNullString(dt, i, "ORGANISATION");
                     aDetails.royalMailPostTown = CheckNullString(dt, i, "POSTTOWN");
                     //aDetails.primaryUsage = CheckNullString(dt, i, "USAGE_PRIMARY");
-                    aDetails.landPropertyUsage = CheckNullString(dt, i, "USAGE_DESCRIPTION");
+                    //aDetails.landPropertyUsage = CheckNullString(dt, i, "USAGE_DESCRIPTION");
                     aDetails.isNonLocalAddressInLocalGazetteer = CheckNullBool(dt, i, "NEVEREXPORT"); //for LLPG results; should be null in results for NLPG
                     aDetails.easting = Convert.ToDouble(dt.Rows[i]["EASTING"]);
                     aDetails.northing = Convert.ToDouble(dt.Rows[i]["NORTHING"]);

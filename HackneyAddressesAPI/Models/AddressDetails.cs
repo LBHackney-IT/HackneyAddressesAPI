@@ -24,12 +24,15 @@ namespace HackneyAddressesAPI.Models
         public string gazetteer { get; set; } //“hackney” or “national”
         public string commercialOccupier { get; set; }
         public string royalMailPostTown { get; set; }
-        //public string primaryUsage { get; set; }
-        public string landPropertyUsage { get; set; }
+        public string usageClassDescription { get; set; }
+        public string usageClassPrimary { get; set; }
+        public string usageClassCode { get; set; }
+        public bool propertyShell { get; set; }
         public bool? isNonLocalAddressInLocalGazetteer { get; set; } //for LLPG results; should be null in results for NLPG
         public double easting { get; set; }
         public double northing { get; set; }
         public double longitude { get; set; }
         public double latitude { get; set; }
+
     }
 }
