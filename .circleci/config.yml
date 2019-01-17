@@ -11,3 +11,7 @@ jobs:
       - run:
           name: Print the Current Time
           command: date
+      - run:
+          name: Run tests
+          #command: docker-compose run -e LLPGConnectionString="Data Source=tcp:stubuniversalhousing;Initial Catalog=StubUH;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --rm 
+          command: lbhaddressesapitest dotnet test
