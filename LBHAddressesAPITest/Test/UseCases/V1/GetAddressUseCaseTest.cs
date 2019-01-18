@@ -10,6 +10,7 @@ using LBHAddressesAPI.UseCases.V1.Addresses;
 using System.Threading.Tasks;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using System.Threading;
+using LBHAddressesAPI.Infrastructure.V1.Exceptions;
 
 namespace LBHAddressesAPITest
 {
@@ -49,9 +50,8 @@ namespace LBHAddressesAPITest
             //arrange
             SearchAddressRequest request = new SearchAddressRequest { addressID = string.Empty } ;
             //act
-            //assert
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
-            Assert.Equal("lpi_key must be provided", exception.Message);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
+            Assert.Equal("addressID must be provided", exception.ValidationResponse.ValidationErrors.FirstOrDefault().Message);
         }
 
         [Fact]
@@ -60,8 +60,8 @@ namespace LBHAddressesAPITest
             SearchAddressRequest request = new SearchAddressRequest { addressID = "ABCDEFGHIJKLM" };
             //act
             //assert
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
-            Assert.Equal("lpi_key must be 14 characters", exception.Message);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
+            Assert.Equal("addressID must be 14 characters", exception.ValidationResponse.ValidationErrors.FirstOrDefault().Message);
         }
 
         [Fact]
@@ -70,8 +70,8 @@ namespace LBHAddressesAPITest
             SearchAddressRequest request = new SearchAddressRequest { addressID = "ABCDEFGHIJKLMNO" };
             //act
             //assert
-            var exception = await Assert.ThrowsAsync<Exception>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
-            Assert.Equal("lpi_key must be 14 characters", exception.Message);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
+            Assert.Equal("addressID must be 14 characters", exception.ValidationResponse.ValidationErrors.FirstOrDefault().Message);
         }
 
         [Fact]
