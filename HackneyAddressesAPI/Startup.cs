@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
 using LBHAddressesAPI.Infrastructure.V1.Services;
+using LBHAddressesAPI.Infrastructure.V1.Middleware;
 
 namespace LBHAddressesAPI
 {
@@ -34,8 +35,7 @@ namespace LBHAddressesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //TODO: This shouldn't be here :) just for testing.
-            //var connectionString = "server=LBHSQLT03\\MSSQL2017; database=ADDRESSES_API_TEST; Integrated Security=true;";
+
             var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
 
             services.ConfigureAddressSearch(connectionString);
@@ -65,6 +65,9 @@ namespace LBHAddressesAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //Register exception handling middleware early so exceptions are handled and formatted
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
             app.UseSwagger();
 

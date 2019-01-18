@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using System.Threading.Tasks;
+using System.Threading;
+using LBHAddressesAPI.UseCases.V1.Search.Models;
 
 namespace LBHAddressesAPI.Gateways.V1
 {
@@ -19,9 +21,10 @@ namespace LBHAddressesAPI.Gateways.V1
         /// <summary>
         /// Return an address for a given LPI_Key
         /// </summary>
-        /// <param name="lpi_key"></param>
+        /// <param name="request"></param> 
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<AddressDetails> GetAddressAsync(string lpi_key)
+        public async Task<AddressDetails> GetAddressAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
             var result = new AddressDetails();
 
@@ -33,7 +36,7 @@ namespace LBHAddressesAPI.Gateways.V1
                 //open connection explicity
                 conn.Open();
                 var all = await conn.QueryAsync<AddressDetails>(query,
-                    new { key = lpi_key }
+                    new { key = request.addressID }
                 ).ConfigureAwait(false);
 
                 result = all.FirstOrDefault();
