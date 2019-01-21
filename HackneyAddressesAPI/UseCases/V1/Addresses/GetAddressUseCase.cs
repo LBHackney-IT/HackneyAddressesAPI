@@ -20,8 +20,7 @@ namespace LBHAddressesAPI.UseCases.V1.Addresses
         {
             _addressGateway = addressesGateway;
         }
-
-        //public async Task<AddressDetails> ExecuteAsync(string lpi_key, CancellationToken cancellationToken)
+        
         public async Task<SearchAddressResponse> ExecuteAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
 
@@ -34,14 +33,6 @@ namespace LBHAddressesAPI.UseCases.V1.Addresses
             if (!validationResponse.IsValid)
                 throw new BadRequestException(validationResponse);
 
-            //if (request.addressID == null || string.IsNullOrEmpty(request.addressID))
-            //{
-            //    throw new Exception("lpi_key must be provided");
-            //}
-            //else if(request.addressID.Length != 14)
-            //{
-            //    throw new Exception("lpi_key must be 14 characters");
-            //}
 
             var response = await _addressGateway.GetAddressAsync(request, cancellationToken).ConfigureAwait(false);
 
