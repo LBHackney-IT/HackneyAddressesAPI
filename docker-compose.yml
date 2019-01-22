@@ -12,7 +12,7 @@ services:
       - 3000:80
     links:
      - stubaddressdb
-  lbhaddressesapiTest:
+  lbhaddressesapitest:
     image: lbhaddressesapitest
     build:
       context: ./lbhaddressesapitest
