@@ -28,8 +28,7 @@ ENV CORECLR_ENABLE_PROFILING=1 \
   CORECLR_NEWRELIC_HOME=./newrelic \
   CORECLR_PROFILER_PATH=./newrelic/libNewRelicProfiler.so \
   NEW_RELIC_LICENSE_KEY="${NEW_RELIC_LICENSE_KEY}" \
-  NEW_RELIC_APP_NAME="${NEW_RELIC_APP_NAME}" \
-  LLPGConnectionString="server=LBHSQLT03\MSSQL2017; database=ADDRESSES_API_TEST; Integrated Security=true;"
+  NEW_RELIC_APP_NAME="${NEW_RELIC_APP_NAME}" 
 
 COPY --from=publish /app .
 #COPY newrelic ./newrelic
