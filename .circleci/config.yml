@@ -11,8 +11,7 @@ jobs:
           command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM
       - run:
           name: Run tests
-          #command: docker-compose run -e LLPGConnectionString="Data Source=tcp:stubuniversalhousing;Initial Catalog=StubUH;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --rm 
-          command: lbhaddressesapitest dotnet test
+          command: docker-compose run -e LLPGConnectionString="server=tcp:stubaddressdb; database=StubAdd; Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --rm lbhaddressesapitest dotnet test
 workflows:
   version: 2
   continuous_delivery:
