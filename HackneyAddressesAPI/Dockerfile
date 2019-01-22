@@ -5,7 +5,7 @@ EXPOSE ${PORT:-80}
 FROM microsoft/dotnet:latest AS build
 WORKDIR /src
 #COPY LBHAddressesAPI.sln ./
-COPY LBHAddressesAPI.csproj LBHAddressesAPI/
+COPY LBHAddressesAPI.csproj HackneyAddressesAPI/
 
 ARG VERSION_SUFFIX
 ENV VERSION_SUFFIX=${VERSION_SUFFIX:-buildNumberUnsupplied}
@@ -15,7 +15,6 @@ COPY . .
 RUN dotnet restore LBHAddressesAPI.csproj -nowarn:msb3202,nu1503
 
 RUN dotnet build LBHAddressesAPI.csproj -c Release
-#RUN dotnet build LBH.Data.Repository/LBH.Data.Repository.csproj -c Release
 
 FROM build AS publish
 RUN dotnet publish LBHAddressesAPI.csproj -c Release -o /app --version-suffix "${VERSION_SUFFIX}"
