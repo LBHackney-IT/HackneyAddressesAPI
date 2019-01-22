@@ -8,7 +8,7 @@ services:
       dockerfile: HackneyAddressesAPI/Dockerfile
       args:
         - VERSION_SUFFIX
-      ports:
+    ports:
       - 3000:80
     links:
      - stubaddressdb
@@ -18,8 +18,8 @@ services:
       context: .
       dockerfile: lbhaddressesapiTest/Dockerfile
     links:
-      -lbhaddressesapi
-      -stubaddressdb
+     - lbhaddressesapi
+     - stubaddressdb
   stubaddressdb:
     image: stubaddressdb
     build:
