@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   lbhaddressesapi:
-    image: lbhaddressesapi
+    #image: lbhaddressesapi
     build:
       context: ./HackneyAddressesAPI
       dockerfile: Dockerfile
@@ -13,7 +13,7 @@ services:
     links:
      - stubaddressdb
   lbhaddressesapitest:
-    image: lbhaddressesapitest
+    #image: lbhaddressesapitest
     build:
       context: ./lbhaddressesapitest
       dockerfile: Dockerfile
@@ -21,7 +21,7 @@ services:
      - lbhaddressesapi
      - stubaddressdb
   stubaddressdb:
-    image: stubaddressdb
+    #image: stubaddressdb
     build:
       context: ./stubaddressdb
       dockerfile: Dockerfile
