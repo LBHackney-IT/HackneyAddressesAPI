@@ -15,7 +15,7 @@ services:
   lbhaddressesapitest:
     #image: lbhaddressesapitest
     build:
-      context: ./lbhaddressesapitest
+      context: ./LBHAddressesAPITest
       dockerfile: Dockerfile
     links:
      - lbhaddressesapi
@@ -23,7 +23,7 @@ services:
   stubaddressdb:
     #image: stubaddressdb
     build:
-      context: ./stubaddressdb
+      context: ./StubAddressDB
       dockerfile: Dockerfile
     ports:
       - 1433:1433
