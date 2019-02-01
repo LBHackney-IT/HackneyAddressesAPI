@@ -31,11 +31,10 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchAddressRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchAddressResponse
                 {
-                    Address = new AddressDetails
+                    Addresses = new List<AddressDetails>
                     {
-                        
-                    }
 
+                    }
                 });
             var lpi_key = "ABCDEFGHIJKLMN";
 

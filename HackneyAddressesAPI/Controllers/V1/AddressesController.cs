@@ -38,6 +38,27 @@ namespace LBHAddressesAPI.Controllers.V1
 
             return HandleResponse(response);
         }
-        
+
+        /*[HttpGet, MapToApiVersion("2")]
+        [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]
+        public async Task<IActionResult> Get([FromQuery]SearchTenancyRequest request)*/
+        [ProducesResponseType(typeof(APIResponse<SearchAddressResponse>), 200)]
+        [HttpGet]
+        public async Task<IActionResult> GetAddresses([FromQuery]string Postcode = null/*,
+            [FromQuery]string USRN = null,
+            [FromQuery]string UPRN = null,
+            [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
+            [FromQuery]string PropertyClassCode = null/*,
+            [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
+            [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
+            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
+            [FromQuery]int? Limit = GlobalConstants.LIMIT,
+            [FromQuery]int? Offset = GlobalConstants.OFFSET*/)
+        {
+
+            return HandleResponse(new SearchAddressResponse());
+
+        }
+
     }
 } 

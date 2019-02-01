@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="25.0.4" />
     <PackageReference Include="DotNetEnv" Version="1.2.0" />
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
@@ -19,6 +20,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HackneyAddressesAPI\LBHAddressesAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\Data\" />
   </ItemGroup>
 
 </Project>

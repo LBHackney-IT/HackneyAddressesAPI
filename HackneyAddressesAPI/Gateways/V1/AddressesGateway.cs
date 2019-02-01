@@ -47,5 +47,15 @@ namespace LBHAddressesAPI.Gateways.V1
             return result;
         }
 
+        public async Task<List<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
+        {
+
+            var result = new List<AddressDetails>();
+
+
+
+            return result;
+        }
+
     }
 }

@@ -13,13 +13,14 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
 {
     public class AddressGatewayTest : IClassFixture<DatabaseFixture>
     {
-        private readonly SqlConnection db;
-        private IRepository<AddressDetails> _AddressGateway; 
+
+        readonly DatabaseFixture _databaseFixture;
+        private readonly IAddressesGateway _classUnderTest;
 
         public AddressGatewayTest(DatabaseFixture fixture)
         {
-            db = fixture.Db;
-            _AddressGateway = new AddressStubGateway(db);
+            _databaseFixture = fixture;
+            _classUnderTest = new AddressesGateway(_databaseFixture.ConnectionString);
         }
 
 
