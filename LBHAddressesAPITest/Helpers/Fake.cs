@@ -13,22 +13,33 @@ namespace LBHAddressesAPITest.Helpers
         {
           var random = new Faker();
 
-          return new AddressDetails
-          {
-
-              //TenancyRef = random.Random.Hash(11),
-              //PropertyRef = random.Random.Hash(12),
-              //Tenure = random.Random.Hash(3),
-              //CurrentBalance = random.Finance.Amount(),
-              //LastActionDate = new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-              //LastActionCode = random.Random.Hash(3),
-              //ArrearsAgreementStatus = random.Random.Hash(10),
-              //ArrearsAgreementStartDate =
-              //    new DateTime(random.Random.Int(1900, 1999), random.Random.Int(1, 12), random.Random.Int(1, 28), 9, 30, 0),
-              //PrimaryContactName = random.Name.FullName(),
-              //PrimaryContactShortAddress = $"{random.Address.BuildingNumber()}\n{random.Address.StreetName()}\n{random.Address.Country()}",
-              //PrimaryContactPostcode = random.Random.Hash(10)
-          };
+            return new AddressDetails
+            {
+                LPI_KEY = random.Random.AlphaNumeric(14),
+                UPRN = random.Random.Double(1, 906700601612),
+                USRN = random.Random.Int(200001, 85655511),
+                PARENT_UPRN = random.Random.Double(34, 906700526492),
+                LPI_LOGICAL_STATUS = random.PickRandom(new List<string> { "Alternative", "Approved preferred", "Historical", "Provisional", "Rejected Internal" }),
+                SAO_TEXT = random.Random.String(0,90),
+                UNIT_NUMBER = random.Random.String(1,10),
+                PAO_TEXT = random.Random.String(0,90),
+                BUILDING_NUMBER = random.Random.String(1,11),
+                STREET_DESCRIPTION = random.Random.String(2,100),
+                POSTCODE = random.Random.String(0,8),
+                LOCALITY = random.Random.String(0,35),
+                GAZETTEER = random.PickRandom(new List<string> { "LOCAL", "NATIONAL" }),
+                ORGANISATION = random.Random.String(0,65),
+                POSTTOWN = random.Random.String(0,18),
+                USAGE_DESCRIPTION = random.Random.String(4,216),
+                USAGE_PRIMARY = random.Random.String(4,28),
+                BLPU_CLASS = random.Random.String(0,6),
+                PROPERTY_SHELL = random.Random.Bool(),
+                NEVEREXPORT = random.Random.Bool(),
+                EASTING = random.Random.Decimal(8560.2000m, 655593.0000m),
+                NORTHING = random.Random.Decimal(7677.8000m, 1219680.0000m),
+                LONGITUDE = random.Address.Longitude(-8.5965771, 1.7627731),
+                LATITUDE = random.Address.Latitude(49.8879315, 60.8553035)
+            };
         }
     }
 }

@@ -101,7 +101,7 @@ namespace LBHAddressesAPITest.Helpers.Entities
         /// USAGE_DESCRIPTION
         /// </summary>
         [Column("USAGE_DESCRIPTION")]
-        [MaxLength(160)]
+        [MaxLength(1006)]
         public string USAGE_DESCRIPTION { get; set; }
 
         /// <summary>
