@@ -51,6 +51,35 @@ namespace LBHAddressesAPITest
         }
 
         [Fact]
+        public async Task GivenValidPostCode_WhenExecuteAsync_ThenMultipleAddressesShouldBeReturned()
+        {
+            var addresses = new List<AddressDetails>
+            {
+                new AddressDetails
+                {
+                    AddressID = "ABCDEFGHIJKLMN", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "NATIONAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified",                usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                },
+                new AddressDetails
+                {
+                    AddressID = "ABCDEFGHIJKLM2", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "NATIONAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified",                usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                }
+            };
+
+            var postcode = "RM3 0FS";
+            var request = new SearchAddressRequest
+            {
+                postCode = postcode
+            };
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS")), CancellationToken.None))
+                .ReturnsAsync(addresses);
+
+            var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            response.Should().NotBeNull();
+            response.Addresses.Count().Should().Equals(2);
+        }
+
+
+        [Fact]
         public async Task GivenValidPostCode_WhenExecuteAsync_ThenAddressShouldBeReturned()
         {
             var addresses = new List<AddressDetails>();
