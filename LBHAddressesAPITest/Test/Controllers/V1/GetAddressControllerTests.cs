@@ -14,21 +14,21 @@ using System.Threading.Tasks;
 
 namespace LBHAddressesAPITest.Test.Controllers.V1
 {
-    public class AddressesControllerTests
+    public class GetAddressControllerTests
     {
-        private AddressesController _classUnderTest;
-        private Mock<IGetAddressUseCase> _mock;
+        private GetAddressController _classUnderTest;
+        private Mock<IGetSingleAddressUseCase> _mock;
 
-        public AddressesControllerTests()
+        public GetAddressControllerTests()
         {
-            _mock = new Mock<IGetAddressUseCase>();
-            _classUnderTest = new AddressesController(_mock.Object);
+            _mock = new Mock<IGetSingleAddressUseCase>();
+            _classUnderTest = new GetAddressController(_mock.Object);
         }
 
         [Fact]
         public async Task GivenValidSearchAddressRequest_WhenCallingGet_ThenShouldReturn200()
         {
-            _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchAddressRequest>(), CancellationToken.None))
+            _mock.Setup(s => s.ExecuteAsync(It.IsAny<GetAddressRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchAddressResponse
                 {
                     Addresses = new List<AddressDetails>

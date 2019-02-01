@@ -22,8 +22,4 @@
     <ProjectReference Include="..\HackneyAddressesAPI\LBHAddressesAPI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Helpers\Data\" />
-  </ItemGroup>
-
 </Project>

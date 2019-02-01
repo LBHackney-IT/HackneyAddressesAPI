@@ -9,11 +9,11 @@ namespace LBHAddressesAPITest.Helpers
     public static class Fake
     {
 
-        public static AddressDetails GenerateAddress()
+        public static Address GenerateAddress()
         {
           var random = new Faker();
 
-            return new AddressDetails
+            return new Address
             {
                 LPI_KEY = random.Random.AlphaNumeric(14),
                 UPRN = random.Random.Double(1, 906700601612),

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LBHAddressesAPITest.Helpers.Entities
 {
     [Table("combined_address")] 
-    public class AddressDetails
+    public class Address
     {
 
         /// <summary>

@@ -14,17 +14,17 @@ using LBHAddressesAPI.Infrastructure.V1.Exceptions;
 
 namespace LBHAddressesAPITest
 {
-    public class GetAddressUseCaseTest
+    public class GetSingleAddressUseCaseTest
     {
-        private readonly IGetAddressUseCase _classUnderTest;
+        private readonly IGetSingleAddressUseCase _classUnderTest;
         private readonly Mock<IAddressesGateway> _fakeGateway;
 
 
-        public GetAddressUseCaseTest()
+        public GetSingleAddressUseCaseTest()
         {
             _fakeGateway = new Mock<IAddressesGateway>();
 
-            _classUnderTest = new GetAddressUseCase(_fakeGateway.Object);
+            _classUnderTest = new GetSingleAddressUseCase(_fakeGateway.Object);
         }
 
         [Fact]
@@ -32,23 +32,23 @@ namespace LBHAddressesAPITest
         {
 
             var lpi_key = "ABCDEFGHIJKLMN"; //14 characters
-            _fakeGateway.Setup(s => s.GetAddressAsync(It.Is<SearchAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None)).ReturnsAsync(new AddressDetails());
+            _fakeGateway.Setup(s => s.GetSingleAddressAsync(It.Is<GetAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None)).ReturnsAsync(new AddressDetails());
 
-            var request = new SearchAddressRequest
+            var request = new GetAddressRequest
             {
                 addressID = lpi_key
             };
                 
             await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
 
-            _fakeGateway.Verify(v => v.GetAddressAsync(It.Is<SearchAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None));
+            _fakeGateway.Verify(v => v.GetSingleAddressAsync(It.Is<GetAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None));
         }
 
         [Fact]
         public async Task GivenBlankStringInput_WhenExecuteAsync_ThenShouldThrowException()
         {
             //arrange
-            SearchAddressRequest request = new SearchAddressRequest { addressID = string.Empty } ;
+            GetAddressRequest request = new GetAddressRequest { addressID = string.Empty } ;
             //act
             var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
             Assert.Equal("addressID must be provided", exception.ValidationResponse.ValidationErrors.FirstOrDefault().Message);
@@ -57,7 +57,7 @@ namespace LBHAddressesAPITest
         [Fact]
         public async Task GivenString13Characters_WhenExectueAsync_TheShouldThrowException()
         {
-            SearchAddressRequest request = new SearchAddressRequest { addressID = "ABCDEFGHIJKLM" };
+            GetAddressRequest request = new GetAddressRequest { addressID = "ABCDEFGHIJKLM" };
             //act
             //assert
             var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
@@ -67,7 +67,7 @@ namespace LBHAddressesAPITest
         [Fact]
         public async Task GivenString15Characters_WhenExectueAsync_TheShouldThrowException()
         {
-            SearchAddressRequest request = new SearchAddressRequest { addressID = "ABCDEFGHIJKLMNO" };
+            GetAddressRequest request = new GetAddressRequest { addressID = "ABCDEFGHIJKLMNO" };
             //act
             //assert
             var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
@@ -80,10 +80,10 @@ namespace LBHAddressesAPITest
             //arrange
             var lpi_key = "ABCDEFGHIJKLMN";
             
-            _fakeGateway.Setup(s => s.GetAddressAsync(It.Is<SearchAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
+            _fakeGateway.Setup(s => s.GetSingleAddressAsync(It.Is<GetAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
                 .ReturnsAsync(null as AddressDetails);
 
-            var request = new SearchAddressRequest
+            var request = new GetAddressRequest
             {
                 addressID = lpi_key
             };
@@ -126,11 +126,11 @@ namespace LBHAddressesAPITest
             };
 
             var lpi_key = "ABCDEFGHIJKLMN";
-            var request = new SearchAddressRequest
+            var request = new GetAddressRequest
             {
                 addressID = lpi_key
             };
-            _fakeGateway.Setup(s => s.GetAddressAsync(It.Is<SearchAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
+            _fakeGateway.Setup(s => s.GetSingleAddressAsync(It.Is<GetAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
                 .ReturnsAsync(address);
 
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);

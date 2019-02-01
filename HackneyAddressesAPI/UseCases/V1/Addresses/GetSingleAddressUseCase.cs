@@ -11,17 +11,17 @@ using LBHAddressesAPI.Infrastructure.V1.Exceptions;
 
 namespace LBHAddressesAPI.UseCases.V1.Addresses
 {
-    public class GetAddressUseCase : IGetAddressUseCase
+    public class GetSingleAddressUseCase : IGetSingleAddressUseCase
     {
 
         private readonly IAddressesGateway _addressGateway;
 
-        public GetAddressUseCase(IAddressesGateway addressesGateway)
+        public GetSingleAddressUseCase(IAddressesGateway addressesGateway)
         {
             _addressGateway = addressesGateway;
         }
         
-        public async Task<SearchAddressResponse> ExecuteAsync(SearchAddressRequest request, CancellationToken cancellationToken)
+        public async Task<SearchAddressResponse> ExecuteAsync(GetAddressRequest request, CancellationToken cancellationToken)
         {
 
             //validate
@@ -33,18 +33,19 @@ namespace LBHAddressesAPI.UseCases.V1.Addresses
             if (!validationResponse.IsValid)
                 throw new BadRequestException(validationResponse);
 
-
-            var response = await _addressGateway.GetAddressAsync(request, cancellationToken).ConfigureAwait(false);
+            var response = await _addressGateway.GetSingleAddressAsync(request, cancellationToken).ConfigureAwait(false);
 
             if (response == null)
                 return new SearchAddressResponse();
-
             var useCaseResponse = new SearchAddressResponse
             {
                 Addresses = new List<AddressDetails> { response }
             };
 
+
             return useCaseResponse;
+
+            
         }
     }
 }

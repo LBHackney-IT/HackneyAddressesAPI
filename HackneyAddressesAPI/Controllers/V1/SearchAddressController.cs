@@ -13,31 +13,16 @@ namespace LBHAddressesAPI.Controllers.V1
     [Route("api/v1/addresses")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
-    public class AddressesController : BaseController
+    public class SearchAddressController : BaseController
     {
-        private readonly IGetAddressUseCase _addressByID;
+        private readonly ISearchAddressUseCase _searchAddressUseCase;
 
-        public AddressesController(IGetAddressUseCase addressByID)
+
+        public SearchAddressController(ISearchAddressUseCase searchAddressUseCase)
         {
-            _addressByID = addressByID;
+            _searchAddressUseCase = searchAddressUseCase;
         }
-
-
-        /// <summary>
-        /// Returns an address from the given addressID or LPI_Key
-        /// </summary>
-        /// <param name="addressID"></param>
-        /// <returns></returns>
-        [HttpGet, MapToApiVersion("1")]
-        [Route("{addressID}")]
-        [ProducesResponseType(typeof(APIResponse<SearchAddressResponse>), 200)]
-        public async Task<IActionResult> GetAddress(string addressID)
-        {
-            SearchAddressRequest request = new SearchAddressRequest { addressID = addressID };
-            var response = await _addressByID.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
-
-            return HandleResponse(response);
-        }
+		
 
         /*[HttpGet, MapToApiVersion("2")]
         [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]
@@ -55,8 +40,9 @@ namespace LBHAddressesAPI.Controllers.V1
             [FromQuery]int? Limit = GlobalConstants.LIMIT,
             [FromQuery]int? Offset = GlobalConstants.OFFSET*/)
         {
-
-            return HandleResponse(new SearchAddressResponse());
+            SearchAddressRequest request = new SearchAddressRequest { postCode = Postcode };
+            var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
+            return HandleResponse(response);
 
         }
 

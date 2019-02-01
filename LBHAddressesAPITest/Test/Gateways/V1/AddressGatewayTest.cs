@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using LBHAddressesAPI.Gateways.V1;
 using LBHAddressesAPI.Models;
 using LBHAddressesAPITest.Helpers.Stub;
+using System.Threading.Tasks;
+using LBHAddressesAPITest.Helpers;
 
 namespace LBHAddressesAPITest.Test.Gateways.V1
 {
@@ -23,6 +25,12 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
             _classUnderTest = new AddressesGateway(_databaseFixture.ConnectionString);
         }
 
+        [Fact]
+        public async Task can_search_on_address_id()
+        {
+            var expectedAddress = Fake.GenerateAddress();
+
+        }
 
 
     }
