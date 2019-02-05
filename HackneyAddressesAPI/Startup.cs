@@ -27,7 +27,6 @@ namespace LBHAddressesAPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            TestStatus.IsRunningInTests = false;
         }
 
         public IConfiguration Configuration { get; }

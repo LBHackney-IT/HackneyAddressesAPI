@@ -20,8 +20,7 @@ namespace LBHAddressesAPI
 
             services.AddTransient<IAddressesActions, AddressesActions>();
             services.AddTransient<IStreetsActions, StreetsActions>();
-
-            services.AddTransient<IDetailsMapper, DetailsMapperOracle>();
+            
             services.AddTransient<IFilterObjectBuilder, FilterObjectBuilder>();
 
             services.AddTransient<IDB_Helper, OracleHelper>();
