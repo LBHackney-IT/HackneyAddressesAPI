@@ -9,7 +9,10 @@ using LBHAddressesAPI.Gateways.V1;
 using LBHAddressesAPI.Models;
 using LBHAddressesAPITest.Helpers.Stub;
 using System.Threading.Tasks;
+using System.Threading;
 using LBHAddressesAPITest.Helpers;
+using LBHAddressesAPITest.Helpers.Data;
+using LBHAddressesAPI.UseCases.V1.Search.Models;
 
 namespace LBHAddressesAPITest.Test.Gateways.V1
 {
@@ -26,9 +29,32 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
         }
 
         [Fact]
-        public async Task can_search_on_address_id()
+        public async Task can_retrieve_using_address_id()
         {
-            var expectedAddress = Fake.GenerateAddress();
+            string key = "0123456789abcd";
+            var expectedAddress = Fake.GenerateAddressProvidingKey(key);
+            TestDataHelper.InsertAddress(expectedAddress, _databaseFixture.Db);
+
+            var response = await _classUnderTest.GetSingleAddressAsync(new GetAddressRequest
+            {
+                addressID = key
+            }, CancellationToken.None);
+
+            response.Should().NotBeNull();
+            response.AddressID.Should().BeEquivalentTo(key);
+
+            /*var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
+            {
+                SearchTerm = tenancyRef,
+                PageSize = 10,
+                Page = 1
+            }, CancellationToken.None);
+            //assert
+            response.Should().NotBeNull();
+            response.Results.Should().NotBeNullOrEmpty();
+            response.Results.Count.Should().Be(1);
+            response.Results[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);*/
+
 
         }
 

@@ -46,6 +46,20 @@ namespace LBHAddressesAPI
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
+                c.AddSecurityDefinition("Token",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Your Hackney API Key",
+                        Name = "X-Api-Key",
+                        Type = "apiKey"
+                    });
+                
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Token", Enumerable.Empty<string>()}
+                });
+
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Hackney Addresses API", Version = "v1" });
 
                 c.DescribeAllEnumsAsStrings();

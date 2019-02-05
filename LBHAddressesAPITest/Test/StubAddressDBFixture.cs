@@ -23,7 +23,7 @@ namespace LBHAddressesAPITest.Test
                 // do nothing
             }
 
-            Db = new SqlConnection(DotNetEnv.Env.GetString("ADDRESS_CONNECTION_STRING"));
+            Db = new SqlConnection(DotNetEnv.Env.GetString("LLPGConnectionStringLOCAL"));
 
             Db.Open();
         }
