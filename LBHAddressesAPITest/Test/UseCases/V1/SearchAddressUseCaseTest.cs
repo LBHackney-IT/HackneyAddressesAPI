@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using System.Threading;
 using LBHAddressesAPI.Infrastructure.V1.Exceptions;
+using LBHAddressesAPI.Infrastructure.V1.API;
 
 namespace LBHAddressesAPITest
 {
@@ -38,7 +39,7 @@ namespace LBHAddressesAPITest
             var postcode = "RM3 0FS";
             
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
-                .ReturnsAsync(null as List<AddressDetails>);
+                .ReturnsAsync(null as PagedResults<AddressDetails>);
 
             var request = new SearchAddressRequest
             {
@@ -71,11 +72,16 @@ namespace LBHAddressesAPITest
                 postCode = postcode
             };
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS")), CancellationToken.None))
-                .ReturnsAsync(addresses);
+                .ReturnsAsync(new PagedResults<AddressDetails>
+                {
+                    Results = addresses,
+                    TotalResultsCount = 2
+                });
 
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             response.Should().NotBeNull();
             response.Addresses.Count().Should().Equals(2);
+            response.TotalCount.Should().Equals(2);
         }
 
 
@@ -118,7 +124,10 @@ namespace LBHAddressesAPITest
                 postCode = postcode
             };
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS")), CancellationToken.None))
-                .ReturnsAsync(addresses);
+                .ReturnsAsync(new PagedResults<AddressDetails>
+                {
+                    Results = addresses
+                });
 
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
 

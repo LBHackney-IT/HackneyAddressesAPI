@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Extensions\Validation\" />
-    <Folder Include="Infrastructure\V1\API\" />
     <Folder Include="Infrastructure\V1\Exceptions\" />
     <Folder Include="Infrastructure\V1\Validation\" />
     <Folder Include="wwwroot\" />

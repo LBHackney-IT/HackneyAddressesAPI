@@ -37,7 +37,8 @@ namespace LBHAddressesAPI.UseCases.V1.Addresses
                 return new SearchAddressResponse();
             var useCaseResponse = new SearchAddressResponse
             {
-                Addresses = response 
+                Addresses = response.Results ,
+                PageCount = response.TotalResultsCount
             };
 
 

@@ -1,24 +1,26 @@
-﻿using LBHAddressesAPI.Infrastructure.V1.API;
-using LBHAddressesAPI.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LBHAddressesAPI.UseCases.V1.Search.Models
+namespace LBHAddressesAPI.Infrastructure.V1.API
 {
-    public class SearchAddressResponse : IPagedResponse
+    public class PagedResults<T> : IPagedResults<T>
     {
-        [JsonProperty("address")]
-        public List<AddressDetails> Addresses {get;set;}
+        public List<T> Results { get; set; }
+        public int TotalResultsCount { get; set; }
 
-        [JsonProperty("page_count")]
-        public int PageCount { get; set; }
-        [JsonProperty("total_count")]
-        public int TotalCount { get; set; }
+        public PagedResults()
+        {
+            Results = new List<T>();
+        }
 
-
+        /// <summary>
+        /// Based on 1 based paging not 0 based
+        /// </summary>
+        /// <param name="pageSize"></param>
+        /// <param name="totalResultsCount"></param>
+        /// <returns></returns>
         public int CalculatePageCount(int pageSize, int totalResultsCount)
         {
             if (totalResultsCount == 0)
