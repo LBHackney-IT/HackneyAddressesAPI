@@ -66,124 +66,124 @@ namespace LBHAddressesAPI.Controllers
         /// For details see: <a href = '#' target='_new'>Insert Link here</a>.
         /// </returns>
 
-        [HttpGet]
-        public async Task<JsonResult> GetAddresses([FromQuery]string Postcode = null,
-            [FromQuery]string USRN = null,
-            [FromQuery]string UPRN = null,
-            [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
-            [FromQuery]string PropertyClassCode = null,
-            [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
-            [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
-            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
-            [FromQuery]int? Limit = GlobalConstants.LIMIT,
-            [FromQuery]int? Offset = GlobalConstants.OFFSET)
-        {
-            try
-            {
-                AddressesQueryParams queryParams = new AddressesQueryParams();
+        //[HttpGet]
+        //public async Task<JsonResult> GetAddresses([FromQuery]string Postcode = null,
+        //    [FromQuery]string USRN = null,
+        //    [FromQuery]string UPRN = null,
+        //    [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
+        //    [FromQuery]string PropertyClassCode = null,
+        //    [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
+        //    [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
+        //    [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
+        //    [FromQuery]int? Limit = GlobalConstants.LIMIT,
+        //    [FromQuery]int? Offset = GlobalConstants.OFFSET)
+        //{
+        //    try
+        //    {
+        //        AddressesQueryParams queryParams = new AddressesQueryParams();
                 
-                queryParams.Postcode = WebUtility.UrlDecode(Postcode);
-                queryParams.UPRN = WebUtility.UrlDecode(UPRN);
-                queryParams.USRN = WebUtility.UrlDecode(USRN);
-                queryParams.PropertyClassCode = WebUtility.UrlDecode(PropertyClassCode);
-                queryParams.PropertyClass = WebUtility.UrlDecode(PropertyClass.ToString());
-                queryParams.AddressStatus = WebUtility.UrlDecode(AddressStatus.ToString());
-                queryParams.Gazetteer = WebUtility.UrlDecode(Gazetteer.ToString());
-                queryParams.Format = WebUtility.UrlDecode(Format.ToString());
+        //        queryParams.Postcode = WebUtility.UrlDecode(Postcode);
+        //        queryParams.UPRN = WebUtility.UrlDecode(UPRN);
+        //        queryParams.USRN = WebUtility.UrlDecode(USRN);
+        //        queryParams.PropertyClassCode = WebUtility.UrlDecode(PropertyClassCode);
+        //        queryParams.PropertyClass = WebUtility.UrlDecode(PropertyClass.ToString());
+        //        queryParams.AddressStatus = WebUtility.UrlDecode(AddressStatus.ToString());
+        //        queryParams.Gazetteer = WebUtility.UrlDecode(Gazetteer.ToString());
+        //        queryParams.Format = WebUtility.UrlDecode(Format.ToString());
 
-                ValidationResult validatorFilterErrors = _validator.ValidateAddressesQueryParams(queryParams);
+        //        ValidationResult validatorFilterErrors = _validator.ValidateAddressesQueryParams(queryParams);
 
-                if (!validatorFilterErrors.ErrorOccurred)
-                {
-                    Pagination pagination = new Pagination();
-                    pagination.limit = Limit ?? default(int);
-                    pagination.offset = Offset ?? default(int);
+        //        if (!validatorFilterErrors.ErrorOccurred)
+        //        {
+        //            Pagination pagination = new Pagination();
+        //            pagination.limit = Limit ?? default(int);
+        //            pagination.offset = Offset ?? default(int);
 
-                    var result = await _addressesActions.GetAddresses(
-                        queryParams,
-                        pagination);
+        //            var result = await _addressesActions.GetAddresses(
+        //                queryParams,
+        //                pagination);
 
-                    var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
-                    json.StatusCode = 200;
-                    json.ContentType = "application/json";
+        //            var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
+        //            json.StatusCode = 200;
+        //            json.ContentType = "application/json";
 
-                    return json;
-                }
-                else
-                {
-                    var errors = validatorFilterErrors.ErrorMessages;
+        //            return json;
+        //        }
+        //        else
+        //        {
+        //            var errors = validatorFilterErrors.ErrorMessages;
 
-                    var json = Json(errors);
-                    json.StatusCode = 400;
-                    json.ContentType = "application/json";
-                    return json;
-                }
-            }
-            catch (Exception ex)
-            {
-                var errors = new List<ApiErrorMessage>
-                {
-                    new ApiErrorMessage
-                    {
-                        developerMessage = ex.Message,
-                        userMessage = "We had some problems processing your request"
-                    }
-                };
-                _logger.LogError(ex.Message);
-                var json = Json(errors);
-                json.StatusCode = 500;
-                json.ContentType = "application/json";
-                return json;
-            }
-        }
+        //            var json = Json(errors);
+        //            json.StatusCode = 400;
+        //            json.ContentType = "application/json";
+        //            return json;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errors = new List<ApiErrorMessage>
+        //        {
+        //            new ApiErrorMessage
+        //            {
+        //                developerMessage = ex.Message,
+        //                userMessage = "We had some problems processing your request"
+        //            }
+        //        };
+        //        _logger.LogError(ex.Message);
+        //        var json = Json(errors);
+        //        json.StatusCode = 500;
+        //        json.ContentType = "application/json";
+        //        return json;
+        //    }
+        //}
 
-        [Route("{lpikey}")]
-        [HttpGet]
-        public async Task<JsonResult> GetAddressesByLPI(string lpikey)
-        {
-            try
-            {
-                lpikey = WebUtility.UrlDecode(lpikey);
+        //[Route("{lpikey}")]
+        //[HttpGet]
+        //public async Task<JsonResult> GetAddressesByLPI(string lpikey)
+        //{
+        //    try
+        //    {
+        //        lpikey = WebUtility.UrlDecode(lpikey);
 
-                ValidationResult validatorFilterErrors = _validator.ValidateAddressesLPIKey(lpikey);
+        //        ValidationResult validatorFilterErrors = _validator.ValidateAddressesLPIKey(lpikey);
 
-                if (!validatorFilterErrors.ErrorOccurred)
-                {
+        //        if (!validatorFilterErrors.ErrorOccurred)
+        //        {
 
-                    var result = await _addressesActions.GetAddressesLpikey(lpikey);
+        //            var result = await _addressesActions.GetAddressesLpikey(lpikey);
 
-                    var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
-                    json.StatusCode = 200;
-                    json.ContentType = "application/json";
+        //            var json = Json(new { result, ErrorCode = "0", ErrorMessage = "" });
+        //            json.StatusCode = 200;
+        //            json.ContentType = "application/json";
 
-                    return json;
-                }
-                else
-                {
-                    var errors = validatorFilterErrors.ErrorMessages;
-                    var json = Json(errors);
-                    json.StatusCode = 400;
-                    json.ContentType = "application/json";
-                    return json;
-                }
-            }
-            catch (Exception ex)
-            {
-                var errors = new List<ApiErrorMessage>
-                {
-                    new ApiErrorMessage
-                    {
-                        developerMessage = ex.Message,
-                        userMessage = "We had some problems processing your request"
-                    }
-                };
-                _logger.LogError(ex.Message);
-                var json = Json(errors);
-                json.StatusCode = 500;
-                json.ContentType = "application/json";
-                return json;
-            }
-        }
+        //            return json;
+        //        }
+        //        else
+        //        {
+        //            var errors = validatorFilterErrors.ErrorMessages;
+        //            var json = Json(errors);
+        //            json.StatusCode = 400;
+        //            json.ContentType = "application/json";
+        //            return json;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errors = new List<ApiErrorMessage>
+        //        {
+        //            new ApiErrorMessage
+        //            {
+        //                developerMessage = ex.Message,
+        //                userMessage = "We had some problems processing your request"
+        //            }
+        //        };
+        //        _logger.LogError(ex.Message);
+        //        var json = Json(errors);
+        //        json.StatusCode = 500;
+        //        json.ContentType = "application/json";
+        //        return json;
+        //    }
+        //}
 
     } // Class Bracket
 } // Namespace Bracket

@@ -10,12 +10,9 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
     /// </summary>
     public class SearchAddressRequest : IRequest, IPagedRequest
     {
-        /// <summary>
-        /// Exact match
-        /// </summary>
-        public string addressID { get; set; }
         
-
+        
+        public string postCode { get; set; }
         /// <summary>
         /// Responsible for validating itself.
         /// Uses SearchAddressRequestValidator to do complex validation

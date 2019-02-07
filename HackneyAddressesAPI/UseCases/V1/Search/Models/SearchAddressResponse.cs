@@ -11,7 +11,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
     public class SearchAddressResponse : IPagedResponse
     {
         [JsonProperty("address")]
-        public AddressDetails Address {get;set;}
+        public List<AddressDetails> Addresses {get;set;}
 
         [JsonProperty("page_count")]
         public int PageCount { get; set; }

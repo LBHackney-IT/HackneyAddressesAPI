@@ -27,7 +27,6 @@ namespace LBHAddressesAPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            TestStatus.IsRunningInTests = false;
         }
 
         public IConfiguration Configuration { get; }
@@ -40,13 +39,27 @@ namespace LBHAddressesAPI
 
             services.ConfigureAddressSearch(connectionString);
 
-            services.AddCors(option => {
-                option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            });
+            //services.AddCors(option => {
+            //    option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            //});
 
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
+                c.AddSecurityDefinition("Token",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Your Hackney API Key",
+                        Name = "X-Api-Key",
+                        Type = "apiKey"
+                    });
+                
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Token", Enumerable.Empty<string>()}
+                });
+
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Hackney Addresses API", Version = "v1" });
 
                 c.DescribeAllEnumsAsStrings();
@@ -79,7 +92,7 @@ namespace LBHAddressesAPI
                 c.RoutePrefix = "swagger";
             });
 
-            app.UseCors("AllowAny");
+            //app.UseCors("AllowAny");
 
             app.UseMvc();   
         }

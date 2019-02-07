@@ -8,6 +8,9 @@ namespace LBHAddressesAPITest.Test
 
     public class DatabaseFixture : IDisposable
     {
+        public SqlConnection Db { get; }
+        public string ConnectionString { get; }
+
         public DatabaseFixture()
         {
             try
@@ -20,13 +23,12 @@ namespace LBHAddressesAPITest.Test
                 // do nothing
             }
 
-            Db = new SqlConnection(DotNetEnv.Env.GetString("ADDRESS_CONNECTION_STRING"));
+            Db = new SqlConnection(DotNetEnv.Env.GetString("LLPGConnectionStringLOCAL"));
 
             Db.Open();
         }
 
-        public SqlConnection Db { get; }
-
+        
         public void Dispose()
         {
             Db.Close();

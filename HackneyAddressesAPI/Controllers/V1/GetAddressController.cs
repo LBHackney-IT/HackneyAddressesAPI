@@ -13,15 +13,14 @@ namespace LBHAddressesAPI.Controllers.V1
     [Route("api/v1/addresses")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
-    public class AddressesController : BaseController
+    public class GetAddressController : BaseController
     {
-        private readonly IGetAddressUseCase _addressByID;
+        private readonly IGetSingleAddressUseCase _getAddressUseCase;
 
-        public AddressesController(IGetAddressUseCase addressByID)
+        public GetAddressController(IGetSingleAddressUseCase addressUseCase)
         {
-            _addressByID = addressByID;
+            _getAddressUseCase = addressUseCase;
         }
-
 
         /// <summary>
         /// Returns an address from the given addressID or LPI_Key
@@ -33,11 +32,13 @@ namespace LBHAddressesAPI.Controllers.V1
         [ProducesResponseType(typeof(APIResponse<SearchAddressResponse>), 200)]
         public async Task<IActionResult> GetAddress(string addressID)
         {
-            SearchAddressRequest request = new SearchAddressRequest { addressID = addressID };
-            var response = await _addressByID.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
+            GetAddressRequest request = new GetAddressRequest { addressID = addressID };
+            var response = await _getAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
 
             return HandleResponse(response);
         }
-        
+
+      
+
     }
 } 
