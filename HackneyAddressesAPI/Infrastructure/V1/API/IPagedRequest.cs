@@ -1,4 +1,4 @@
-namespace LBHTenancyAPI.Infrastructure.V1.API
+namespace LBHAddressesAPI.Infrastructure.V1.API
 {
     public interface IPagedRequest
     {

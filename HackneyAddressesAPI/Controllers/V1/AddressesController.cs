@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using LBHAddressesAPI.UseCases.V1.Addresses;
 using LBHAddressesAPI.Models;
 using LBHAddressesAPI.Infrastructure.V1.API;
+using LBHAddressesAPI.Extensions.Controller;
+using LBHAddressesAPI.UseCases.V1.Search.Models;
 
 namespace LBHAddressesAPI.Controllers.V1
 {
@@ -28,10 +30,11 @@ namespace LBHAddressesAPI.Controllers.V1
         /// <returns></returns>
         [HttpGet, MapToApiVersion("1")]
         [Route("{addressID}")]
-        [ProducesResponseType(typeof(APIResponse<AddressDetails>), 200)]
+        [ProducesResponseType(typeof(APIResponse<SearchAddressResponse>), 200)]
         public async Task<IActionResult> GetAddress(string addressID)
         {
-            var response = await _addressByID.ExecuteAsync(addressID).ConfigureAwait(false);
+            SearchAddressRequest request = new SearchAddressRequest { addressID = addressID };
+            var response = await _addressByID.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
 
             return HandleResponse(response);
         }
