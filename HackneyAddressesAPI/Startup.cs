@@ -39,9 +39,9 @@ namespace LBHAddressesAPI
 
             services.ConfigureAddressSearch(connectionString);
 
-            services.AddCors(option => {
-                option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            });
+            //services.AddCors(option => {
+            //    option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            //});
 
             services.AddMvc();
             services.AddSwaggerGen(c =>
@@ -92,7 +92,7 @@ namespace LBHAddressesAPI
                 c.RoutePrefix = "swagger";
             });
 
-            app.UseCors("AllowAny");
+            //app.UseCors("AllowAny");
 
             app.UseMvc();   
         }
