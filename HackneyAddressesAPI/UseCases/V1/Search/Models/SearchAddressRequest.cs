@@ -11,11 +11,40 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
     /// </summary>
     public class SearchAddressRequest : IRequest, IPagedRequest
     {
-        
-        
+
+
+        //    [FromQuery]string USRN = null,
+        //    [FromQuery]string UPRN = null,
+        //    [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
+        //    [FromQuery]string PropertyClassCode = null/*,
+        //    [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,*/
+        //    [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
+        //    /*[FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,*/
+        //    [FromQuery]int? Limit = GlobalConstants.LIMIT,
+        //    [FromQuery]int? Offset = GlobalConstants.OFFSET)
+
+
+        /// <summary>
+        /// Postcode partial match i.e. "E8 4" will return addresses that have a postcode starting with E84** 
+        /// (Whitespace is removed automatically)  
+        /// </summary>
         public string postCode { get; set; }
 
+        /// <summary>
+        /// LOCAL/NATIONAL/BOTH (Defaults to LOCAL)
+        /// </summary>
         public GlobalConstants.Gazetteer gazeteer { get; set; }
+
+        /// <summary>
+        /// Page defaults to 1 as paging is 1 index based not 0 index based
+        /// </summary>
+        public int Page { get; set; }
+        /// <summary>
+        /// PageSize defaults to 50 if not provided
+        /// </summary>
+        public int PageSize { get; set; }
+
+
         /// <summary>
         /// Responsible for validating itself.
         /// Uses SearchAddressRequestValidator to do complex validation
@@ -42,13 +71,6 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
                 castedRequest.PageSize = 10;
             return new RequestValidationResponse(validationResult);
         }
-        /// <summary>
-        /// Page defaults to 1 as paging is 1 index based not 0 index based
-        /// </summary>
-        public int Page { get; set; }
-        /// <summary>
-        /// PageSize defaults to 10 
-        /// </summary>
-        public int PageSize { get; set; }
+        
     }
 }
