@@ -58,7 +58,7 @@ namespace LBHAddressesAPI.Gateways.V1
             var result = new PagedResults<AddressDetails>();
             
             //TODO: Move the query in to a helper so it's in one place!
-            string query =  GetAddressesQuery() + GetSearchAddressClause();
+            string query =  GetAddressesQuery() + GetSearchAddressClauseWithPaging(request.Page, request.PageSize);
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -70,7 +70,7 @@ namespace LBHAddressesAPI.Gateways.V1
 
                 result.Results = all?.ToList();
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(), new { postcode = request.postCode.Replace(" ", "") + "%" }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(true), new { postcode = request.postCode.Replace(" ", "") + "%" }).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -83,22 +83,33 @@ namespace LBHAddressesAPI.Gateways.V1
 
         private static string GetAddressesQuery()
         {
-            return "select LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude";
+            return "SELECT LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude ";
         }
 
         private static string GetAddressCountQuery()
         {
-            return "select count(1) ";
+            return "SELECT count(1) ";
         }
 
         private static string GetSingleAddressClause()
         {
-            return " from dbo.combined_address WHERE LPI_KEY = @key";
+            return " FROM dbo.combined_address WHERE LPI_KEY = @key";
         }
 
-        private static string GetSearchAddressClause()
+        private static string GetSearchAddressClause(bool includeRecompile)
         {
-            return " FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode AND BLPU_CLASS NOT LIKE 'P%' OPTION(RECOMPILE)";
+            return string.Format(" FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode AND BLPU_CLASS NOT LIKE 'P%' {0} ", includeRecompile == true ? "OPTION(RECOMPILE)":"");
+        }
+
+        private static string GetSearchAddressClauseWithPaging(int page, int pageSize)
+        {
+            int lower = 0;
+            lower = page == 0 ? 1 : page * pageSize;
+            // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
+            string clause = GetSearchAddressClause(false);
+            clause += "ORDER BY street_description, building_number DESC ";
+            clause += string.Format("OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY OPTION(RECOMPILE)", lower, pageSize);
+            return clause;
         }
     }
 }
