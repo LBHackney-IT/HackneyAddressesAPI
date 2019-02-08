@@ -1,5 +1,6 @@
 ﻿using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Infrastructure.V1.Validation;
+using LBHAddressesAPI.Helpers;
 
 namespace LBHAddressesAPI.UseCases.V1.Search.Models
 {
@@ -13,6 +14,8 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         
         
         public string postCode { get; set; }
+
+        public GlobalConstants.Gazetteer gazeteer { get; set; }
         /// <summary>
         /// Responsible for validating itself.
         /// Uses SearchAddressRequestValidator to do complex validation

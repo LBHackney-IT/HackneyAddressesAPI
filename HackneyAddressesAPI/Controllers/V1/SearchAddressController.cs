@@ -35,13 +35,13 @@ namespace LBHAddressesAPI.Controllers.V1
             [FromQuery]string UPRN = null,
             [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
             [FromQuery]string PropertyClassCode = null/*,
-            [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
-            [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
-            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,*/
+            [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,*/
+            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
+            /*[FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,*/
             [FromQuery]int? Limit = GlobalConstants.LIMIT,
             [FromQuery]int? Offset = GlobalConstants.OFFSET)
         {
-            SearchAddressRequest request = new SearchAddressRequest { postCode = Postcode };
+            SearchAddressRequest request = new SearchAddressRequest { postCode = Postcode, gazeteer = Gazetteer };
             var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
             return HandleResponse(response);
 

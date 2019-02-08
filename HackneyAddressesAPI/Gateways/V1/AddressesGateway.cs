@@ -65,12 +65,12 @@ namespace LBHAddressesAPI.Gateways.V1
                 //open connection explicity
                 conn.Open();
                 var all = await conn.QueryAsync<AddressDetails>(query,
-                    new { postcode = request.postCode.Replace(" ", "") + "%" }
+                    new { postcode = request.postCode.Replace(" ", "") + "%", gazetteer = request.gazeteer.ToString() }
                 ).ConfigureAwait(false);
 
                 result.Results = all?.ToList();
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(true), new { postcode = request.postCode.Replace(" ", "") + "%" }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(true), new { postcode = request.postCode.Replace(" ", "") + "%", gazetteer = request.gazeteer.ToString() }).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -98,7 +98,7 @@ namespace LBHAddressesAPI.Gateways.V1
 
         private static string GetSearchAddressClause(bool includeRecompile)
         {
-            return string.Format(" FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode AND BLPU_CLASS NOT LIKE 'P%' {0} ", includeRecompile == true ? "OPTION(RECOMPILE)":"");
+            return string.Format(" FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode AND Gazetteer = @gazetteer AND BLPU_CLASS NOT LIKE 'P%' {0} ", includeRecompile == true ? "OPTION(RECOMPILE)":"");
         }
 
         private static string GetSearchAddressClauseWithPaging(int page, int pageSize)
