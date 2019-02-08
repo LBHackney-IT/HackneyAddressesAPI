@@ -5,8 +5,7 @@ using LBHAddressesAPI.Helpers;
 namespace LBHAddressesAPI.UseCases.V1.Search.Models
 {
     /// <summary>
-    /// SearchTenancyRequest V2 uses 5 Fields to search on allowing for greater filtering
-    /// One of the fields must be populated
+    /// SearchAddressRequest V1 
     /// Validated by Validate Method
     /// </summary>
     public class SearchAddressRequest : IRequest, IPagedRequest
@@ -17,9 +16,8 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         //    [FromQuery]string UPRN = null,
         //    [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
         //    [FromQuery]string PropertyClassCode = null/*,
-        //    [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,*/
-        //    [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
-        //    /*[FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,*/
+        //    [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
+        //    [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
         //    [FromQuery]int? Limit = GlobalConstants.LIMIT,
         //    [FromQuery]int? Offset = GlobalConstants.OFFSET)
 
@@ -28,12 +26,18 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Postcode partial match i.e. "E8 4" will return addresses that have a postcode starting with E84** 
         /// (Whitespace is removed automatically)  
         /// </summary>
-        public string postCode { get; set; }
+        public string PostCode { get; set; }
 
         /// <summary>
         /// LOCAL/NATIONAL/BOTH (Defaults to LOCAL)
         /// </summary>
-        public GlobalConstants.Gazetteer gazeteer { get; set; }
+        public GlobalConstants.Gazetteer Gazeteer { get; set; }
+
+        /// <summary>
+        /// Allows a switch between simple and detailed address
+        /// </summary>
+        public GlobalConstants.Format Format { get; set; }
+
 
         /// <summary>
         /// Page defaults to 1 as paging is 1 index based not 0 index based

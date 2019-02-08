@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using LBHAddressesAPI.Infrastructure.V1.API;
+using LBHAddressesAPI.Helpers;
 
 namespace LBHAddressesAPI.Gateways.V1
 {
@@ -30,7 +31,7 @@ namespace LBHAddressesAPI.Gateways.V1
             var result = new AddressDetails();
 
             //TODO: Move the query in to a helper so it's in one place!
-            string query = GetAddressesQuery() + GetSingleAddressClause();
+            string query = GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSingleAddressClause();
             using (var conn = new SqlConnection(_connectionString))
             {
                 //open connection explicity
@@ -56,9 +57,9 @@ namespace LBHAddressesAPI.Gateways.V1
         public async Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
             var result = new PagedResults<AddressDetails>();
-            bool includeGazetteer = request.gazeteer == Helpers.GlobalConstants.Gazetteer.Both ? false : true;
+            bool includeGazetteer = request.Gazeteer == Helpers.GlobalConstants.Gazetteer.Both ? false : true;
             //TODO: Move the query in to a helper so it's in one place!
-            string query =  GetAddressesQuery() + GetSearchAddressClauseWithPaging(request.Page, request.PageSize, includeGazetteer);
+            string query =  GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSearchAddressClauseWithPaging(request.Page, request.PageSize, includeGazetteer);
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -67,13 +68,13 @@ namespace LBHAddressesAPI.Gateways.V1
                 //open connection explicity
                 conn.Open();
                 var all = await conn.QueryAsync<AddressDetails>(query,
-                    new { postcode = request.postCode.Replace(" ", "") + "%", gazetteer = request.gazeteer.ToString() }
+                    new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }
                 ).ConfigureAwait(false);
 
                 result.Results = all?.ToList();
 
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(true, includeGazetteer), new { postcode = request.postCode.Replace(" ", "") + "%", gazetteer = request.gazeteer.ToString() }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(true, includeGazetteer), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -83,9 +84,16 @@ namespace LBHAddressesAPI.Gateways.V1
             return result;
         }        
 
-        private static string GetAddressesQuery()
+        private static string GetAddressesQuery(GlobalConstants.Format format)
         {
-            return "SELECT LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude ";
+            if (format == GlobalConstants.Format.Detailed)
+            {
+                return "SELECT LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude ";
+            }
+            else
+            {
+                return "";
+            }
         }
 
         private static string GetAddressCountQuery()

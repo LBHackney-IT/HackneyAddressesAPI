@@ -42,8 +42,8 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
 
             var request = new SearchAddressRequest
             {
-                postCode = "",
-                gazeteer = GlobalConstants.Gazetteer.Local
+                PostCode = "",
+                Gazeteer = GlobalConstants.Gazetteer.Local
             };
             //act
             var response = await _classUnderTest.GetAddresses(request).ConfigureAwait(false);

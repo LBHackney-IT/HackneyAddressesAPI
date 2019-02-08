@@ -49,10 +49,10 @@ namespace LBHAddressesAPITest
             var gazetteer = "LOCAL";
             var request = new SearchAddressRequest
             {
-                postCode = postcode,
-                gazeteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
+                PostCode = postcode,
+                Gazeteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
             };
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS") && i.gazeteer == LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local), CancellationToken.None))
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS") && i.Gazeteer == LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<AddressDetails>
                 {
                     Results = addresses,
@@ -74,12 +74,12 @@ namespace LBHAddressesAPITest
             //arrange
             var postcode = "RM3 0FS";
             
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
                 .ReturnsAsync(null as PagedResults<AddressDetails>);
 
             var request = new SearchAddressRequest
             {
-                postCode = postcode
+                PostCode = postcode
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
@@ -105,9 +105,9 @@ namespace LBHAddressesAPITest
             var postcode = "RM3 0FS";
             var request = new SearchAddressRequest
             {
-                postCode = postcode
+                PostCode = postcode
             };
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS")), CancellationToken.None))
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS")), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<AddressDetails>
                 {
                     Results = addresses,
@@ -157,9 +157,9 @@ namespace LBHAddressesAPITest
             var postcode = "RM3 0FS";
             var request = new SearchAddressRequest
             {
-                postCode = postcode
+                PostCode = postcode
             };
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS")), CancellationToken.None))
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS")), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<AddressDetails>
                 {
                     Results = addresses

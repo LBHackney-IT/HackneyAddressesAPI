@@ -38,6 +38,7 @@ namespace LBHAddressesAPI.Controllers.V1
         public async Task<IActionResult> GetAddresses([FromQuery] SearchAddressRequest request)
         {
             var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
+            //We convert the result to an APIResponse via extensions on BaseController
             return HandleResponse(response);
         }
 
