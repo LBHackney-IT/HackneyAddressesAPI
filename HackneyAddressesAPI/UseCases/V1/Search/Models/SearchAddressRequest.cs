@@ -1,6 +1,7 @@
 ﻿using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Infrastructure.V1.Validation;
 using LBHAddressesAPI.Helpers;
+using System;
 
 namespace LBHAddressesAPI.UseCases.V1.Search.Models
 {
@@ -11,7 +12,6 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
     public class SearchAddressRequest : IRequest, IPagedRequest
     {
 
-        //    [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
         //    [FromQuery]string PropertyClassCode = null/*,
         // Parent shells??
 
@@ -30,12 +30,12 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// <summary>
         /// Filter by UPRN (unique property reference number - unique identifier of the BLPU (Basic Land and Property Unit); a UPRN can have more than one LPI/address. )
         /// </summary>
-        public string UPRN { get; set; }
+        public Int64 ? UPRN { get; set; }
         
         /// <summary>
         /// Filter by USRN (unique street reference number - uniquely identifies streets)
         /// </summary>
-        public string USRN { get; set; }
+        public int ? USRN { get; set; }
 
         /// <summary>
         /// Description of the primary usage, can be:
@@ -50,7 +50,12 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Unclassified
         /// null (default) 
         /// </summary>
-        public GlobalConstants.PropertyClassPrimary PropertyClass { get; set; }
+        public GlobalConstants.PropertyClassPrimary ? PropertyClassPrimary  { get; set; }
+
+        /// <summary>
+        /// Identifies land and property usage according to this system of classification: https://www.geoplace.co.uk/documents/10181/38204/Appendix+C+-+Classifications/ ; this is a textual description
+        /// </summary>
+        public string PropertyClassCode { get; set; }
 
         /// <summary>
         /// Allows a switch between simple and detailed address
@@ -60,7 +65,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// <summary>
         /// Allows switch between address statuses:
         /// Alternative
-        /// Approved Preferred
+        /// Approved Preferred (Default)
         /// Historical
         /// Provisional
         /// Rejected Internal
@@ -102,6 +107,10 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
             //Sets default page size to 10
             if (castedRequest.PageSize == 0)
                 castedRequest.PageSize = 10;
+            if(string.IsNullOrEmpty(castedRequest.PropertyClassPrimary.ToString()))
+            {
+                castedRequest.PropertyClassPrimary = null;
+            }
             return new RequestValidationResponse(validationResult);
         }
         

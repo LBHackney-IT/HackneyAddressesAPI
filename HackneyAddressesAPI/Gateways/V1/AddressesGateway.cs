@@ -142,11 +142,7 @@ namespace LBHAddressesAPI.Gateways.V1
         
         private static string GetSearchAddressClause(SearchAddressRequest request, bool includePaging, bool includeRecompile, ref DynamicParameters dbArgs)
         {
-            int page = request.Page;
-            int pageSize = request.PageSize;
-            int lower = 0;
-            lower = page == 0 ? 1 : page * pageSize;
-            // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
+            
             string clause = string.Format(" FROM dbo.combined_address L WHERE BLPU_CLASS NOT LIKE 'P%' ");
 
             if (!string.IsNullOrEmpty(request.PostCode))
@@ -160,24 +156,30 @@ namespace LBHAddressesAPI.Gateways.V1
                 dbArgs.Add("@addressStatus", GlobalConstants.MapAddressStatus(request.AddressStatus));
                 clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
             }
-            if(!string.IsNullOrEmpty(request.UPRN))
+            if(request.UPRN!=null)
             {
                 dbArgs.Add("@uprn", request.UPRN);
                 clause += " AND UPRN = @uprn ";
             }
 
-            if (!string.IsNullOrEmpty(request.USRN))
+            if (request.USRN!=null)
             {
                 dbArgs.Add("@usrn", request.USRN);
                 clause += " AND USRN = @usrn ";
             }
 
-            if (!string.IsNullOrEmpty(request.PropertyClass.ToString()))
+            if (!string.IsNullOrEmpty(request.PropertyClassPrimary.ToString()))
             {
-                dbArgs.Add("@primaryClass", request.PropertyClass.ToString());
+                dbArgs.Add("@primaryClass", request.PropertyClassPrimary.ToString());
                 clause += " AND USAGE_PRIMARY = @primaryClass ";
             }
             
+            if(!string.IsNullOrEmpty(request.PropertyClassCode))
+            {
+                dbArgs.Add("@propertyClassCode", request.PropertyClassCode);
+                clause += " AND BLPU_CLASS = @propertyClassCode ";
+            }
+
             if (request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
             {
                 dbArgs.Add("@gazetteer", request.Gazeteer.ToString());
@@ -186,6 +188,11 @@ namespace LBHAddressesAPI.Gateways.V1
 
             if (includePaging)//paging
             {
+                int page = request.Page;
+                int pageSize = request.PageSize;
+                int lower = 0;
+                lower = page == 0 || page == 1 ? 0 : page * pageSize;
+                // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
                 clause += " ORDER BY street_description, building_number DESC ";
                 clause += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
             }
