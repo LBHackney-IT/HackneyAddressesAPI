@@ -11,14 +11,9 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
     public class SearchAddressRequest : IRequest, IPagedRequest
     {
 
-
-        //    [FromQuery]string USRN = null,
-        //    [FromQuery]string UPRN = null,
         //    [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
         //    [FromQuery]string PropertyClassCode = null/*,
         // Parent shells??
-
-
 
 
         /// <summary>
@@ -42,7 +37,20 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// </summary>
         public string USRN { get; set; }
 
-        
+        /// <summary>
+        /// Description of the primary usage, can be:
+        /// Commercial
+        /// Dual Use
+        /// Features
+        /// Land
+        /// Military
+        /// Object of Interest
+        /// Parent Shell
+        /// Residential
+        /// Unclassified
+        /// null (default) 
+        /// </summary>
+        public GlobalConstants.PropertyClassPrimary PropertyClass { get; set; }
 
         /// <summary>
         /// Allows a switch between simple and detailed address
