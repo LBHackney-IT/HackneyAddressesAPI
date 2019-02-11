@@ -106,7 +106,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
                 castedRequest.Page = 1;
             //Sets default page size to 10
             if (castedRequest.PageSize == 0)
-                castedRequest.PageSize = 10;
+                castedRequest.PageSize = 50;
             if(string.IsNullOrEmpty(castedRequest.PropertyClassPrimary.ToString()))
             {
                 castedRequest.PropertyClassPrimary = null;

@@ -34,6 +34,12 @@ namespace LBHAddressesAPI.Models
         public double northing { get; set; }
         public double longitude { get; set; }
         public double latitude { get; set; }
+        public string Line1 { get; set; }
+        public string Line2 { get; set; }
+        public string Line3 { get; set; }
+        public string Line4 { get; set; }
+        public string City { get; set; }
+
 
     }
 }

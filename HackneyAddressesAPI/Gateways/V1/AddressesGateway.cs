@@ -119,14 +119,17 @@ namespace LBHAddressesAPI.Gateways.V1
 
         private static string GetAddressesQuery(GlobalConstants.Format format)
         {
+            string query = string.Empty;
             if (format == GlobalConstants.Format.Detailed)
             {
-                return "SELECT LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude ";
+                query = "SELECT LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude, ";
+                query += " SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4, POSTTOWN as City ";
             }
             else
             {
-                return "SELECT SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4, POSTTOWN as City, Postcode, UPRN, LPI_KEY as AddressID ";
+                query = "SELECT SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4, POSTTOWN as City, Postcode, UPRN, LPI_KEY as AddressID ";
             }
+            return query;
         }
 
         private static string GetAddressCountQuery()
@@ -176,8 +179,8 @@ namespace LBHAddressesAPI.Gateways.V1
             
             if(!string.IsNullOrEmpty(request.PropertyClassCode))
             {
-                dbArgs.Add("@propertyClassCode", request.PropertyClassCode);
-                clause += " AND BLPU_CLASS = @propertyClassCode ";
+                dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%");
+                clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
             }
 
             if (request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
