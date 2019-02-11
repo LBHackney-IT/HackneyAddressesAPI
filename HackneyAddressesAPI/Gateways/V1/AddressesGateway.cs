@@ -67,13 +67,22 @@ namespace LBHAddressesAPI.Gateways.V1
                 //open connection explicity
                 conn.Open();
                 var all = await conn.QueryAsync<AddressDetails>(query,
-                    new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }
+                    new {
+                        postcode = request.PostCode.Replace(" ", "") + "%",
+                        gazetteer = request.Gazeteer.ToString(),
+                        addressStatus = GlobalConstants.MapAddressStatus(request.AddressStatus)
+                    }
                 ).ConfigureAwait(false);
 
                 result.Results = all?.ToList();
 
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(request, includeGazetteer, false, false), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(request, includeGazetteer, false, false), 
+                    new {
+                        postcode = request.PostCode.Replace(" ", "") + "%",
+                        gazetteer = request.Gazeteer.ToString(),
+                        addressStatus = GlobalConstants.MapAddressStatus(request.AddressStatus)
+                    }).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -149,14 +158,28 @@ namespace LBHAddressesAPI.Gateways.V1
             int lower = 0;
             lower = page == 0 ? 1 : page * pageSize;
             // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
-            string clause = string.Format(" FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode {0} AND BLPU_CLASS NOT LIKE 'P%' ", includeGazetteer ? "AND Gazetteer = @gazetteer" : "");
-            if (includePaging)
+            string clause = string.Format(" FROM dbo.combined_address L WHERE BLPU_CLASS NOT LIKE 'P%' ");
+
+            //Postcode
+            clause += " AND POSTCODE_NOSPACE LIKE @postcode  ";
+
+            //AddressStatus/LPI_LOGICAL_STATUS
+            clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
+
+            if(includeGazetteer)//Gazetteer
             {
-                clause += "ORDER BY street_description, building_number DESC ";
-                clause += string.Format("OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY", lower, pageSize);
+                clause += " AND Gazetteer = @gazetteer ";
             }
-            if(includeRecompile)
-            clause += " OPTION(RECOMPILE)";
+
+            if (includePaging)//paging
+            {
+                clause += " ORDER BY street_description, building_number DESC ";
+                clause += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
+            }
+            if (includeRecompile)//recompile
+            {
+                clause += " OPTION(RECOMPILE) ";
+            }
             return clause;
         }
     }

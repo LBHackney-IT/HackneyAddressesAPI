@@ -56,5 +56,25 @@ namespace LBHAddressesAPI.Helpers
             National,
             Both
         };
+
+        public static string MapAddressStatus(AddressStatus status)
+        {
+            switch (status)
+            {
+                case AddressStatus.ApprovedPreferred:
+                    return "Approved Preferred";
+                case AddressStatus.Alternative:
+                    return "Alternative";                    
+                case AddressStatus.Historical:
+                    return "Historical";
+                case AddressStatus.Provisional:
+                    return "Provisional";
+                case AddressStatus.RejectedInternal:
+                    return "Rejected Internal";
+                default:
+                    throw new Exception("Address status is not a valid value");
+            }
+        }
+
     }
 }

@@ -16,7 +16,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         //    [FromQuery]string UPRN = null,
         //    [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
         //    [FromQuery]string PropertyClassCode = null/*,
-        //    [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
+        // Parent shells??
 
 
 
