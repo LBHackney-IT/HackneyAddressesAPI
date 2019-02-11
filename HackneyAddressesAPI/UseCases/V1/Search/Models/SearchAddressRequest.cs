@@ -33,6 +33,18 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         public GlobalConstants.Gazetteer Gazeteer { get; set; }
 
         /// <summary>
+        /// Filter by UPRN (unique property reference number - unique identifier of the BLPU (Basic Land and Property Unit); a UPRN can have more than one LPI/address. )
+        /// </summary>
+        public string UPRN { get; set; }
+        
+        /// <summary>
+        /// Filter by USRN (unique street reference number - uniquely identifies streets)
+        /// </summary>
+        public string USRN { get; set; }
+
+        
+
+        /// <summary>
         /// Allows a switch between simple and detailed address
         /// </summary>
         public GlobalConstants.Format Format { get; set; }

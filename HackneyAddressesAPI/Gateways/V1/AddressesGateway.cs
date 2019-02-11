@@ -58,31 +58,22 @@ namespace LBHAddressesAPI.Gateways.V1
         {
             var result = new PagedResults<AddressDetails>();
             //Only add Gazetteer to query if NATIONAL or LOCAL are specified
-            bool includeGazetteer = request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true;
-            
-            string query =  GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSearchAddressClause(request, includeGazetteer, true, true);
+            //bool includeGazetteer = request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true;
+            var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
+            string query =  GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSearchAddressClause(request, true, true, ref dbArgs);
+     
 
             using (var conn = new SqlConnection(_connectionString))
             {
                 //open connection explicity
                 conn.Open();
-                var all = await conn.QueryAsync<AddressDetails>(query,
-                    new {
-                        postcode = request.PostCode.Replace(" ", "") + "%",
-                        gazetteer = request.Gazeteer.ToString(),
-                        addressStatus = GlobalConstants.MapAddressStatus(request.AddressStatus)
-                    }
-                ).ConfigureAwait(false);
+                var all = await conn.QueryAsync<AddressDetails>(query,dbArgs).ConfigureAwait(false);
 
                 result.Results = all?.ToList();
 
+                
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(request, includeGazetteer, false, false), 
-                    new {
-                        postcode = request.PostCode.Replace(" ", "") + "%",
-                        gazetteer = request.Gazeteer.ToString(),
-                        addressStatus = GlobalConstants.MapAddressStatus(request.AddressStatus)
-                    }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(request, false, false, ref dbArgs),dbArgs).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -102,22 +93,20 @@ namespace LBHAddressesAPI.Gateways.V1
         {
             var result = new PagedResults<AddressDetailsSimple>();
             //Only add Gazetteer to query if NATIONAL or LOCAL are specified
-            bool includeGazetteer = request.Gazeteer == Helpers.GlobalConstants.Gazetteer.Both ? false : true;
+            var dbArgs = new DynamicParameters();
 
-            string query = GetAddressesQuery(GlobalConstants.Format.Simple) + GetSearchAddressClause(request, includeGazetteer, true, true);
+            string query = GetAddressesQuery(GlobalConstants.Format.Simple) + GetSearchAddressClause(request, true, true, ref dbArgs);
 
             using (var conn = new SqlConnection(_connectionString))
             {
                 //open connection explicity
                 conn.Open();
-                var all = await conn.QueryAsync<AddressDetailsSimple>(query,
-                    new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }
-                ).ConfigureAwait(false);
+                var all = await conn.QueryAsync<AddressDetailsSimple>(query,dbArgs).ConfigureAwait(false);
 
                 result.Results = all?.ToList();
 
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() + GetSearchAddressClause(request, includeGazetteer, false, false), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() + GetSearchAddressClause(request, false, false, ref dbArgs), dbArgs).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -151,7 +140,7 @@ namespace LBHAddressesAPI.Gateways.V1
         }
 
         
-        private static string GetSearchAddressClause(SearchAddressRequest request, bool includeGazetteer, bool includePaging, bool includeRecompile)
+        private static string GetSearchAddressClause(SearchAddressRequest request, bool includePaging, bool includeRecompile, ref DynamicParameters dbArgs)
         {
             int page = request.Page;
             int pageSize = request.PageSize;
@@ -160,14 +149,32 @@ namespace LBHAddressesAPI.Gateways.V1
             // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
             string clause = string.Format(" FROM dbo.combined_address L WHERE BLPU_CLASS NOT LIKE 'P%' ");
 
-            //Postcode
-            clause += " AND POSTCODE_NOSPACE LIKE @postcode  ";
-
-            //AddressStatus/LPI_LOGICAL_STATUS
-            clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
-
-            if(includeGazetteer)//Gazetteer
+            if (!string.IsNullOrEmpty(request.PostCode))
             {
+                dbArgs.Add("@postcode", request.PostCode.Replace(" ", "") + "%");
+                clause += " AND POSTCODE_NOSPACE LIKE @postcode  ";
+            }
+
+            if (!string.IsNullOrEmpty(request.AddressStatus.ToString())) //AddressStatus/LPI_LOGICAL_STATUS
+            {
+                dbArgs.Add("@addressStatus", GlobalConstants.MapAddressStatus(request.AddressStatus));
+                clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
+            }
+            if(!string.IsNullOrEmpty(request.UPRN))
+            {
+                dbArgs.Add("@uprn", request.UPRN);
+                clause += " AND UPRN = @uprn ";
+            }
+
+            if (!string.IsNullOrEmpty(request.USRN))
+            {
+                dbArgs.Add("@usrn", request.USRN);
+                clause += " AND USRN = @usrn ";
+            }
+            
+            if (request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
+            {
+                dbArgs.Add("@gazetteer", request.Gazeteer.ToString());
                 clause += " AND Gazetteer = @gazetteer ";
             }
 
