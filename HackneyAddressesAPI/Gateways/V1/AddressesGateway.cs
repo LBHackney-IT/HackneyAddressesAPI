@@ -171,6 +171,12 @@ namespace LBHAddressesAPI.Gateways.V1
                 dbArgs.Add("@usrn", request.USRN);
                 clause += " AND USRN = @usrn ";
             }
+
+            if (!string.IsNullOrEmpty(request.PropertyClass.ToString()))
+            {
+                dbArgs.Add("@primaryClass", request.PropertyClass.ToString());
+                clause += " AND USAGE_PRIMARY = @primaryClass ";
+            }
             
             if (request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
             {
