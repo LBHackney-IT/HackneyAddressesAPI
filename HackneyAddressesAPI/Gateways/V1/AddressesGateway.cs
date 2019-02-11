@@ -56,27 +56,26 @@ namespace LBHAddressesAPI.Gateways.V1
         /// <returns></returns>
         public async Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
-            var result = new PagedResults<AddressDetails>();
-            //Only add Gazetteer to query if NATIONAL or LOCAL are specified
-            //bool includeGazetteer = request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true;
+            var result = new PagedResults<AddressDetails>();            
             var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
             string query =  GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSearchAddressClause(request, true, true, ref dbArgs);
-     
-
+            string countQuery = GetAddressCountQuery() + GetSearchAddressClause(request, false, false, ref dbArgs);
+            
             using (var conn = new SqlConnection(_connectionString))
             {
                 //open connection explicity
                 conn.Open();
-                var all = await conn.QueryAsync<AddressDetails>(query,dbArgs).ConfigureAwait(false);
+                string sql = query + " " + countQuery;
 
-                result.Results = all?.ToList();
+                using (var multi = conn.QueryMultipleAsync(sql, dbArgs).Result)
+                {
+                    var all = multi.Read<AddressDetails>()?.ToList();
+                    var totalCount = multi.Read<int>().Single();
+                    result.Results = all?.ToList();
+                    result.TotalResultsCount = totalCount;
 
-                
-
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(request, false, false, ref dbArgs),dbArgs).ConfigureAwait(false);
-                //add to pages results
-                result.TotalResultsCount = totalCount.Sum();
-
+                }
+                                
                 conn.Close();
             }
 
