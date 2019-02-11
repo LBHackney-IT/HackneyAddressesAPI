@@ -73,14 +73,14 @@ namespace LBHAddressesAPI.Gateways.V1
                     var totalCount = multi.Read<int>().Single();
                     result.Results = all?.ToList();
                     result.TotalResultsCount = totalCount;
-
                 }
                                 
                 conn.Close();
             }
-
             return result;
         }
+        
+
 
         /// <summary>
         /// Return Simple addresses for matching search
@@ -95,19 +95,20 @@ namespace LBHAddressesAPI.Gateways.V1
             var dbArgs = new DynamicParameters();
 
             string query = GetAddressesQuery(GlobalConstants.Format.Simple) + GetSearchAddressClause(request, true, true, ref dbArgs);
-
+            string countQuery = GetAddressCountQuery() + GetSearchAddressClause(request, false, false, ref dbArgs);
             using (var conn = new SqlConnection(_connectionString))
             {
                 //open connection explicity
                 conn.Open();
-                var all = await conn.QueryAsync<AddressDetailsSimple>(query,dbArgs).ConfigureAwait(false);
+                string sql = query + " " + countQuery;
 
-                result.Results = all?.ToList();
-
-
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() + GetSearchAddressClause(request, false, false, ref dbArgs), dbArgs).ConfigureAwait(false);
-                //add to pages results
-                result.TotalResultsCount = totalCount.Sum();
+                using (var multi = conn.QueryMultipleAsync(sql, dbArgs).Result)
+                {
+                    var all = multi.Read<AddressDetailsSimple>()?.ToList();
+                    var totalCount = multi.Read<int>().Single();
+                    result.Results = all?.ToList();
+                    result.TotalResultsCount = totalCount;
+                }
 
                 conn.Close();
             }
@@ -120,7 +121,7 @@ namespace LBHAddressesAPI.Gateways.V1
         {
             if (format == GlobalConstants.Format.Detailed)
             {
-                return "SELECT LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier,POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude ";
+                return "SELECT LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude ";
             }
             else
             {

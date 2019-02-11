@@ -48,7 +48,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Parent Shell
         /// Residential
         /// Unclassified
-        /// null (default) 
+        /// ALL (default) 
         /// </summary>
         public GlobalConstants.PropertyClassPrimary ? PropertyClassPrimary  { get; set; }
 

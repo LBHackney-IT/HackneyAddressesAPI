@@ -23,6 +23,7 @@ namespace LBHAddressesAPI.Models
         public string locality { get; set; } //for NLPG results; should be null in results for LLPG
         public string gazetteer { get; set; } //“hackney” or “national”
         public string commercialOccupier { get; set; }
+        public string ward { get; set; }
         public string royalMailPostTown { get; set; }
         public string usageClassDescription { get; set; }
         public string usageClassPrimary { get; set; }
