@@ -49,7 +49,7 @@ namespace LBHAddressesAPI.Gateways.V1
         }
 
         /// <summary>
-        /// Return addresses for matching search
+        /// Return Detailed addresses for matching search
         /// </summary>
         /// <param name="request"></param> 
         /// <param name="cancellationToken"></param>
@@ -57,8 +57,9 @@ namespace LBHAddressesAPI.Gateways.V1
         public async Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
             var result = new PagedResults<AddressDetails>();
+            //Only add Gazetteer to query if NATIONAL or LOCAL are specified
             bool includeGazetteer = request.Gazeteer == Helpers.GlobalConstants.Gazetteer.Both ? false : true;
-            //TODO: Move the query in to a helper so it's in one place!
+            
             string query =  GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSearchAddressClauseWithPaging(request.Page, request.PageSize, includeGazetteer);
 
             using (var conn = new SqlConnection(_connectionString))
@@ -82,7 +83,43 @@ namespace LBHAddressesAPI.Gateways.V1
             }
 
             return result;
-        }        
+        }
+
+        /// <summary>
+        /// Return Simple addresses for matching search
+        /// </summary>
+        /// <param name="request"></param> 
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<PagedResults<AddressDetailsSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
+        {
+            var result = new PagedResults<AddressDetailsSimple>();
+            //Only add Gazetteer to query if NATIONAL or LOCAL are specified
+            bool includeGazetteer = request.Gazeteer == Helpers.GlobalConstants.Gazetteer.Both ? false : true;
+
+            string query = GetAddressesQuery(GlobalConstants.Format.Simple) + GetSearchAddressClauseWithPaging(request.Page, request.PageSize, includeGazetteer);
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                //open connection explicity
+                conn.Open();
+                var all = await conn.QueryAsync<AddressDetailsSimple>(query,
+                    new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }
+                ).ConfigureAwait(false);
+
+                result.Results = all?.ToList();
+
+
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() + GetSearchAddressClause(true, includeGazetteer), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
+                //add to pages results
+                result.TotalResultsCount = totalCount.Sum();
+
+                conn.Close();
+            }
+
+            return result;
+        }
+
 
         private static string GetAddressesQuery(GlobalConstants.Format format)
         {
@@ -92,7 +129,7 @@ namespace LBHAddressesAPI.Gateways.V1
             }
             else
             {
-                return "";
+                return "SELECT SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4, POSTTOWN as City, Postcode, UPRN, LPI_KEY as AddressID ";
             }
         }
 
