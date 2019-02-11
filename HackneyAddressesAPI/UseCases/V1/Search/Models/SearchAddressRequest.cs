@@ -17,9 +17,8 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         //    [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
         //    [FromQuery]string PropertyClassCode = null/*,
         //    [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
-        //    [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
-        //    [FromQuery]int? Limit = GlobalConstants.LIMIT,
-        //    [FromQuery]int? Offset = GlobalConstants.OFFSET)
+
+
 
 
         /// <summary>
@@ -37,6 +36,16 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Allows a switch between simple and detailed address
         /// </summary>
         public GlobalConstants.Format Format { get; set; }
+
+        /// <summary>
+        /// Allows switch between address statuses:
+        /// Alternative
+        /// Approved Preferred
+        /// Historical
+        /// Provisional
+        /// Rejected Internal
+        /// </summary>
+        public GlobalConstants.AddressStatus AddressStatus { get; set; }
 
 
         /// <summary>

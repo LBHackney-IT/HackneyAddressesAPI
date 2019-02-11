@@ -58,14 +58,12 @@ namespace LBHAddressesAPI.Gateways.V1
         {
             var result = new PagedResults<AddressDetails>();
             //Only add Gazetteer to query if NATIONAL or LOCAL are specified
-            bool includeGazetteer = request.Gazeteer == Helpers.GlobalConstants.Gazetteer.Both ? false : true;
+            bool includeGazetteer = request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true;
             
-            string query =  GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSearchAddressClauseWithPaging(request.Page, request.PageSize, includeGazetteer);
+            string query =  GetAddressesQuery(GlobalConstants.Format.Detailed) + GetSearchAddressClause(request, includeGazetteer, true, true);
 
             using (var conn = new SqlConnection(_connectionString))
             {
-                
-
                 //open connection explicity
                 conn.Open();
                 var all = await conn.QueryAsync<AddressDetails>(query,
@@ -75,7 +73,7 @@ namespace LBHAddressesAPI.Gateways.V1
                 result.Results = all?.ToList();
 
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(true, includeGazetteer), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() +  GetSearchAddressClause(request, includeGazetteer, false, false), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -97,7 +95,7 @@ namespace LBHAddressesAPI.Gateways.V1
             //Only add Gazetteer to query if NATIONAL or LOCAL are specified
             bool includeGazetteer = request.Gazeteer == Helpers.GlobalConstants.Gazetteer.Both ? false : true;
 
-            string query = GetAddressesQuery(GlobalConstants.Format.Simple) + GetSearchAddressClauseWithPaging(request.Page, request.PageSize, includeGazetteer);
+            string query = GetAddressesQuery(GlobalConstants.Format.Simple) + GetSearchAddressClause(request, includeGazetteer, true, true);
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -110,7 +108,7 @@ namespace LBHAddressesAPI.Gateways.V1
                 result.Results = all?.ToList();
 
 
-                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() + GetSearchAddressClause(true, includeGazetteer), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
+                var totalCount = await conn.QueryAsync<int>(GetAddressCountQuery() + GetSearchAddressClause(request, includeGazetteer, false, false), new { postcode = request.PostCode.Replace(" ", "") + "%", gazetteer = request.Gazeteer.ToString() }).ConfigureAwait(false);
                 //add to pages results
                 result.TotalResultsCount = totalCount.Sum();
 
@@ -143,20 +141,22 @@ namespace LBHAddressesAPI.Gateways.V1
             return " FROM dbo.combined_address WHERE LPI_KEY = @key";
         }
 
-        private static string GetSearchAddressClause(bool includeRecompile, bool includeGazetteer)
+        
+        private static string GetSearchAddressClause(SearchAddressRequest request, bool includeGazetteer, bool includePaging, bool includeRecompile)
         {
-            string clause = string.Format(" FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode {0} AND BLPU_CLASS NOT LIKE 'P%' {1} ", includeGazetteer? "AND Gazetteer = @gazetteer": "" , includeRecompile == true ? "OPTION(RECOMPILE)" : "");
-            return clause; 
-        }
-
-        private static string GetSearchAddressClauseWithPaging(int page, int pageSize, bool includeGazetteer)
-        {
+            int page = request.Page;
+            int pageSize = request.PageSize;
             int lower = 0;
             lower = page == 0 ? 1 : page * pageSize;
             // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
-            string clause = GetSearchAddressClause(false, includeGazetteer);
-            clause += "ORDER BY street_description, building_number DESC ";
-            clause += string.Format("OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY OPTION(RECOMPILE)", lower, pageSize);
+            string clause = string.Format(" FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode {0} AND BLPU_CLASS NOT LIKE 'P%' ", includeGazetteer ? "AND Gazetteer = @gazetteer" : "");
+            if (includePaging)
+            {
+                clause += "ORDER BY street_description, building_number DESC ";
+                clause += string.Format("OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY", lower, pageSize);
+            }
+            if(includeRecompile)
+            clause += " OPTION(RECOMPILE)";
             return clause;
         }
     }
