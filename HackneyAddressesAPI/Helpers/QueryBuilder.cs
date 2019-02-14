@@ -1,87 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Dapper;
-using FluentAssertions;
-using Xunit;
-using System.Data.SqlClient;
-using LBHAddressesAPI.Gateways.V1;
-using LBHAddressesAPI.Models;
-using LBHAddressesAPITest.Helpers.Stub;
-using System.Threading.Tasks;
-using System.Threading;
-using LBHAddressesAPITest.Helpers;
-using LBHAddressesAPITest.Helpers.Data;
+﻿using Dapper;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
-using LBHAddressesAPI.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace LBHAddressesAPITest.Test.Gateways.V1
+namespace LBHAddressesAPI.Helpers
 {
-    public class AddressGatewayTest : IClassFixture<DatabaseFixture>
+    public class QueryBuilder
     {
-
-        readonly DatabaseFixture _databaseFixture;
-        private readonly IAddressesGateway _classUnderTest;
-
-        public AddressGatewayTest(DatabaseFixture fixture)
+        public static string GetSingleAddress(GlobalConstants.Format detailed)
         {
-            _databaseFixture = fixture;
-            _classUnderTest = new AddressesGateway(_databaseFixture.ConnectionString);
+            return GetAddressesQuery(detailed) + GetSingleAddressClause();
         }
 
-        [Fact]
-        public async Task can_retrieve_using_address_id()
+        public static string GetSearchAddressQuery(GlobalConstants.Format format, SearchAddressRequest request, bool includePaging, bool includeRecompile, bool isCountQuery, ref DynamicParameters dbArgs)
         {
-            string key = "0123456789abcd";
-            var expectedAddress = Fake.GenerateAddressProvidingKey(key);
-            TestDataHelper.InsertAddress(expectedAddress, _databaseFixture.Db);
-
-            var response = await _classUnderTest.GetSingleAddressAsync(new GetAddressRequest
+            if (isCountQuery)
             {
-                addressID = key
-            }, CancellationToken.None);
-
-            response.Should().NotBeNull();
-            response.AddressID.Should().BeEquivalentTo(key);
-
-            /*var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
-            {
-                SearchTerm = tenancyRef,
-                PageSize = 10,
-                Page = 1
-            }, CancellationToken.None);
-            //assert
-            response.Should().NotBeNull();
-            response.Results.Should().NotBeNullOrEmpty();
-            response.Results.Count.Should().Be(1);
-            response.Results[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);*/
-
-
-        }
-
-        [Fact]
-        public async Task GetCorrectQuery()
-        {
-            GlobalConstants.Format format = GlobalConstants.Format.Detailed;
-            bool parentShell = false;
-
-            string selectSimpleColumns = string.Format(" SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4{0} ", format == GlobalConstants.Format.Simple ? ", POSTTOWN as City, Postcode, UPRN, LPI_KEY as AddressID " : " ");
-            string selectDetailedColumns = string.Format(" LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude, {0} ", selectSimpleColumns);
-            string selectParentShells = " WITH SEED AS (SELECT * FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @varPCID UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) SELECT DISTINCT {0} from SEED S ";
-
-            string query = string.Empty;
-
-            if (format == GlobalConstants.Format.Detailed)
-            {
-                query = parentShell ? query = string.Format(selectParentShells, selectDetailedColumns) : "SELECT " + selectDetailedColumns;
+                return GetAddressCountQuery() + GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs);
             }
             else
             {
-                query = parentShell ? query = string.Format(selectParentShells, selectSimpleColumns) : string.Format("SELECT {0} ", selectSimpleColumns);
+                return GetAddressesQuery(format) + GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs);
             }
-            
-            query = query;
+
         }
+
+        private static string GetAddressesQuery(GlobalConstants.Format format)
+        {
+            string selectSimpleColumns = string.Format(" SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4{0} ", format == GlobalConstants.Format.Simple ? ", POSTTOWN as City, Postcode, UPRN, LPI_KEY as AddressID " : " ");
+            string selectDetailedColumns = string.Format(" LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, POSTTOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude, {0} ", selectSimpleColumns);
+            string selectParentShells = string.Format(" WITH SEED AS (SELECT * FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @varPCID UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) SELECT DISTINCT {0} from SEED S ", selectDetailedColumns);
+
+            string query = string.Empty;
+            if (format == GlobalConstants.Format.Detailed)
+            {
+                query = "SELECT " + selectDetailedColumns;
+                query += selectSimpleColumns;
+            }
+            else
+            {
+                query = string.Format("SELECT {0} ", selectSimpleColumns);
+            }
+            return query;
+        }
+
+       
+        private static string GetAddressCountQuery()
+        {
+            return "SELECT count(1) ";
+        }
+
+        private static string GetSingleAddressClause()
+        {
+            return " FROM dbo.combined_address WHERE LPI_KEY = @key";
+        }
+
+
         private static string GetSearchAddressClause(SearchAddressRequest request, bool includePaging, bool includeRecompile, ref DynamicParameters dbArgs)
         {
 
@@ -144,7 +120,5 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
             }
             return clause;
         }
-
-
     }
 }
