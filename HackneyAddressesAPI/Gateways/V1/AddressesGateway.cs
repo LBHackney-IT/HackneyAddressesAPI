@@ -58,8 +58,8 @@ namespace LBHAddressesAPI.Gateways.V1
         {
             var result = new PagedResults<AddressDetails>();            
             var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
-            string query = QueryBuilder.GetSearchAddressQuery(GlobalConstants.Format.Detailed, request, true, true, false, ref dbArgs);
-            string countQuery = QueryBuilder.GetSearchAddressQuery(GlobalConstants.Format.Detailed, request, false, false, false, ref dbArgs);
+            string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
+            string countQuery = QueryBuilder.GetSearchAddressQuery(request, false, false, false, ref dbArgs);
             
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -94,8 +94,8 @@ namespace LBHAddressesAPI.Gateways.V1
 
             var dbArgs = new DynamicParameters();
 
-            string query = QueryBuilder.GetSearchAddressQuery(GlobalConstants.Format.Simple, request, true, true, false, ref dbArgs);
-            string countQuery = QueryBuilder.GetSearchAddressQuery(GlobalConstants.Format.Simple, request, false, false, false, ref dbArgs);
+            string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
+            string countQuery = QueryBuilder.GetSearchAddressQuery(request, false, false, false, ref dbArgs);
 
 
             using (var conn = new SqlConnection(_connectionString))
