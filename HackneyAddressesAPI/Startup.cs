@@ -25,9 +25,15 @@ namespace LBHAddressesAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -36,8 +42,8 @@ namespace LBHAddressesAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //TODO: THis needs to be changed before putting in to prod. 
-            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
-            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
+            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
+            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringDev");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringTest");
             var settings = Configuration.Get<ConfigurationSettings>();
