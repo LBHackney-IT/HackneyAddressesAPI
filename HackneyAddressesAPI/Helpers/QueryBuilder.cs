@@ -43,7 +43,7 @@ namespace LBHAddressesAPI.Helpers
             if (IncludeParentShell(request))
             {
                 //TODO: need to work out how to get the query working in this one...
-                return string.Format(" WITH SEED AS (SELECT * FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) {0} from SEED S {1} ", isCountQuery ? selectedColumns : "SELECT DISTINCT " + selectedColumns, isCountQuery ? GetSearchAddressClause(request, false, false, ref dbArgs) : GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs));
+                return string.Format(" ;WITH SEED AS (SELECT * FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @postcode UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) {0} from SEED S {1} ", isCountQuery ? selectedColumns : "SELECT DISTINCT " + selectedColumns, isCountQuery ? GetSearchAddressClause(request, false, false, ref dbArgs) : GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs));
             }
             else
             {
@@ -58,6 +58,13 @@ namespace LBHAddressesAPI.Helpers
             }
         }
 
+        /// <summary>
+        /// test to decide whether parent shells should be included in query. 
+        /// Can come from PropertyClassPrimary being set to ParentShell
+        /// Can also come from 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         private static bool IncludeParentShell(SearchAddressRequest request)
         {
             if (request.PropertyClassPrimary == GlobalConstants.PropertyClassPrimary.ParentShell)
@@ -125,7 +132,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassPrimary.ToString()))
             {
-                dbArgs.Add("@primaryClass", request.PropertyClassPrimary.ToString());
+                dbArgs.Add("@primaryClass", GlobalConstants.MapPrimaryPropertyClass((GlobalConstants.PropertyClassPrimary)request.PropertyClassPrimary));
                 clause += " AND USAGE_PRIMARY = @primaryClass ";
             }
 
@@ -148,7 +155,17 @@ namespace LBHAddressesAPI.Helpers
                 int lower = 0;
                 lower = page == 0 || page == 1 ? 0 : page * pageSize;
                 // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
-                clause += " ORDER BY street_description, building_number DESC ";
+
+                if (request.Format == GlobalConstants.Format.Detailed)
+                {
+                    clause += " ORDER BY street_description, building_number DESC ";
+                }
+                else
+                {
+                    clause += " ORDER BY Line2, Line1 DESC ";
+                }
+
+
                 clause += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
             }
             if (includeRecompile)//recompile
