@@ -19,6 +19,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
 using LBHAddressesAPI.Infrastructure.V1.Services;
 using LBHAddressesAPI.Infrastructure.V1.Middleware;
+using LBHAddressesAPI.Settings;
 
 namespace LBHAddressesAPI
 {
@@ -39,6 +40,7 @@ namespace LBHAddressesAPI
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringDev");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringTest");
+            var settings = Configuration.Get<ConfigurationSettings>();
 
             services.ConfigureAddressSearch(connectionString);
 
@@ -72,6 +74,8 @@ namespace LBHAddressesAPI
             });
 
             services.AddCustomServices();
+
+            services.ConfigureLogging(Configuration, settings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
