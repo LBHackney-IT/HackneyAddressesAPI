@@ -19,6 +19,15 @@ namespace LBHAddressesAPI.Helpers
             return GetAddressesQuery(request, includePaging, includeRecompile, isCountQuery, ref dbArgs);
         }
 
+        /// <summary>
+        /// Does all the work for returning the right query with the right select and where parameters for the incoming request
+        /// </summary>
+        /// <param name="request">Request object from the API call</param>
+        /// <param name="includePaging">Whether to include paging</param>
+        /// <param name="includeRecompile">Whether to include the recompile...(Not sure if this is needed)</param>
+        /// <param name="isCountQuery">The DB call needs the count in order to effectively do the paging</param>
+        /// <param name="dbArgs">ref object which builds up the database parameter arguments</param>
+        /// <returns>the SQL query to be run on the database</returns>
         private static string GetAddressesQuery(SearchAddressRequest request, bool includePaging, bool includeRecompile, bool isCountQuery, ref DynamicParameters dbArgs)
         {
             string selectedColumns = string.Empty;
@@ -33,26 +42,30 @@ namespace LBHAddressesAPI.Helpers
             {
                 if (format == GlobalConstants.Format.Detailed)
                 {
+                    //requested format is detailed so we request columns but also include simple format
                     selectedColumns = string.Format(selectDetailedColumns, string.Format(selectSimpleColumns,""));
                 }
                 else
                 {
+                    //Requested format is simple so we amend query accordingly
                     selectedColumns = string.Format(selectSimpleColumns, format == GlobalConstants.Format.Simple ? ", TOWN as City, Postcode, UPRN, LPI_KEY as AddressID " : " ");
                 }
             }
             if (IncludeParentShell(request))
             {
-                //TODO: need to work out how to get the query working in this one...
+                //if parent shells are needed we need to take into account parents with no postcode hence query changes
                 return string.Format(" ;WITH SEED AS (SELECT * FROM dbo.combined_address L {0} UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) {1} from SEED S {2} ", GetSearchAddressClause(request, false, false, ref dbArgs), isCountQuery ? selectedColumns : "SELECT DISTINCT " + selectedColumns, isCountQuery ? GetSearchAddressClause(request, false, false, ref dbArgs) : GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs));
             }
             else
             {
                 if (isCountQuery)
                 {
+                    //count query so we change format of query
                     return selectedColumns + GetSearchAddressClause(request, false, includeRecompile, ref dbArgs);
                 }
                 else
                 {
+                    //not count query so we format the query accordingly
                     return "SELECT " + selectedColumns + GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs);
                 }
             }
@@ -61,10 +74,10 @@ namespace LBHAddressesAPI.Helpers
         /// <summary>
         /// test to decide whether parent shells should be included in query. 
         /// Can come from PropertyClassPrimary being set to ParentShell
-        /// Can also come from 
+        /// Can also come from other fields (to be determined)
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>whether to include parent shells or not</returns>
         private static bool IncludeParentShell(SearchAddressRequest request)
         {
             if (request.PropertyClassPrimary == GlobalConstants.PropertyClassPrimary.ParentShell)
@@ -93,7 +106,14 @@ namespace LBHAddressesAPI.Helpers
         }
         
 
-
+        /// <summary>
+        /// Formats the Where clause of the SQL query depending on the provided paramaters
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="includePaging"></param>
+        /// <param name="includeRecompile"></param>
+        /// <param name="dbArgs"></param>
+        /// <returns>WHERE clause portion of the SQL query</returns>
         private static string GetSearchAddressClause(SearchAddressRequest request, bool includePaging, bool includeRecompile, ref DynamicParameters dbArgs)
         {
             string clause = string.Empty;
