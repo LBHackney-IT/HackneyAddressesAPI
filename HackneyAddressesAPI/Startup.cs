@@ -34,8 +34,10 @@ namespace LBHAddressesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
+            //TODO: THis needs to be changed before putting in to prod. 
+            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
+            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringDev");
+            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringTest");
 
             services.ConfigureAddressSearch(connectionString);
 

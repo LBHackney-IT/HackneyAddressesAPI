@@ -72,13 +72,11 @@ namespace LBHAddressesAPI.Helpers
         {
             string selectSimpleColumns = string.Format(" SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4{0} ", format == GlobalConstants.Format.Simple ? ", TOWN as City, Postcode, UPRN, LPI_KEY as AddressID " : " ");
             string selectDetailedColumns = string.Format(" LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, TOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude, {0} ", selectSimpleColumns);
-            string selectParentShells = string.Format(" WITH SEED AS (SELECT * FROM dbo.combined_address L WHERE POSTCODE_NOSPACE LIKE @varPCID UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) SELECT DISTINCT {0} from SEED S ", selectDetailedColumns);
 
             string query = string.Empty;
             if (format == GlobalConstants.Format.Detailed)
             {
                 query = "SELECT " + selectDetailedColumns;
-                query += selectSimpleColumns;
             }
             else
             {
