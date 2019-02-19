@@ -14,4 +14,4 @@ while ! /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Rooty-Tooty -d master 
     echo 'Waiting for db'; sleep 3; \
 done &&\
 echo '--- running migrationns ---\n' &&\ 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Rooty-Tooty -d master -i /usr/src/app/setup.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Rooty-Tooty -d master -i /usr/src/app/StubAddressDB/setup.sql
