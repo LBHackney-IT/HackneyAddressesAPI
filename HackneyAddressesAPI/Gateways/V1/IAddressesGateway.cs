@@ -1,4 +1,5 @@
-﻿using LBHAddressesAPI.Models;
+﻿using LBHAddressesAPI.Infrastructure.V1.API;
+using LBHAddressesAPI.Models;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace LBHAddressesAPI.Gateways.V1
     {
         Task<AddressDetails> GetSingleAddressAsync(GetAddressRequest request, CancellationToken cancellationToken);
 
-        Task<List<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
+        Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
+
+        Task<PagedResults<AddressDetailsSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
     }
 }

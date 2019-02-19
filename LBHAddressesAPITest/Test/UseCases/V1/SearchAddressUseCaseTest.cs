@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using System.Threading;
 using LBHAddressesAPI.Infrastructure.V1.Exceptions;
+using LBHAddressesAPI.Infrastructure.V1.API;
 
 namespace LBHAddressesAPITest
 {
@@ -29,7 +30,43 @@ namespace LBHAddressesAPITest
 
 
 
-        
+        [Fact]
+        public async Task GivenLocalGazetteer_WhenExecuteAsync_ThenOnlyLocalAddressesShouldBeReturned()
+        {
+            var addresses = new List<AddressDetails>
+            {
+                new AddressDetails
+                {
+                    AddressID = "ABCDEFGHIJKLMN", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "NATIONAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified", usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                },
+                new AddressDetails
+                {
+                    AddressID = "ABCDEFGHIJKLM2", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "LOCAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified", usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                }
+            };
+
+            var postcode = "RM3 0FS";
+            var gazetteer = "LOCAL";
+            var request = new SearchAddressRequest
+            {
+                PostCode = postcode,
+                Gazeteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
+            };
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS") && i.Gazeteer == LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local), CancellationToken.None))
+                .ReturnsAsync(new PagedResults<AddressDetails>
+                {
+                    Results = addresses,
+                    TotalResultsCount = 1
+                });
+
+            var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
+            response.Should().NotBeNull();
+            response.Addresses.Count().Should().Equals(1);
+            response.TotalCount.Should().Equals(1);
+            response.Addresses[0].gazetteer.Should().Equals(gazetteer);
+        }
+
+
 
         [Fact]
         public async Task GivenValidInput_WhenGatewayRespondsWithNull_ThenResponseShouldBeNull()
@@ -37,12 +74,12 @@ namespace LBHAddressesAPITest
             //arrange
             var postcode = "RM3 0FS";
             
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
-                .ReturnsAsync(null as List<AddressDetails>);
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
+                .ReturnsAsync(null as PagedResults<AddressDetails>);
 
             var request = new SearchAddressRequest
             {
-                postCode = postcode
+                PostCode = postcode
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
@@ -68,14 +105,19 @@ namespace LBHAddressesAPITest
             var postcode = "RM3 0FS";
             var request = new SearchAddressRequest
             {
-                postCode = postcode
+                PostCode = postcode
             };
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS")), CancellationToken.None))
-                .ReturnsAsync(addresses);
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS")), CancellationToken.None))
+                .ReturnsAsync(new PagedResults<AddressDetails>
+                {
+                    Results = addresses,
+                    TotalResultsCount = 2
+                });
 
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
             response.Should().NotBeNull();
             response.Addresses.Count().Should().Equals(2);
+            response.TotalCount.Should().Equals(2);
         }
 
 
@@ -115,10 +157,13 @@ namespace LBHAddressesAPITest
             var postcode = "RM3 0FS";
             var request = new SearchAddressRequest
             {
-                postCode = postcode
+                PostCode = postcode
             };
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.postCode.Equals("RM3 0FS")), CancellationToken.None))
-                .ReturnsAsync(addresses);
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS")), CancellationToken.None))
+                .ReturnsAsync(new PagedResults<AddressDetails>
+                {
+                    Results = addresses
+                });
 
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
 

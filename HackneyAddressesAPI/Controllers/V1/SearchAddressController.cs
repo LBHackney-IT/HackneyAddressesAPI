@@ -5,6 +5,7 @@ using LBHAddressesAPI.Models;
 using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Extensions.Controller;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
+using LBHAddressesAPI.Helpers;
 
 namespace LBHAddressesAPI.Controllers.V1
 {
@@ -22,28 +23,23 @@ namespace LBHAddressesAPI.Controllers.V1
         {
             _searchAddressUseCase = searchAddressUseCase;
         }
-		
 
-        /*[HttpGet, MapToApiVersion("2")]
-        [ProducesResponseType(typeof(APIResponse<SearchTenancyResponse>), 200)]
-        public async Task<IActionResult> Get([FromQuery]SearchTenancyRequest request)*/
+
+        /// <summary>
+        /// Search Controller V1 to search for addresses
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [ProducesResponseType(typeof(APIResponse<SearchAddressResponse>), 200)]
-        [HttpGet]
-        public async Task<IActionResult> GetAddresses([FromQuery]string Postcode = null/*,
-            [FromQuery]string USRN = null,
-            [FromQuery]string UPRN = null,
-            [FromQuery]GlobalConstants.PropertyClassPrimary? PropertyClass = null,
-            [FromQuery]string PropertyClassCode = null/*,
-            [FromQuery]GlobalConstants.AddressStatus AddressStatus = GlobalConstants.AddressStatus.ApprovedPreferred,
-            [FromQuery]GlobalConstants.Format Format = GlobalConstants.Format.Simple,
-            [FromQuery]GlobalConstants.Gazetteer Gazetteer = GlobalConstants.Gazetteer.Local,
-            [FromQuery]int? Limit = GlobalConstants.LIMIT,
-            [FromQuery]int? Offset = GlobalConstants.OFFSET*/)
+        [HttpGet, MapToApiVersion("1")]       
+        public async Task<IActionResult> GetAddresses([FromQuery] SearchAddressRequest request)
         {
-            SearchAddressRequest request = new SearchAddressRequest { postCode = Postcode };
             var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
+            //We convert the result to an APIResponse via extensions on BaseController
             return HandleResponse(response);
-
         }
 
     }
