@@ -22,10 +22,8 @@ namespace LBHAddressesAPITest.Test
             {
                 // do nothing
             }
-            ConnectionString = "server=localhost\\SQLExpress,1433; database=ADDRESSES_API_LOCAL; User Id=addressesAPI_dev;Password=LLPGdev;";
-            //Db = new SqlConnection(DotNetEnv.Env.GetString("LLPGConnectionStringLOCAL"));
+            ConnectionString =  DotNetEnv.Env.GetString("LLPGConnectionString");
             Db = new SqlConnection(ConnectionString);
-
             Db.Open();
         }
 
