@@ -4,22 +4,18 @@ services:
   lbhaddressesapi:
     image: lbhaddressesapi
     build:
-      context: .
-      dockerfile: HackneyAddressesAPI/Dockerfile
-      args:
-        - VERSION_SUFFIX
+      context: HackneyAddressesAPI/
+      dockerfile: ./Dockerfile
     ports:
-      - 3000:80
+      - 9000:9000
     links:
-     - stubaddressdb
-  lbhaddressesapitest:
-    image: lbhaddressesapitest
-    build:
-      context: .
-      dockerfile: LBHAddressesAPITest/Dockerfile
-    links:
-     - lbhaddressesapi
-     - stubaddressdb
+      - stubaddressdb
+    volumes:
+      - './lbhaddressesapi:/app'
+      - 'out:/app/out'
+      - 'obj:/app/obj'
+      - 'bin:/app/bin'
+
   stubaddressdb:
     image: stubaddressdb
     build:
@@ -28,3 +24,13 @@ services:
     ports:
       - 1433:1433
 
+  lbhaddressesapitest:
+    image: lbhaddressesapitest
+    build:
+      context: .
+      dockerfile: LBHAddressesAPITest/Dockerfile
+
+volumes:
+  obj:
+  bin:
+  out:

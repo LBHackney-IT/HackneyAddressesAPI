@@ -1,32 +1,16 @@
-﻿FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
-WORKDIR /app
-EXPOSE ${PORT:-80}
-
-FROM microsoft/dotnet:latest AS build
-WORKDIR /src
-COPY LBHAddressesAPI.sln ./
-COPY HackneyAddressesAPI/LBHAddressesAPI.csproj HackneyAddressesAPI/
-
-ARG VERSION_SUFFIX
-ENV VERSION_SUFFIX=${VERSION_SUFFIX:-buildNumberUnsupplied}
-RUN echo "Build number: $VERSION_SUFFIX"
-
-COPY . .
-RUN dotnet restore LBHAddressesAPI.sln -nowarn:msb3202,nu1503
-
-#RUN dotnet build LBHAddressesAPI.csproj -c Release
-
-FROM build AS publish
-RUN dotnet publish HackneyAddressesAPI/LBHAddressesAPI.csproj -c Release -o /app --version-suffix "${VERSION_SUFFIX}"
-
-FROM base AS final
+﻿
+FROM microsoft/dotnet:2.2-sdk
 WORKDIR /app
 
-ENV CORECLR_ENABLE_PROFILING=1 \
-  CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A} 
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
 
-COPY --from=publish /app .
+# Copy everything else and build
+COPY . ./
 
+RUN dotnet publish -c Release -o out
 
-EXPOSE ${PORT:-80}
-CMD ASPNETCORE_URLS=http://+:${PORT:-80} dotnet LBHAddressesAPI.dll
+CMD ASPNETCORE_URLS=http://+:${PORT:-9000} dotnet ./out/LBHAddressesAPI.dll
+
+EXPOSE ${PORT:-9000}
