@@ -54,9 +54,9 @@ namespace LBHAddressesAPI.Gateways.V1
         /// <param name="request"></param> 
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
+        public async Task<PagedResults<AddressBase>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
-            var result = new PagedResults<AddressDetails>();            
+            var result = new PagedResults<AddressBase>();            
             var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
             string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
             string countQuery = QueryBuilder.GetSearchAddressQuery(request, false, false, true, ref dbArgs);
@@ -69,7 +69,7 @@ namespace LBHAddressesAPI.Gateways.V1
 
                 using (var multi = conn.QueryMultipleAsync(sql, dbArgs).Result)
                 {
-                    var all = multi.Read<AddressDetails>()?.ToList();
+                    var all = multi.Read<AddressBase>()?.ToList();
                     var totalCount = multi.Read<int>().Single();
                     result.Results = all?.ToList();
                     result.TotalResultsCount = totalCount;
@@ -82,41 +82,7 @@ namespace LBHAddressesAPI.Gateways.V1
         
 
 
-        /// <summary>
-        /// Return Simple addresses for matching search
-        /// </summary>
-        /// <param name="request"></param> 
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<PagedResults<AddressDetailsSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
-        {
-            var result = new PagedResults<AddressDetailsSimple>();
-
-            var dbArgs = new DynamicParameters();
-
-            string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            string countQuery = QueryBuilder.GetSearchAddressQuery(request, false, false, false, ref dbArgs);
-
-
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                //open connection explicity
-                conn.Open();
-                string sql = query + " " + countQuery;
-
-                using (var multi = conn.QueryMultipleAsync(sql, dbArgs).Result)
-                {
-                    var all = multi.Read<AddressDetailsSimple>()?.ToList();
-                    var totalCount = multi.Read<int>().Single();
-                    result.Results = all?.ToList();
-                    result.TotalResultsCount = totalCount;
-                }
-
-                conn.Close();
-            }
-
-            return result;
-        }
+   
 
 
         

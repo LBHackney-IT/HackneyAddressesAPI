@@ -41,8 +41,8 @@ namespace LBHAddressesAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //TODO: THis needs to be changed before putting in to prod. 
-            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
-            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
+            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
+            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringDev");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringTest");
 

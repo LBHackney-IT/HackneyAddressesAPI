@@ -53,7 +53,7 @@ namespace LBHAddressesAPITest
                 Gazeteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
             };
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS") && i.Gazeteer == LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local), CancellationToken.None))
-                .ReturnsAsync(new PagedResults<AddressDetails>
+                .ReturnsAsync(new PagedResults<AddressBase>
                 {
                     Results = addresses,
                     TotalResultsCount = 1

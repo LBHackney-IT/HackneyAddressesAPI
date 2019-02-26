@@ -17,8 +17,7 @@ namespace LBHAddressesAPI
         {
             services.AddTransient<IValidator, Validator>();
             services.AddTransient<IFormatter, Formatter>();
-
-            services.AddTransient<IAddressesActions, AddressesActions>();
+            
             services.AddTransient<IStreetsActions, StreetsActions>();
             
             services.AddTransient<IFilterObjectBuilder, FilterObjectBuilder>();

@@ -13,8 +13,8 @@ namespace LBHAddressesAPI.Gateways.V1
     {
         Task<AddressDetails> GetSingleAddressAsync(GetAddressRequest request, CancellationToken cancellationToken);
 
-        Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
+        Task<PagedResults<AddressBase>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
 
-        Task<PagedResults<AddressDetailsSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
+        //Task<PagedResults<AddressDetailsSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
     }
 }
