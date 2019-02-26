@@ -7,8 +7,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Web;
 
 namespace LBHAddressesAPI
 {

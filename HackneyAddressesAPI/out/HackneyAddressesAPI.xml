@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LBHAddressesAPI</name>
+    </assembly>
+    <members>
+        <member name="M:LBHAddressesAPI.Controllers.V1.GetAddressController.GetAddress(System.String)">
+            <summary>
+            Returns an address from the given addressID or LPI_Key
+            </summary>
+            <param name="addressID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Controllers.V1.SearchAddressController.GetAddresses(LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest)">
+            <summary>
+            Search Controller V1 to search for addresses
+            </summary>
+            <remarks>
+            
+            </remarks>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHAddressesAPI.Extensions.Controller.CancellableAPIRequestExtensions">
+            <summary>
+            Extension Helper class to help get CancellationTokens from APIRequests
+            </summary>
+        </member>
+        <member name="M:LBHAddressesAPI.Extensions.Controller.CancellableAPIRequestExtensions.GetCancellationToken(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            This allows us to get a CancellationToken from the HTTPContext so if the user
+            Cancels the request on the browser we can potentally cancel the request in the API
+            However if the HTTPContext is Null Return a default CancellationToken
+            </summary>
+            <param name="httpContext"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Extensions.Controller.CancellableAPIRequestExtensions.GetCancellationToken(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            This allows us to get a CancellationToken from the HTTPContext so if the user
+            Cancels the request on the browser we can potentally cancel the request in the API
+            However if the HTTPContext is Null Return a default CancellationToken
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHAddressesAPI.Extensions.Controller.ControllerExtensions">
+            <summary>
+            Extension class to help format a positive response into an standardised API Response
+            </summary>
+        </member>
+        <member name="M:LBHAddressesAPI.Extensions.Controller.ControllerExtensions.ExecuteStandardResponse``1(Microsoft.AspNetCore.Mvc.Controller,LBHAddressesAPI.Infrastructure.V1.UseCase.Execution.IExecuteWrapper{``0})">
+            <summary>
+            Formats ExecuteWrapper which can be positve or negative Responses into standardised APIResponses
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="controller"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Extensions.Controller.ControllerExtensions.StandardResponse``1(Microsoft.AspNetCore.Mvc.Controller,``0)">
+            <summary>
+            Formats postive responses from UseCases into APIResponses
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="controller"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHAddressesAPI.Extensions.String.StringExtensions">
+            <summary>
+            Extension class to help with common string validation
+            </summary>
+        </member>
+        <member name="M:LBHAddressesAPI.Extensions.String.StringExtensions.IsNullOrEmptyOrWhiteSpace(System.String)">
+            <summary>
+            Confirm string does not have any text
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Extensions.String.StringExtensions.IsNotNullOrEmptyOrWhiteSpace(System.String)">
+            <summary>
+            Confirm we have a string with some text
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Gateways.V1.AddressesGateway.GetSingleAddressAsync(LBHAddressesAPI.UseCases.V1.Search.Models.GetAddressRequest,System.Threading.CancellationToken)">
+            <summary>
+            Return an address for a given LPI_Key
+            </summary>
+            <param name="request"></param> 
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Gateways.V1.AddressesGateway.SearchAddressesAsync(LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest,System.Threading.CancellationToken)">
+            <summary>
+            Return Detailed addresses for matching search
+            </summary>
+            <param name="request"></param> 
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Gateways.V1.AddressesGateway.SearchSimpleAddressesAsync(LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest,System.Threading.CancellationToken)">
+            <summary>
+            Return Simple addresses for matching search
+            </summary>
+            <param name="request"></param> 
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Helpers.QueryBuilder.GetAddressesQuery(LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest,System.Boolean,System.Boolean,System.Boolean,Dapper.DynamicParameters@)">
+            <summary>
+            Does all the work for returning the right query with the right select and where parameters for the incoming request
+            </summary>
+            <param name="request">Request object from the API call</param>
+            <param name="includePaging">Whether to include paging</param>
+            <param name="includeRecompile">Whether to include the recompile...(Not sure if this is needed)</param>
+            <param name="isCountQuery">The DB call needs the count in order to effectively do the paging</param>
+            <param name="dbArgs">ref object which builds up the database parameter arguments</param>
+            <returns>the SQL query to be run on the database</returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Helpers.QueryBuilder.IncludeParentShell(LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest)">
+            <summary>
+            test to decide whether parent shells should be included in query. 
+            Can come from PropertyClassPrimary being set to ParentShell
+            Can also come from other fields (to be determined)
+            </summary>
+            <param name="request"></param>
+            <returns>whether to include parent shells or not</returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Helpers.QueryBuilder.GetSearchAddressClause(LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest,System.Boolean,System.Boolean,Dapper.DynamicParameters@)">
+            <summary>
+            Formats the Where clause of the SQL query depending on the provided paramaters
+            </summary>
+            <param name="request"></param>
+            <param name="includePaging"></param>
+            <param name="includeRecompile"></param>
+            <param name="dbArgs"></param>
+            <returns>WHERE clause portion of the SQL query</returns>
+        </member>
+        <member name="T:LBHAddressesAPI.Infrastructure.V1.API.APIResponse`1">
+            <summary>
+            API Response wrapper for all API responses
+            If a request has been successful this will be denoted by the statusCode
+                Then the 'data' property will be populated
+            If a request has not been successful denoted
+                Then the Error property will be populated
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:LBHAddressesAPI.Infrastructure.V1.API.IRequest">
+            <summary>
+            Request Interface
+            </summary>
+        </member>
+        <member name="M:LBHAddressesAPI.Infrastructure.V1.API.IRequest.Validate``1(``0)">
+            <summary>
+            Encapsulates the validation by making the request responsible for validating itself
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Infrastructure.V1.API.PagedResults`1.CalculatePageCount(System.Int32,System.Int32)">
+            <summary>
+            Based on 1 based paging not 0 based
+            </summary>
+            <param name="pageSize"></param>
+            <param name="totalResultsCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LBHAddressesAPI.Infrastructure.V1.Middleware.CustomExceptionHandlerMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Intercept the request and wrap it in a TryCatch
+            Allows us to throw exceptions and know they will be properly handled
+            Centralises exception handling and removes 80-90% of exception handling code from codebase
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:LBHAddressesAPI.Infrastructure.V1.Validation.RequestValidationResponse">
+            <summary>
+            Encapsulates a valid response using some sort of validation extensions
+            We want this so we can swap out validation tools and still keep a standard response
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.GetAddressRequest.addressID">
+            <summary>
+            Exact match
+            </summary>
+        </member>
+        <member name="M:LBHAddressesAPI.UseCases.V1.Search.Models.GetAddressRequest.Validate``1(``0)">
+            <summary>
+            Responsible for validating itself.
+            Uses SearchAddressRequestValidator to do complex validation
+            Sets defaults for Page and PageSize
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <returns>RequestValidationResponse</returns>
+        </member>
+        <member name="T:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest">
+            <summary>
+            SearchAddressRequest V1 
+            Validated by Validate Method
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.PostCode">
+            <summary>
+            Postcode partial match i.e. "E8 4" will return addresses that have a postcode starting with E84** 
+            (Whitespace is removed automatically)  
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.Gazeteer">
+            <summary>
+            LOCAL/NATIONAL/BOTH (Defaults to LOCAL)
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.UPRN">
+            <summary>
+            Filter by UPRN (unique property reference number - unique identifier of the BLPU (Basic Land and Property Unit); a UPRN can have more than one LPI/address. )
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.USRN">
+            <summary>
+            Filter by USRN (unique street reference number - uniquely identifies streets)
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.PropertyClassPrimary">
+            <summary>
+            Description of the primary usage, can be:
+            Commercial
+            Dual Use
+            Features
+            Land
+            Military
+            Object of Interest
+            Parent Shell
+            Residential
+            Unclassified
+            ALL (default) 
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.PropertyClassCode">
+            <summary>
+            Identifies land and property usage according to this system of classification: https://www.geoplace.co.uk/documents/10181/38204/Appendix+C+-+Classifications/ ; this is a textual description
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.Format">
+            <summary>
+            Allows a switch between simple and detailed address
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.AddressStatus">
+            <summary>
+            Allows switch between address statuses:
+            Alternative
+            Approved Preferred (Default)
+            Historical
+            Provisional
+            Rejected Internal
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.Page">
+            <summary>
+            Page defaults to 1 as paging is 1 index based not 0 index based
+            </summary>
+        </member>
+        <member name="P:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.PageSize">
+            <summary>
+            PageSize defaults to 50 if not provided
+            </summary>
+        </member>
+        <member name="M:LBHAddressesAPI.UseCases.V1.Search.Models.SearchAddressRequest.Validate``1(``0)">
+            <summary>
+            Responsible for validating itself.
+            Uses SearchAddressRequestValidator to do complex validation
+            Sets defaults for Page and PageSize
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <returns>RequestValidationResponse</returns>
+        </member>
+    </members>
+</doc>

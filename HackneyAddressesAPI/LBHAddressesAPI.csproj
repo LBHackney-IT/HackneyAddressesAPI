@@ -58,8 +58,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.0" />
-    <PackageReference Include="NLog" Version="4.5.11" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,16 +65,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Oracle.ManagedDataAccess">
-      <HintPath>..\..\..\..\..\..\..\GitHub\HackneyAddressesAPI\HackneyAddressesAPI\Oracle.ManagedDataAccess.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
