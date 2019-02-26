@@ -29,7 +29,7 @@ commands:
               curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
               sudo chmod +x /usr/bin/ecs-deploy
       - run:
-          name: Premote target image
+          name: Promote target image
           command: |
             ecs-deploy \
             --timeout 104400 \

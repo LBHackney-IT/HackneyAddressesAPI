@@ -8,7 +8,7 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
-
+RUN pwd
 RUN dotnet publish -c Release -o out
 
 CMD ASPNETCORE_URLS=http://+:${PORT:-9000} dotnet ./out/LBHAddressesAPI.dll
