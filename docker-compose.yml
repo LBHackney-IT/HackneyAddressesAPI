@@ -8,8 +8,6 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 9000:9000
-    links:
-      - stubaddressdb
     volumes:
       - './lbhaddressesapi:/app'
       - 'out:/app/out'

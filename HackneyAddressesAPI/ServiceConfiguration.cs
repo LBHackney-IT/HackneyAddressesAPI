@@ -26,7 +26,7 @@ namespace LBHAddressesAPI
             services.AddTransient<IDB_Helper, OracleHelper>();
             services.AddTransient<IQueryBuilder, QueryBuilderOracle>();
 
-            services.AddScoped<IConfigReader, ConfigReader>();
+            //services.AddScoped<IConfigReader, ConfigReader>();
 
             services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
         }

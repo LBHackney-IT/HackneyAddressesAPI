@@ -16,15 +16,13 @@ namespace LBHAddressesAPI
     {
         public static void Main(string[] args)
         {
-            var logger = LogManager.LoadConfiguration("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
                 BuildWebHost(args).Run();
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Stopped program because of exception");
+                
                 throw;
             }
         }
