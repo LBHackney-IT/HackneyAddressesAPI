@@ -1,65 +1,113 @@
-version: 2
-jobs:
-  check:
-    machine: 
-      image: circleci/classic:201808-01 #used to push docker form 17 to 18 use 'machine: true' when this is no longer needed
-      docker_layer_caching: true
-    steps:
-      - checkout
-      - run:
-          name: Build projects
-          command: docker-compose build --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM
-      - run:
-          name: Run tests
-          command: docker-compose run -e LLPGConnectionString="server=tcp:stubaddressdb; database=StubAdd; Integrated Security=False;User ID=sa;Password=Rooty-Tooty" --rm lbhaddressesapitest dotnet test
+version: 2.1
 
-  staging_release:
-    machine: true
+orbs:
+  aws-ecr: circleci/aws-ecr@3.0.0
+  aws-cli: circleci/aws-cli@0.1.9
+
+commands:
+  deploy-env:
+    description: "Sets up aws cli and ecs-deploy to update a service with a target docker image"
+    parameters:
+      service-name:
+        type: string
+      image-name:
+        type: string
     steps:
-      - checkout
-      - run:
-          name: Install AWS CLI
-          command: pip install awscli --upgrade --user
+      - aws-cli/install
+      - aws-cli/configure:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
       - run:
           name: Install jq
           command: |
-            sudo apt-get update
-            sudo apt-get install jq
+            sudo apt update
+            sudo apt install jq
       - run:
-          name: Install ecs-deploy
+          name: Install ecs deploy
           command: |
-            curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-            sudo chmod +x /usr/bin/ecs-deploy
+              curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
+              sudo chmod +x /usr/bin/ecs-deploy
       - run:
-          name: Login to ECR
-          command: aws ecr get-login --region $AWS_REGION --no-include-email | sh
-      - run:
-          name: Build new application Docker image
-          command: docker build --file HackneyAddressesAPI/Dockerfile --tag hackney/apps/addresses-api --build-arg VERSION_SUFFIX=$CIRCLE_BUILD_NUM .
-      - run:
-          name: Tag new image for staging release
+          name: Premote target image
           command: |
-            docker tag hackney/apps/addresses-api:latest $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker tag hackney/apps/addresses-api:latest $ECR_IMAGE_URL:latest
-            docker tag hackney/apps/addresses-api:latest $ECR_IMAGE_URL:staging
+            ecs-deploy \
+            --timeout 104400 \
+            --region $AWS_REGION \
+            --cluster $ECS_STAGING_CLUSTER \
+            --service-name << parameters.service-name >> \
+            --image << parameters.image-name >> \
+            --timeout 104400 \
+            --use-latest-task-def
+          no_output_timeout: 30m
+
+jobs:
+  check:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - setup_remote_docker
       - run:
-          name: Release new image to ECR
-          command: |
-            docker push $ECR_IMAGE_URL:$CIRCLE_SHA1
-            docker push $ECR_IMAGE_URL:latest
-            docker push $ECR_IMAGE_URL:staging
+          name: build
+          command: docker-compose build lbhaddressesapitest
       - run:
-          name: Force new deployment
-          command: ecs-deploy --region $AWS_REGION --cluster $ECS_STAGING_CLUSTER --service-name $ECS_STAGING_APP_NAME --image $ECR_IMAGE_URL:staging --timeout $ECS_DEPLOY_TIMEOUT
+          name: Run tests
+          command: docker-compose run -e LLPGConnectionString="Data Source=tcp:stubaddressdb;Initial Catalog=StubAdd;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" lbhaddressesapitest
+
+  deploy-to-staging:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - deploy-env:
+          service-name: 'address-api-staging'
+          image-name: "$AWS_ECR_HOST/$AWS_ECR_PATH:$CIRCLE_SHA1"
+
+  deploy-to-production:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - deploy-env:
+          service-name: 'address-api-production'
+          image-name: "$AWS_ECR_HOST/$AWS_ECR_PATH:$CIRCLE_SHA1"
 
 workflows:
-  version: 2
-  continuous_delivery:
-    jobs:
+  build-and-deploy:
+      jobs:
       - check
-      - staging_release:
+      - aws-ecr/build_and_push_image:
+          name: build_and_push_image
+          dockerfile: ./HackneyAddressesAPI/Dockerfile
+          path: ./HackneyAddressesAPI
+          account-url: AWS_ECR_HOST
+          repo: $AWS_ECR_PATH
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only: master
+
+      - deploy-to-staging:
           requires:
             - check
+            - build_and_push_image
+          filters:
+            branches:
+              only: master
+
+      - permit-production-release:
+          type: approval
+          requires:
+            - deploy-to-staging
+          filters:
+            branches:
+              only: master
+
+      - deploy-to-production:
+          requires:
+            - permit-production-release
           filters:
             branches:
               only: master
