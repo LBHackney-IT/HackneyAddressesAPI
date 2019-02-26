@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LBHAddressesAPI.Models
 {
-    public class AddressBase
+    public class AddressBasexxx
     {
         public string Postcode { get; set; }
         public Int64 UPRN { get; set; }

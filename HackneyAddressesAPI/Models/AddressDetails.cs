@@ -7,7 +7,7 @@ using LBHAddressesAPI.Interfaces;
 
 namespace LBHAddressesAPI.Models
 {
-    public class AddressDetails : AddressBase
+    public class AddressDetails : IAddressTypes
     {
         public string AddressID { get; set; }
         public Int64 UPRN { get; set; }

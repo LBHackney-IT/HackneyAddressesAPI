@@ -54,9 +54,9 @@ namespace LBHAddressesAPI.Gateways.V1
         /// <param name="request"></param> 
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<PagedResults<AddressBase>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
+        public async Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
-            var result = new PagedResults<AddressBase>();            
+            var result = new PagedResults<AddressDetails>();            
             var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
             string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
             string countQuery = QueryBuilder.GetSearchAddressQuery(request, false, false, true, ref dbArgs);
@@ -69,7 +69,7 @@ namespace LBHAddressesAPI.Gateways.V1
 
                 using (var multi = conn.QueryMultipleAsync(sql, dbArgs).Result)
                 {
-                    var all = multi.Read<AddressBase>()?.ToList();
+                    var all = multi.Read<AddressDetails>()?.ToList();
                     var totalCount = multi.Read<int>().Single();
                     result.Results = all?.ToList();
                     result.TotalResultsCount = totalCount;
