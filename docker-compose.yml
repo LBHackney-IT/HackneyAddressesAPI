@@ -9,7 +9,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - './lbhaddressesapi:/app'
+      - './HackneyAddressesAPI:/app'
       - 'out:/app/out'
       - 'obj:/app/obj'
       - 'bin:/app/bin'
