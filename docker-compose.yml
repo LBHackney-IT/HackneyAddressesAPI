@@ -7,12 +7,7 @@ services:
       context: HackneyAddressesAPI/
       dockerfile: ./Dockerfile
     ports:
-      - 9000:9000
-    volumes:
-      - './HackneyAddressesAPI:/app'
-      - 'out:/app/out'
-      - 'obj:/app/obj'
-      - 'bin:/app/bin'
+      - 9000:80
 
   stubaddressdb:
     image: stubaddressdb
@@ -29,7 +24,3 @@ services:
       dockerfile: LBHAddressesAPITest/Dockerfile
     links:
       - stubaddressdb
-volumes:
-  obj:
-  bin:
-  out:
