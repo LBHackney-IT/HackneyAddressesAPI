@@ -22,14 +22,15 @@ services:
       context: .
       dockerfile: StubAddressDB/Dockerfile
     ports:
-      - 1433:1433
+      - 6666:1433
 
   lbhaddressesapitest:
     image: lbhaddressesapitest
     build:
       context: .
       dockerfile: LBHAddressesAPITest/Dockerfile
-
+    links:
+      - stubaddressdb
 volumes:
   obj:
   bin:
