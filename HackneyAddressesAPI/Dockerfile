@@ -1,5 +1,5 @@
 ﻿
-FROM microsoft/dotnet:2.2-sdk
+FROM microsoft/dotnet:latest
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
@@ -8,7 +8,8 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
-
+RUN pwd
+RUN ls
 RUN dotnet publish -c Release -o out
 
 CMD ASPNETCORE_URLS=http://+:${PORT:-9000} dotnet ./out/LBHAddressesAPI.dll

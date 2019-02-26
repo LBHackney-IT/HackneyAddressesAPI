@@ -7,8 +7,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Web;
 
 namespace LBHAddressesAPI
 {
@@ -16,15 +14,13 @@ namespace LBHAddressesAPI
     {
         public static void Main(string[] args)
         {
-            var logger = LogManager.LoadConfiguration("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
                 BuildWebHost(args).Run();
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Stopped program because of exception");
+                
                 throw;
             }
         }

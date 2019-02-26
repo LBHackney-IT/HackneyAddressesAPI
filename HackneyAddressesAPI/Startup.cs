@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LBHAddressesAPI.Actions;
-using LBHAddressesAPI.DB;
 using LBHAddressesAPI.Helpers;
 using LBHAddressesAPI.Interfaces;
 using LBHAddressesAPI.Logging;
@@ -19,6 +17,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
 using LBHAddressesAPI.Infrastructure.V1.Services;
 using LBHAddressesAPI.Infrastructure.V1.Middleware;
+using System.Configuration;
 
 namespace LBHAddressesAPI
 {
@@ -41,8 +40,11 @@ namespace LBHAddressesAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //TODO: THis needs to be changed before putting in to prod. 
-            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
-            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
+            services.Configure<ConfigurationSettings>(Configuration);
+            var settings = Configuration.Get<ConfigurationSettings>();
+
+            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
+            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringDev");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringTest");
 
