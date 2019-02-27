@@ -80,9 +80,14 @@ namespace LBHAddressesAPI.Helpers
         /// <returns>whether to include parent shells or not</returns>
         private static bool IncludeParentShell(SearchAddressRequest request)
         {
-            if (request.PropertyClassPrimary == GlobalConstants.PropertyClassPrimary.ParentShell)
+            if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
             {
-                return true;
+                if (request.PropertyClassPrimary.Replace(" ", "").Contains("ParentShell"))
+                {
+                    return true;
+                }
+                else
+                    return false;
             }
             else
                 return false;
@@ -135,9 +140,26 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.AddressStatus.ToString())) //AddressStatus/LPI_LOGICAL_STATUS
             {
-                dbArgs.Add("@addressStatus", GlobalConstants.MapAddressStatus(request.AddressStatus));
+                string[] addressStatuses = request.AddressStatus.ToString().Split();
+                if (addressStatuses.Count() == 1)
+                {
+                    dbArgs.Add("@addressStatus", request.AddressStatus.ToString());
+                    clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
+                }
+                else
+                {
+                    //need to convert address statuses
+                    dbArgs.Add("@addressStatus", addressStatuses);
+                    clause += " AND LPI_LOGICAL_STATUS IN @addressStatus ";
+                }
+            }
+            else // No address status default it to approved preferred
+            {
+                dbArgs.Add("@addressStatus", "Approved Preferred");
                 clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
             }
+
+
             if (request.UPRN != null)
             {
                 dbArgs.Add("@uprn", request.UPRN);
@@ -152,19 +174,37 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassPrimary.ToString()))
             {
-                dbArgs.Add("@primaryClass", GlobalConstants.MapPrimaryPropertyClass((GlobalConstants.PropertyClassPrimary)request.PropertyClassPrimary));
-                clause += " AND USAGE_PRIMARY = @primaryClass ";
+                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split();
+                if (propertyClasses.Count() == 1)
+                {
+                    dbArgs.Add("@primaryClass", request.PropertyClassPrimary);
+                    clause += " AND USAGE_PRIMARY = @primaryClass ";
+                }
+                else
+                {
+                    dbArgs.Add("@primaryClass", propertyClasses);
+                    clause += " AND USAGE_PRIMARY IN @primaryClass ";
+                }
             }
 
             if (!string.IsNullOrEmpty(request.PropertyClassCode))
             {
-                dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%");
-                clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
+                string[] classCodes = request.PropertyClassCode.Split(',');
+                if (classCodes.Count() == 1)
+                {
+                    dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%");
+                    clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
+                }
+                else
+                {
+                    dbArgs.Add("@propertyClassCode", classCodes);
+                    clause += " AND BLPU_CLASS IN @propertyClassCode ";
+                }
             }
 
-            if (request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
+            if (request.Gazetteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
             {
-                dbArgs.Add("@gazetteer", request.Gazeteer.ToString());
+                dbArgs.Add("@gazetteer", request.Gazetteer.ToString());
                 clause += " AND Gazetteer = @gazetteer ";
             }
 

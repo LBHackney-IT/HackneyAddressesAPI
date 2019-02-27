@@ -50,9 +50,9 @@ namespace LBHAddressesAPITest
             var request = new SearchAddressRequest
             {
                 PostCode = postcode,
-                Gazeteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
+                Gazetteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
             };
-            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS") && i.Gazeteer == LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local), CancellationToken.None))
+            _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS") && i.Gazetteer == LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<AddressDetails>
                 {
                     Results = addresses,

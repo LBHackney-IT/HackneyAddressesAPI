@@ -25,7 +25,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// <summary>
         /// LOCAL/NATIONAL/BOTH (Defaults to LOCAL)
         /// </summary>
-        public GlobalConstants.Gazetteer Gazeteer { get; set; }
+        public GlobalConstants.Gazetteer Gazetteer { get; set; }
 
         /// <summary>
         /// Filter by UPRN (unique property reference number - unique identifier of the BLPU (Basic Land and Property Unit); a UPRN can have more than one LPI/address. )
@@ -50,7 +50,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Unclassified
         /// ALL (default) 
         /// </summary>
-        public GlobalConstants.PropertyClassPrimary ? PropertyClassPrimary  { get; set; }
+        public string PropertyClassPrimary  { get; set; }
 
         /// <summary>
         /// Identifies land and property usage according to this system of classification: https://www.geoplace.co.uk/documents/10181/38204/Appendix+C+-+Classifications/ ; this is a textual description
@@ -70,7 +70,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Provisional
         /// Rejected Internal
         /// </summary>
-        public GlobalConstants.AddressStatus AddressStatus { get; set; }
+        public string AddressStatus { get; set; }
 
 
         /// <summary>
@@ -107,10 +107,6 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
             //Sets default page size to 10
             if (castedRequest.PageSize == 0)
                 castedRequest.PageSize = 50;
-            if(string.IsNullOrEmpty(castedRequest.PropertyClassPrimary.ToString()))
-            {
-                castedRequest.PropertyClassPrimary = null;
-            }
             return new RequestValidationResponse(validationResult);
         }
         
