@@ -136,42 +136,44 @@ namespace LBHAddressesAPITest
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
 
             response.Should().NotBeNull();
-            response.Addresses[0].AddressID.Should().BeEquivalentTo(address.AddressID);
-            response.Addresses[0].AddressID.Should().NotBeNullOrEmpty();
 
-            response.Addresses[0].UPRN.Should().Be(address.UPRN);
-            response.Addresses[0].USRN.Should().Be(address.USRN);
+            var x = (AddressDetailed) response.Addresses[0];
+            x.AddressID.Should().BeEquivalentTo(address.AddressID);
+            x.AddressID.Should().NotBeNullOrEmpty();
 
-            response.Addresses[0].addressStatus.Should().NotBeNullOrEmpty();
-            response.Addresses[0].addressStatus.Should().BeEquivalentTo(address.addressStatus);
+            x.UPRN.Should().Be(address.UPRN);
+            x.USRN.Should().Be(address.USRN);
 
-            response.Addresses[0].unitName.Should().BeEquivalentTo(address.unitName);
-            response.Addresses[0].unitNumber.Should().BeEquivalentTo(address.unitNumber);
-            response.Addresses[0].buildingName.Should().BeEquivalentTo(address.buildingName);
-            response.Addresses[0].buildingNumber.Should().BeEquivalentTo(address.buildingNumber);
+            x.addressStatus.Should().NotBeNullOrEmpty();
+            x.addressStatus.Should().BeEquivalentTo(address.addressStatus);
 
-            response.Addresses[0].street.Should().NotBeNullOrEmpty();
-            response.Addresses[0].street.Should().BeEquivalentTo(address.street);
+            x.unitName.Should().BeEquivalentTo(address.unitName);
+            x.unitNumber.Should().BeEquivalentTo(address.unitNumber);
+            x.buildingName.Should().BeEquivalentTo(address.buildingName);
+            x.buildingNumber.Should().BeEquivalentTo(address.buildingNumber);
 
-            response.Addresses[0].postcode.Should().BeEquivalentTo(address.postcode);
+            x.street.Should().NotBeNullOrEmpty();
+            x.street.Should().BeEquivalentTo(address.street);
 
-            response.Addresses[0].locality.Should().BeEquivalentTo(address.locality);
+            x.postcode.Should().BeEquivalentTo(address.postcode);
 
-            response.Addresses[0].gazetteer.Should().NotBeNullOrEmpty();
-            response.Addresses[0].gazetteer.Should().BeEquivalentTo(address.gazetteer);
+            x.locality.Should().BeEquivalentTo(address.locality);
 
-            response.Addresses[0].commercialOccupier.Should().BeEquivalentTo(address.commercialOccupier);
-            response.Addresses[0].royalMailPostTown.Should().BeEquivalentTo(address.royalMailPostTown);
-            response.Addresses[0].usageClassDescription.Should().BeEquivalentTo(address.usageClassDescription);
-            response.Addresses[0].usageClassPrimary.Should().BeEquivalentTo(address.usageClassPrimary);
-            response.Addresses[0].usageClassCode.Should().BeEquivalentTo(address.usageClassCode);
-            response.Addresses[0].propertyShell.Should().Be(address.propertyShell);
-            response.Addresses[0].isNonLocalAddressInLocalGazetteer.Should().Be(address.isNonLocalAddressInLocalGazetteer);
-            response.Addresses[0].easting.Should().Be(address.easting);
-            response.Addresses[0].northing.Should().Be(address.northing);
+            x.gazetteer.Should().NotBeNullOrEmpty();
+            x.gazetteer.Should().BeEquivalentTo(address.gazetteer);
 
-            response.Addresses[0].longitude.Should().Be(address.longitude);
-            response.Addresses[0].latitude.Should().Be(address.latitude);
+            x.commercialOccupier.Should().BeEquivalentTo(address.commercialOccupier);
+            x.royalMailPostTown.Should().BeEquivalentTo(address.royalMailPostTown);
+            x.usageClassDescription.Should().BeEquivalentTo(address.usageClassDescription);
+            x.usageClassPrimary.Should().BeEquivalentTo(address.usageClassPrimary);
+            x.usageClassCode.Should().BeEquivalentTo(address.usageClassCode);
+            x.propertyShell.Should().Be(address.propertyShell);
+            x.isNonLocalAddressInLocalGazetteer.Should().Be(address.isNonLocalAddressInLocalGazetteer);
+            x.easting.Should().Be(address.easting);
+            x.northing.Should().Be(address.northing);
+
+            x.longitude.Should().Be(address.longitude);
+            x.latitude.Should().Be(address.latitude);
         }
     }
 }
