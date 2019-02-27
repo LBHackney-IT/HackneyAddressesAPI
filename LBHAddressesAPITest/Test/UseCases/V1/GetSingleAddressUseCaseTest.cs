@@ -32,7 +32,7 @@ namespace LBHAddressesAPITest
         {
 
             var lpi_key = "ABCDEFGHIJKLMN"; //14 characters
-            _fakeGateway.Setup(s => s.GetSingleAddressAsync(It.Is<GetAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None)).ReturnsAsync(new AddressDetails());
+            _fakeGateway.Setup(s => s.GetSingleAddressAsync(It.Is<GetAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None)).ReturnsAsync(new AddressDetailed());
 
             var request = new GetAddressRequest
             {
@@ -81,7 +81,7 @@ namespace LBHAddressesAPITest
             var lpi_key = "ABCDEFGHIJKLMN";
             
             _fakeGateway.Setup(s => s.GetSingleAddressAsync(It.Is<GetAddressRequest>(i => i.addressID.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
-                .ReturnsAsync(null as AddressDetails);
+                .ReturnsAsync(null as AddressDetailed);
 
             var request = new GetAddressRequest
             {
@@ -96,7 +96,7 @@ namespace LBHAddressesAPITest
         [Fact]
         public async Task GivenValidLPIKey_WhenExecuteAsync_ThenAddressShouldBeReturned()
         {
-            var address = new AddressDetails
+            var address = new AddressDetailed
             {
                 AddressID = "ABCDEFGHIJKLMN",
                 UPRN = 10024389298,

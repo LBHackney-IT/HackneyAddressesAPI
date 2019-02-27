@@ -31,7 +31,7 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<GetAddressRequest>(), CancellationToken.None))
                 .ReturnsAsync(new SearchAddressResponse
                 {
-                    Addresses = new List<AddressDetails>
+                    Addresses = new List<AddressDetailed>
                     {
 
                     }

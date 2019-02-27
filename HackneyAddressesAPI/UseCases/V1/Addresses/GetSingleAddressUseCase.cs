@@ -39,7 +39,7 @@ namespace LBHAddressesAPI.UseCases.V1.Addresses
                 return new SearchAddressResponse();
             var useCaseResponse = new SearchAddressResponse
             {
-                Addresses = new List<AddressDetails> { response }
+                Addresses = new List<AddressBase> { response }
             };
 
 

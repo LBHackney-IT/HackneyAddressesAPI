@@ -11,8 +11,8 @@ namespace LBHAddressesAPI.Interfaces
     public interface IDetailsMapper
     {
 
-        List<AddressDetails> MapAddressDetailsGIS(DataTable dt);
-        List<AddressDetailsSimple> MapAddressDetailsSimple(DataTable dt);
+        List<AddressDetailed> MapAddressDetailsGIS(DataTable dt);
+        List<AddressSimple> MapAddressDetailsSimple(DataTable dt);
 
         List<StreetDetails> MapStreetDetails(DataTable dt);
     }

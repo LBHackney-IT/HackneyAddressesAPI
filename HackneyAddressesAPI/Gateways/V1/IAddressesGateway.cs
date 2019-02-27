@@ -11,10 +11,10 @@ namespace LBHAddressesAPI.Gateways.V1
 {
     public interface IAddressesGateway
     {
-        Task<AddressDetails> GetSingleAddressAsync(GetAddressRequest request, CancellationToken cancellationToken);
+        Task<AddressDetailed> GetSingleAddressAsync(GetAddressRequest request, CancellationToken cancellationToken);
 
-        Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
+        Task<PagedResults<AddressBase>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
 
-        //Task<PagedResults<AddressDetailsSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
+        Task<PagedResults<AddressSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
     }
 }

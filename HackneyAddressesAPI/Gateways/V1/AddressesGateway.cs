@@ -26,9 +26,9 @@ namespace LBHAddressesAPI.Gateways.V1
         /// <param name="request"></param> 
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<AddressDetails> GetSingleAddressAsync(GetAddressRequest request, CancellationToken cancellationToken)
+        public async Task<AddressDetailed> GetSingleAddressAsync(GetAddressRequest request, CancellationToken cancellationToken)
         {
-            var result = new AddressDetails();
+            var result = new AddressDetailed();
 
             //TODO: Move the query in to a helper so it's in one place!
             string query = QueryBuilder.GetSingleAddress(GlobalConstants.Format.Detailed);
@@ -36,7 +36,7 @@ namespace LBHAddressesAPI.Gateways.V1
             {
                 //open connection explicity
                 conn.Open();
-                var all = await conn.QueryAsync<AddressDetails>(query,
+                var all = await conn.QueryAsync<AddressDetailed>(query,
                     new { key = request.addressID }
                 ).ConfigureAwait(false);
 
@@ -54,13 +54,14 @@ namespace LBHAddressesAPI.Gateways.V1
         /// <param name="request"></param> 
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<PagedResults<AddressDetails>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
+        public async Task<PagedResults<AddressBase>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
         {
-            var result = new PagedResults<AddressDetails>();            
+            var result = new PagedResults<AddressBase>();            
             var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
             string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
             string countQuery = QueryBuilder.GetSearchAddressQuery(request, false, false, true, ref dbArgs);
-            
+            GlobalConstants.Format format = request.Format;
+
             using (var conn = new SqlConnection(_connectionString))
             {
                 //open connection explicity
@@ -69,22 +70,64 @@ namespace LBHAddressesAPI.Gateways.V1
 
                 using (var multi = conn.QueryMultipleAsync(sql, dbArgs).Result)
                 {
-                    var all = multi.Read<AddressDetails>()?.ToList();
-                    var totalCount = multi.Read<int>().Single();
-                    result.Results = all?.ToList();
-                    result.TotalResultsCount = totalCount;
+                    
+                    if (format == GlobalConstants.Format.Detailed)
+                    {                        
+                        var all = multi.Read<AddressDetailed>()?.ToList();
+                        var totalCount = multi.Read<int>().Single();
+                        result.Results = all?.ToList().ConvertAll(x => (AddressBase)x);
+                        result.TotalResultsCount = totalCount;
+                    }
+                    else
+                    {
+                        var all = multi.Read<AddressSimple>()?.ToList();
+                        var totalCount = multi.Read<int>().Single();
+                        result.Results = all?.ToList().ConvertAll(x => (AddressBase)x);
+                        result.TotalResultsCount = totalCount;
+                    }             
+                    
                 }
                                 
                 conn.Close();
             }
             return result;
         }
-        
+
+        /// <summary>
+        /// Return Simple addresses for matching search
+        /// </summary>
+        /// <param name="request"></param> 
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<PagedResults<AddressSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken)
+        {
+            var result = new PagedResults<AddressSimple>();
+            var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
+            string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
+            string countQuery = QueryBuilder.GetSearchAddressQuery(request, false, false, true, ref dbArgs);
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                //open connection explicity
+                conn.Open();
+                string sql = query + " " + countQuery;
+
+                using (var multi = conn.QueryMultipleAsync(sql, dbArgs).Result)
+                {
+                    var all = multi.Read<AddressSimple>()?.ToList();
+                    var totalCount = multi.Read<int>().Single();
+                    result.Results = all?.ToList();
+                    result.TotalResultsCount = totalCount;
+                }
+
+                conn.Close();
+            }
+            return result;
+        }
 
 
-   
 
 
-        
+
     }
 }
