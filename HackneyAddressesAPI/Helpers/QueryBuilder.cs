@@ -80,9 +80,14 @@ namespace LBHAddressesAPI.Helpers
         /// <returns>whether to include parent shells or not</returns>
         private static bool IncludeParentShell(SearchAddressRequest request)
         {
-            if (request.PropertyClassPrimary.Replace(" ","").Contains("ParentShell"))
+            if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
             {
-                return true;
+                if (request.PropertyClassPrimary.Replace(" ", "").Contains("ParentShell"))
+                {
+                    return true;
+                }
+                else
+                    return false;
             }
             else
                 return false;
@@ -148,6 +153,13 @@ namespace LBHAddressesAPI.Helpers
                     clause += " AND LPI_LOGICAL_STATUS IN @addressStatus ";
                 }
             }
+            else // No address status default it to approved preferred
+            {
+                dbArgs.Add("@addressStatus", "Approved Preferred");
+                clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
+            }
+
+
             if (request.UPRN != null)
             {
                 dbArgs.Add("@uprn", request.UPRN);
