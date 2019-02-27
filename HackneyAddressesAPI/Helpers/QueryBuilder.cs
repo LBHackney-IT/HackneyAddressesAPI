@@ -138,7 +138,7 @@ namespace LBHAddressesAPI.Helpers
                 clause += " AND POSTCODE_NOSPACE LIKE @postcode  ";
             }
 
-            if (!string.IsNullOrEmpty(request.AddressStatus.ToString())) //AddressStatus/LPI_LOGICAL_STATUS
+            if (!string.IsNullOrEmpty(request.AddressStatus)) //AddressStatus/LPI_LOGICAL_STATUS
             {
                 string[] addressStatuses = request.AddressStatus.ToString().Split();
                 if (addressStatuses.Count() == 1)
@@ -172,7 +172,7 @@ namespace LBHAddressesAPI.Helpers
                 clause += " AND USRN = @usrn ";
             }
 
-            if (!string.IsNullOrEmpty(request.PropertyClassPrimary.ToString()))
+            if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
             {
                 string[] propertyClasses = request.PropertyClassPrimary.ToString().Split();
                 if (propertyClasses.Count() == 1)

@@ -3,7 +3,7 @@ using LBHAddressesAPI.Interfaces;
 
 namespace LBHAddressesAPI.Models
 {
-    public class AddressDetailsSimple : IAddressTypes
+    public class AddressSimple : AddressBase
     {
         public string Line1 { get; set; }
         public string Line2 { get; set; }

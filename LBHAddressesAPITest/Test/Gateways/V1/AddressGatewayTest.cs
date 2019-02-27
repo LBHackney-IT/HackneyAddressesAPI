@@ -44,20 +44,6 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
 
             response.Should().NotBeNull();
             response.AddressID.Should().BeEquivalentTo(key);
-
-            /*var response = await _classUnderTest.SearchTenanciesAsync(new SearchTenancyRequest
-            {
-                SearchTerm = tenancyRef,
-                PageSize = 10,
-                Page = 1
-            }, CancellationToken.None);
-            //assert
-            response.Should().NotBeNull();
-            response.Results.Should().NotBeNullOrEmpty();
-            response.Results.Count.Should().Be(1);
-            response.Results[0].TenancyRef.Should().BeEquivalentTo(tenancyRef);*/
-
-
         }
 
         //[Fact]
