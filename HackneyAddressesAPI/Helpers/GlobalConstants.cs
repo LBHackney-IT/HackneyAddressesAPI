@@ -41,14 +41,6 @@ namespace LBHAddressesAPI.Helpers
             ParentShell
         };
 
-        public enum AddressStatus
-        {
-            ApprovedPreferred,
-            Alternative,
-            Historical,
-            Provisional,
-            RejectedInternal
-        };
 
         public enum Gazetteer
         {
@@ -57,24 +49,6 @@ namespace LBHAddressesAPI.Helpers
             Both
         };
 
-        public static string MapAddressStatus(AddressStatus status)
-        {
-            switch (status)
-            {
-                case AddressStatus.ApprovedPreferred:
-                    return "Approved Preferred";
-                case AddressStatus.Alternative:
-                    return "Alternative";                    
-                case AddressStatus.Historical:
-                    return "Historical";
-                case AddressStatus.Provisional:
-                    return "Provisional";
-                case AddressStatus.RejectedInternal:
-                    return "Rejected Internal";
-                default:
-                    throw new Exception(string.Format("Invalid Address Status = {0}", status));
-            }
-        }
 
         public static string MapPrimaryPropertyClass(PropertyClassPrimary propertyClass)
         {

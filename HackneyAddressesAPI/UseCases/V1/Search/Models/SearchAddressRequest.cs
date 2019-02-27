@@ -70,7 +70,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Provisional
         /// Rejected Internal
         /// </summary>
-        public GlobalConstants.AddressStatus AddressStatus { get; set; }
+        public string AddressStatus { get; set; }
 
 
         /// <summary>

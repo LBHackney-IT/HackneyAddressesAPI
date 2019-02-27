@@ -60,58 +60,58 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
 
         }
 
-        [Fact]
-        public async Task GetCorrectQuery()
-        {
+        //[Fact]
+        //public async Task GetCorrectQuery()
+        //{
             
-            SearchAddressRequest request = new SearchAddressRequest { Format = GlobalConstants.Format.Detailed, PostCode = "RM3 0FS", Page=0, PageSize=50 };
+        //    SearchAddressRequest request = new SearchAddressRequest { Format = GlobalConstants.Format.Detailed, PostCode = "RM3 0FS", Page=0, PageSize=50 };
 
-            var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
+        //    var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
 
-            //detailed no parent shells
-            string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            Debug.WriteLine("--detailed no parent shells");
-            Debug.WriteLine(query);
+        //    //detailed no parent shells
+        //    string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
+        //    Debug.WriteLine("--detailed no parent shells");
+        //    Debug.WriteLine(query);
 
-            //detailed no parent shells count
-            query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-            Debug.WriteLine("--detailed no parent shells count");
-            Debug.WriteLine(query);
+        //    //detailed no parent shells count
+        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
+        //    Debug.WriteLine("--detailed no parent shells count");
+        //    Debug.WriteLine(query);
 
-            //simple no parent shells 
-            request.Format = GlobalConstants.Format.Simple;
-            query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            Debug.WriteLine("--simple no parent shells");
-            Debug.WriteLine(query);
+        //    //simple no parent shells 
+        //    request.Format = GlobalConstants.Format.Simple;
+        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
+        //    Debug.WriteLine("--simple no parent shells");
+        //    Debug.WriteLine(query);
 
-            //simple no parent shells count
-            query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-            Debug.WriteLine("--simple no parent shells count");
-            Debug.WriteLine(query);
+        //    //simple no parent shells count
+        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
+        //    Debug.WriteLine("--simple no parent shells count");
+        //    Debug.WriteLine(query);
             
-            //simple parent shells            
-            query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            Debug.WriteLine("--simple parent shells");
-            Debug.WriteLine(query);
+        //    //simple parent shells            
+        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
+        //    Debug.WriteLine("--simple parent shells");
+        //    Debug.WriteLine(query);
 
-            //simple parent shells count
-            query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-            Debug.WriteLine("--simple parent shells count");
-            Debug.WriteLine(query);
+        //    //simple parent shells count
+        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
+        //    Debug.WriteLine("--simple parent shells count");
+        //    Debug.WriteLine(query);
 
-            //detailed parent shells
-            request.Format = GlobalConstants.Format.Detailed;
-            request.PropertyClassPrimary = GlobalConstants.PropertyClassPrimary.ParentShell;
-            query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            Debug.WriteLine("--detailed parent shells");
-            Debug.WriteLine(query);
+        //    //detailed parent shells
+        //    request.Format = GlobalConstants.Format.Detailed;
+        //    request.PropertyClassPrimary = GlobalConstants.PropertyClassPrimary.ParentShell;
+        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
+        //    Debug.WriteLine("--detailed parent shells");
+        //    Debug.WriteLine(query);
 
-            //detailed parent shells count
-            query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-            Debug.WriteLine("--detailed parent shells count");
-            Debug.WriteLine(query);
+        //    //detailed parent shells count
+        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
+        //    Debug.WriteLine("--detailed parent shells count");
+        //    Debug.WriteLine(query);
             
-        }
+        //}
         
 
 

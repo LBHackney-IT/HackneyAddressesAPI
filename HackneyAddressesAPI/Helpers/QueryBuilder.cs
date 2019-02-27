@@ -135,8 +135,18 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.AddressStatus.ToString())) //AddressStatus/LPI_LOGICAL_STATUS
             {
-                dbArgs.Add("@addressStatus", GlobalConstants.MapAddressStatus(request.AddressStatus));
-                clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
+                string[] addressStatuses = request.AddressStatus.ToString().Split();
+                if (addressStatuses.Count() == 1)
+                {
+                    dbArgs.Add("@addressStatus", request.AddressStatus.ToString());
+                    clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
+                }
+                else
+                {
+                    //need to convert address statuses
+                    dbArgs.Add("@addressStatus", addressStatuses);
+                    clause += " AND LPI_LOGICAL_STATUS IN @addressStatus ";
+                }
             }
             if (request.UPRN != null)
             {

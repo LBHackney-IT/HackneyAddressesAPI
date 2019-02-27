@@ -11,18 +11,6 @@ namespace LBHAddressesAPITest.Test.Helpers
     public class GlobalConstantsTest
     {
         [Theory]
-        [InlineData("Alternative", GlobalConstants.AddressStatus.Alternative)]
-        [InlineData("Approved Preferred", GlobalConstants.AddressStatus.ApprovedPreferred)]
-        [InlineData("Historical", GlobalConstants.AddressStatus.Historical)]
-        [InlineData("Provisional", GlobalConstants.AddressStatus.Provisional)]
-        [InlineData("Rejected Internal", GlobalConstants.AddressStatus.RejectedInternal)]
-        public async Task GivenAddressStatus_ThenReturnMappedAddressStatus(string expectedValue, GlobalConstants.AddressStatus addressStatus)
-        {
-            string testString = GlobalConstants.MapAddressStatus(addressStatus);
-            testString.Should().Equals(expectedValue);
-        }
-
-        [Theory]
         [InlineData("Commercial", GlobalConstants.PropertyClassPrimary.Commercial)]
         [InlineData("Dual Use", GlobalConstants.PropertyClassPrimary.DualUse)]
         [InlineData("Features", GlobalConstants.PropertyClassPrimary.Features)]
