@@ -29,19 +29,6 @@ namespace LBHAddressesAPI.Helpers
             Detailed
         };
 
-        public enum PropertyClassPrimary
-        {
-            Residential,
-            Commercial,
-            DualUse,
-            ObjectOfInterest,
-            Land,
-            Features,
-            Unclassified,
-            ParentShell
-        };
-
-
         public enum Gazetteer
         {
             Local,
@@ -50,42 +37,7 @@ namespace LBHAddressesAPI.Helpers
         };
 
 
-        public static string MapPrimaryPropertyClass(PropertyClassPrimary propertyClass)
-        {
-            /*Commercial
-                Dual Use
-                Features
-                Land
-                Military
-                Mixed
-                Object of Interest
-                Parent Shell
-                Residential
-                Unclassified*/
-
-
-            switch (propertyClass)
-            {
-                case PropertyClassPrimary.Residential:
-                    return "Residential";
-                case PropertyClassPrimary.Commercial:
-                    return "Commercial";
-                case PropertyClassPrimary.DualUse:
-                    return "Dual Use";
-                case PropertyClassPrimary.ObjectOfInterest:
-                    return "Object of Interest";
-                case PropertyClassPrimary.Land:
-                    return "Land";
-                case PropertyClassPrimary.Features:
-                    return "Features";
-                case PropertyClassPrimary.Unclassified:
-                    return "Unclassified";
-                case PropertyClassPrimary.ParentShell:
-                    return "Parent Shell";
-                default:
-                    throw new Exception(string.Format("Invalid property class = {0}",propertyClass.ToString()));
-            }
-        }
+        
 
     }
 }

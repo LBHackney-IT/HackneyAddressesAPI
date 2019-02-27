@@ -80,7 +80,7 @@ namespace LBHAddressesAPI.Helpers
         /// <returns>whether to include parent shells or not</returns>
         private static bool IncludeParentShell(SearchAddressRequest request)
         {
-            if (request.PropertyClassPrimary == GlobalConstants.PropertyClassPrimary.ParentShell)
+            if (request.PropertyClassPrimary.Replace(" ","").Contains("ParentShell"))
             {
                 return true;
             }
@@ -162,8 +162,17 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassPrimary.ToString()))
             {
-                dbArgs.Add("@primaryClass", GlobalConstants.MapPrimaryPropertyClass((GlobalConstants.PropertyClassPrimary)request.PropertyClassPrimary));
-                clause += " AND USAGE_PRIMARY = @primaryClass ";
+                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split();
+                if (propertyClasses.Count() == 1)
+                {
+                    dbArgs.Add("@primaryClass", request.PropertyClassPrimary);
+                    clause += " AND USAGE_PRIMARY = @primaryClass ";
+                }
+                else
+                {
+                    dbArgs.Add("@primaryClass", propertyClasses);
+                    clause += " AND USAGE_PRIMARY IN @primaryClass ";
+                }
             }
 
             if (!string.IsNullOrEmpty(request.PropertyClassCode))
