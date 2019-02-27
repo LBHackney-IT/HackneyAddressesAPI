@@ -158,13 +158,22 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassCode))
             {
-                dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%");
-                clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
+                string[] classCodes = request.PropertyClassCode.Split(',');
+                if (classCodes.Count() == 1)
+                {
+                    dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%");
+                    clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
+                }
+                else
+                {
+                    dbArgs.Add("@propertyClassCode", classCodes);
+                    clause += " AND BLPU_CLASS IN @propertyClassCode ";
+                }
             }
 
-            if (request.Gazeteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
+            if (request.Gazetteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
             {
-                dbArgs.Add("@gazetteer", request.Gazeteer.ToString());
+                dbArgs.Add("@gazetteer", request.Gazetteer.ToString());
                 clause += " AND Gazetteer = @gazetteer ";
             }
 

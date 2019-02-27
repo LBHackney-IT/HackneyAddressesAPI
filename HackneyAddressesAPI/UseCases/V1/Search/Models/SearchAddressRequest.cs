@@ -25,7 +25,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// <summary>
         /// LOCAL/NATIONAL/BOTH (Defaults to LOCAL)
         /// </summary>
-        public GlobalConstants.Gazetteer Gazeteer { get; set; }
+        public GlobalConstants.Gazetteer Gazetteer { get; set; }
 
         /// <summary>
         /// Filter by UPRN (unique property reference number - unique identifier of the BLPU (Basic Land and Property Unit); a UPRN can have more than one LPI/address. )

@@ -43,9 +43,9 @@ namespace LBHAddressesAPI
             services.Configure<ConfigurationSettings>(Configuration);
             var settings = Configuration.Get<ConfigurationSettings>();
 
-            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
+            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
 
-            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
+            var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringDev");
             //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringTest");
 
