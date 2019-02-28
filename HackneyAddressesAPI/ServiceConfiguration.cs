@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LBHAddressesAPI.Helpers;
-using LBHAddressesAPI.Interfaces;
-using LBHAddressesAPI.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LBHAddressesAPI
@@ -13,17 +11,8 @@ namespace LBHAddressesAPI
     {
         public static void AddCustomServices(this IServiceCollection services)
         {
-            services.AddTransient<IValidator, Validator>();
-            services.AddTransient<IFormatter, Formatter>();
+                       
             
-            
-            services.AddTransient<IFilterObjectBuilder, FilterObjectBuilder>();
-
-            
-
-            //services.AddScoped<IConfigReader, ConfigReader>();
-
-            services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
         }
     }
 }

@@ -4,9 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LBHAddressesAPI.Helpers;
-using LBHAddressesAPI.Interfaces;
-using LBHAddressesAPI.Logging;
-using LBHAddressesAPI.Tests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -44,16 +41,13 @@ namespace LBHAddressesAPI
             var settings = Configuration.Get<ConfigurationSettings>();
 
             var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionString");
-
-            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringLive");
-            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringDev");
-            //var connectionString = Environment.GetEnvironmentVariable("LLPGConnectionStringTest");
-
+            
             services.ConfigureAddressSearch(connectionString);
 
-            //services.AddCors(option => {
-            //    option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            //});
+            services.AddCors(option =>
+            {
+                option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
             services.AddMvc();
             services.AddSwaggerGen(c =>

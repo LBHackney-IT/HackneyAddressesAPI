@@ -29,6 +29,8 @@
     <Folder Include="Extensions\Validation\" />
     <Folder Include="Infrastructure\V1\Exceptions\" />
     <Folder Include="Infrastructure\V1\Validation\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Logging\" />
     <Folder Include="Settings\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
