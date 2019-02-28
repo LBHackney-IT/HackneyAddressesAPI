@@ -13,13 +13,7 @@ namespace LBHAddressesAPI
     {
         public static void AddCustomServices(this IServiceCollection services)
         {
-            services.AddTransient<IValidator, Validator>();
-            services.AddTransient<IFormatter, Formatter>();
-            
-            
-            services.AddTransient<IFilterObjectBuilder, FilterObjectBuilder>();
-
-            
+                       
 
             //services.AddScoped<IConfigReader, ConfigReader>();
 

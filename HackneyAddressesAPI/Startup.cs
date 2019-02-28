@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using LBHAddressesAPI.Helpers;
 using LBHAddressesAPI.Interfaces;
 using LBHAddressesAPI.Logging;
-using LBHAddressesAPI.Tests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
