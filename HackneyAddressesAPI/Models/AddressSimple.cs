@@ -1,5 +1,4 @@
 ﻿using System;
-using LBHAddressesAPI.Interfaces;
 
 namespace LBHAddressesAPI.Models
 {
