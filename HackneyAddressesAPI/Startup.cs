@@ -15,6 +15,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using LBHAddressesAPI.Infrastructure.V1.Services;
 using LBHAddressesAPI.Infrastructure.V1.Middleware;
 using System.Configuration;
+using LBHAddressesAPI.Models;
 
 namespace LBHAddressesAPI
 {
@@ -44,10 +45,10 @@ namespace LBHAddressesAPI
             
             services.ConfigureAddressSearch(connectionString);
 
-            //services.AddCors(option =>
-            //{
-            //    option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            //});
+            services.AddCors(option =>
+            {
+                option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
             services.AddMvc();
             services.AddSwaggerGen(c =>
@@ -57,7 +58,7 @@ namespace LBHAddressesAPI
                     {
                         In = "header",
                         Description = "Your Hackney API Key",
-                        Name = "X-Api-Key",
+                        Name = "X-api-Key",
                         Type = "apiKey"
                     });
                 
@@ -65,6 +66,8 @@ namespace LBHAddressesAPI
                 {
                     {"Token", Enumerable.Empty<string>()}
                 });
+
+                c.DocumentFilter<PolymorphismDocumentFilter<AddressBase>>(); // allows us to display the child objects of AddressDetailed and AddressSimple
 
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Hackney Addresses API", Version = "v1" });
 

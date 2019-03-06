@@ -32,7 +32,7 @@ namespace LBHAddressesAPI.Helpers
         {
             string selectedColumns = string.Empty;
             string selectDetailedColumns = " LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, TOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude, {0} ";
-            string selectSimpleColumns = " SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4 {0}";
+            string selectSimpleColumns = " SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4 {0}, TOWN as City";
             GlobalConstants.Format format = request.Format;
             if (isCountQuery)
             {
@@ -48,7 +48,7 @@ namespace LBHAddressesAPI.Helpers
                 else
                 {
                     //Requested format is simple so we amend query accordingly
-                    selectedColumns = string.Format(selectSimpleColumns, format == GlobalConstants.Format.Simple ? ", TOWN as City, Postcode, UPRN, LPI_KEY as AddressID " : " ");
+                    selectedColumns = string.Format(selectSimpleColumns, format == GlobalConstants.Format.Simple ? ", Postcode, UPRN, LPI_KEY as AddressID " : " ");
                 }
             }
             if (IncludeParentShell(request))
