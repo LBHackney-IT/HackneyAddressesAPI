@@ -92,6 +92,16 @@ CREATE TABLE [dbo].[national_address](
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[hackney_xref](
+	[xref_key] [varchar](14) NULL,
+	[uprn] [float] NOT NULL,
+	[xref_code] [nvarchar](6) NULL,
+	[xref_name] [nvarchar](100) NULL,
+	[xref_value] [nvarchar](50) NULL,
+	[xref_end_date] [date] NULL
+) ON [PRIMARY]
+GO
+
 create view [dbo].[combined_address] as  SELECT * FROM dbo.hackney_address   UNION ALL  SELECT * FROM dbo.national_address   ; 
 GO
 
@@ -1296,4 +1306,34 @@ GO
 INSERT [dbo].[national_address] ([LPI_KEY], [LPI_LOGICAL_STATUS], [LPI_OFFICIAL_FLAG], [LPI_START_DATE], [LPI_END_DATE], [LPI_LAST_UPDATE_DATE], [USRN], [UPRN], [PARENT_UPRN], [BLPU_START_DATE], [BLPU_END_DATE], [BLPU_STATE], [BLPU_STATE_DATE], [BLPU_CLASS], [USAGE_DESCRIPTION], [USAGE_PRIMARY], [PROPERTY_SHELL], [EASTING], [NORTHING], [RPA], [ORGANISATION], [SAO_TEXT], [UNIT_NUMBER], [LPI_LEVEL], [PAO_TEXT], [BUILDING_NUMBER], [STREET_DESCRIPTION], [STREET_ADMIN], [LOCALITY], [WARD], [POSTALLY_ADDRESSABLE], [NEVEREXPORT], [TOWN], [POSTCODE], [POSTCODE_NOSPACE], [LONGITUDE], [LATITUDE], [GAZETTEER]) VALUES (N'0738L000167148', N'Approved Preferred', N'Y', 20181030, 0, 20181031, 38205293, 10013724005, NULL, 20080314, 0, NULL, 20181031, N'CT03', N'Commercial, Transport, Car / Coach / Commercial Vehicle / Taxi Parking / Park And Ride Site ', N'Commercial', 0, CAST(441519.0100 AS Numeric(12, 4)), CAST(521028.5500 AS Numeric(12, 4)), 1, NULL, NULL, NULL, NULL, N'CAR PARK SOUTH OF 21', NULL, N'CORNRIGGS WALK', N'STOCKTON-ON-TEES', N'', N'HARDWICK', N'Y', 0, N'', N'TS19 8RA', N'TS198RA', CAST(-1.359137100 AS Numeric(12, 9)), CAST(54.582773400 AS Numeric(12, 9)), N'NATIONAL')
 GO
 INSERT [dbo].[national_address] ([LPI_KEY], [LPI_LOGICAL_STATUS], [LPI_OFFICIAL_FLAG], [LPI_START_DATE], [LPI_END_DATE], [LPI_LAST_UPDATE_DATE], [USRN], [UPRN], [PARENT_UPRN], [BLPU_START_DATE], [BLPU_END_DATE], [BLPU_STATE], [BLPU_STATE_DATE], [BLPU_CLASS], [USAGE_DESCRIPTION], [USAGE_PRIMARY], [PROPERTY_SHELL], [EASTING], [NORTHING], [RPA], [ORGANISATION], [SAO_TEXT], [UNIT_NUMBER], [LPI_LEVEL], [PAO_TEXT], [BUILDING_NUMBER], [STREET_DESCRIPTION], [STREET_ADMIN], [LOCALITY], [WARD], [POSTALLY_ADDRESSABLE], [NEVEREXPORT], [TOWN], [POSTCODE], [POSTCODE_NOSPACE], [LONGITUDE], [LATITUDE], [GAZETTEER]) VALUES (N'0738L000167160', N'Approved Preferred', N'Y', 20181031, 0, 20181101, 38202349, 10013724010, NULL, 20080314, 0, NULL, 20181101, N'CT03', N'Commercial, Transport, Car / Coach / Commercial Vehicle / Taxi Parking / Park And Ride Site ', N'Commercial', 0, CAST(441453.9400 AS Numeric(12, 4)), CAST(520982.3700 AS Numeric(12, 4)), 1, NULL, NULL, NULL, NULL, N'CAR PARK WEST OF 68', NULL, N'TITHE BARN ROAD', N'STOCKTON-ON-TEES', N'', N'HARDWICK', N'Y', 0, N'', N'TS19 8TB', N'TS198TB', CAST(-1.360150300 AS Numeric(12, 9)), CAST(54.582363800 AS Numeric(12, 9)), N'NATIONAL')
+GO
+
+
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X000691196',10008299078,'SNN','Street Naming and Numbering','1091')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001063295',10008299078,'CPZ','CONTROLLED PARKING ZONE','23')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001477350',10008299078,'5360BX','BUSINESS INDEX ATTRIBUTES','* (Y) 9TA 4CR')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001477351',10008299078,'5360CO','BX COMPANIES HOUSE','OC333653 (Y)')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001477352',10008299078,'5360CO','BX COMPANIES HOUSE','04590935 (X)')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439776',10008299078,'5360ND','NON-DOMESTIC RATES','1795084')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439777',10008299078,'5360ND','NON-DOMESTIC RATES','1795085')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439778',10008299078,'5360ND','NON-DOMESTIC RATES','1795086')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439779',10008299078,'5360ND','NON-DOMESTIC RATES','1795087')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439780',10008299078,'5360ND','NON-DOMESTIC RATES','1795088')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439781',10008299078,'5360ND','NON-DOMESTIC RATES','1795089')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439782',10008299078,'5360ND','NON-DOMESTIC RATES','1795090')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439783',10008299078,'5360ND','NON-DOMESTIC RATES','1795091')
+GO
+INSERT INTO [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value]) values('5360X001439784',10008299078,'5360ND','NON-DOMESTIC RATES','1795092')
 GO
