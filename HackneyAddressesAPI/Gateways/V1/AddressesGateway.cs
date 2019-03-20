@@ -93,6 +93,29 @@ namespace LBHAddressesAPI.Gateways.V1
             return result;
         }
 
+        
+        public async Task<List<AddressCrossReference>> GetAddressCrossReferenceAsync(GetAddressCrossReferenceRequest request, CancellationToken cancellationToken)
+        {
+            var result = new List<AddressCrossReference>();
+
+            string query = QueryBuilder.GetCrossReferences(request);
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                //open connection explicity
+                conn.Open();
+                var all = await conn.QueryAsync<AddressCrossReference>(query,
+                    new { uprn = request.uprn }
+                ).ConfigureAwait(false);
+
+                result = all.ToList();
+
+                conn.Close();
+            }
+
+
+            return result;
+        }
+
         /// <summary>
         /// Return Simple addresses for matching search
         /// </summary>

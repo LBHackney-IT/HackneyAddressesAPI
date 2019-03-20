@@ -12,6 +12,6 @@ namespace LBHAddressesAPI.Models
         public string name { get; set; }
         public string code { get; set; }
         public string value { get; set; }
-        public DateTime endDate { get; set; }
+        public DateTime ? endDate { get; set; }
     }
 }

@@ -98,5 +98,28 @@ namespace LBHAddressesAPITest.Helpers.Data
 
             command.ExecuteNonQuery();
         }
+
+        public static void InsertCrossRef (int uprn, SqlConnection db)
+        {
+            var commandText = "insert into [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value],[xref_end_date]) ";
+            commandText += " VALUES(@XREF_KEY,@UPRN,XREF_CODE,XREF_NAME,XREF_VALUE,XREF_END_DATE);";
+
+            var command = new SqlCommand(commandText, db);
+
+            command.Parameters.Add("@XREF_KEY", SqlDbType.VarChar);
+            command.Parameters["@XREF_KEY"].Value = "5360X123456789";
+            command.Parameters.Add("@UPRN", SqlDbType.Float);
+            command.Parameters["@UPRN"].Value = uprn;
+            command.Parameters.Add("@XREF_CODE", SqlDbType.VarChar);
+            command.Parameters["@XREF_CODE"].Value = "5360CO";
+            command.Parameters.Add("@XREF_NAME", SqlDbType.VarChar);
+            command.Parameters["@XREF_NAME"].Value = "BX COMPANIES HOUSE";
+            command.Parameters.Add("@XREF_VALUE", SqlDbType.VarChar);
+            command.Parameters["@XREF_VALUE"].Value = "* (Y) 1CR";
+            command.Parameters.Add("@XREF_END_DATE", SqlDbType.DateTime);
+            command.Parameters["@XREF_END_DATE"].Value = DateTime.Now;
+            command.ExecuteNonQuery();
+        }
+
     }
 }

@@ -16,5 +16,7 @@ namespace LBHAddressesAPI.Gateways.V1
         Task<PagedResults<AddressBase>> SearchAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
 
         Task<PagedResults<AddressSimple>> SearchSimpleAddressesAsync(SearchAddressRequest request, CancellationToken cancellationToken);
+
+        Task<List<AddressCrossReference>> GetAddressCrossReferenceAsync(GetAddressCrossReferenceRequest request, CancellationToken cancellationToken);
     }
 }

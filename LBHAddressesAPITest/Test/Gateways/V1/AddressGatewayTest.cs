@@ -46,6 +46,22 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
             response.AddressID.Should().BeEquivalentTo(key);
         }
 
+        [Fact]
+        public async Task can_retrieve_crossref_using_uprn()
+        {
+            int uprn = 1234578912;
+            TestDataHelper.InsertCrossRef(uprn,_databaseFixture.Db);
+
+            var response = await _classUnderTest.GetAddressCrossReferenceAsync(new GetAddressCrossReferenceRequest
+            {
+            }, CancellationToken.None);
+            response.Should().NotBeNull();
+            response[0].UPRN.Should().Equals(uprn);
+            //check the list for 
+
+        }
+
+
         //[Fact]
         //public async Task GetCorrectQuery()
         //{

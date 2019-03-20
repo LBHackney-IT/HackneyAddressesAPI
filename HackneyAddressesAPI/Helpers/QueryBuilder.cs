@@ -71,6 +71,11 @@ namespace LBHAddressesAPI.Helpers
             }
         }
 
+        public static string GetCrossReferences(GetAddressCrossReferenceRequest request)
+        {
+            return string.Format("SELECT [xref_key] as crossRefKey,[uprn],[xref_code] as code,[xref_name] as name,[xref_value] as value,[xref_end_date] as endDate FROM dbo.hackney_xref where UPRN = @UPRN ");
+        }
+
         /// <summary>
         /// test to decide whether parent shells should be included in query. 
         /// Can come from PropertyClassPrimary being set to ParentShell
