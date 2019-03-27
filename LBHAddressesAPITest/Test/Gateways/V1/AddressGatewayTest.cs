@@ -43,7 +43,7 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
             }, CancellationToken.None);
 
             response.Should().NotBeNull();
-            response.AddressID.Should().BeEquivalentTo(key);
+            response.AddressKey.Should().BeEquivalentTo(key);
         }
 
         [Fact]

@@ -31,7 +31,7 @@ namespace LBHAddressesAPI.Helpers
         private static string GetAddressesQuery(SearchAddressRequest request, bool includePaging, bool includeRecompile, bool isCountQuery, ref DynamicParameters dbArgs)
         {
             string selectedColumns = string.Empty;
-            string selectDetailedColumns = " LPI_KEY as AddressID,UPRN, USRN, PARENT_UPRN as parentUPRN,LPI_Logical_Status as addressStatus,SAO_TEXT as unitName,UNIT_NUMBER as unitNumber,PAO_TEXT as buildingName,BUILDING_NUMBER as buildingNumber,STREET_DESCRIPTION as street,POSTCODE as postcode,LOCALITY as locality,GAZETTEER as gazetteer,ORGANISATION as commercialOccupier, WARD as ward, TOWN as royalMailPostTown,USAGE_DESCRIPTION as usageClassDescription,USAGE_PRIMARY as usageClassPrimary,BLPU_CLASS as usageClassCode, PROPERTY_SHELL as propertyShell,NEVEREXPORT as isNonLocalAddressInLocalGazetteer,EASTING as easting, NORTHING as northing, LONGITUDE as longitude, LATITUDE as latitude, {0} ";
+            string selectDetailedColumns = " lpi_key as addressKey, uprn as uprn, usrn as usrn, parent_uprn as parentUPRN, lpi_logical_status as addressStatus, sao_text as unitName, unit_number as unitNumber, pao_text as buildingName, building_number as buildingNumber, street_description as street, postcode as postcode, locality as locality, town as town, gazetteer as gazetteer, organisation as commercialOccupier, ward as ward, usage_description as usageDescription, usage_primary as usagePrimary, blpu_class as usageCode, planning_use_class as planningUseClass, property_shell as propertyShell, neverexport as hackneyGazetteerOutOfBoroughAddress, easting as easting, northing as northing, longitude as longitude, latitude as latitude, {0} ";
             string selectSimpleColumns = " SAO_TEXT as Line1, coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT as Line2, BUILDING_NUMBER + ' ' + STREET_DESCRIPTION as Line3, LOCALITY as Line4 {0}, TOWN as City";
             GlobalConstants.Format format = request.Format;
             if (isCountQuery)
@@ -48,7 +48,7 @@ namespace LBHAddressesAPI.Helpers
                 else
                 {
                     //Requested format is simple so we amend query accordingly
-                    selectedColumns = string.Format(selectSimpleColumns, format == GlobalConstants.Format.Simple ? ", Postcode, UPRN, LPI_KEY as AddressID " : " ");
+                    selectedColumns = string.Format(selectSimpleColumns, format == GlobalConstants.Format.Simple ? ", Postcode, UPRN " : " ");
                 }
             }
             if (IncludeParentShell(request))

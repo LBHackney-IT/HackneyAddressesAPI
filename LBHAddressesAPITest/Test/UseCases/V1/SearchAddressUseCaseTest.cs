@@ -37,19 +37,19 @@ namespace LBHAddressesAPITest
             {
                 new AddressDetailed
                 {
-                    AddressID = "ABCDEFGHIJKLMN", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "NATIONAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified", usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                    AddressKey = "ABCDEFGHIJKLMN", UPRN = 10024389298,USRN = 21320239,ParentUPRN = 10024389282,AddressStatus = "Approved Preferred",UnitName = "FLAT 16",UnitNumber = "",BuildingName = "HAZELNUT COURT",BuildingNumber = "1",Street = "FIRWOOD LANE",Postcode = "RM3 0FS",Locality = "",Gazetteer = "NATIONAL",CommercialOccupier = "",UsageDescription = "Unclassified, Awaiting Classification",UsagePrimary = "Unclassified", UsageCode = "UC",PropertyShell = false,HackneyGazetteerOutOfBoroughAddress = false,Easting = 554189.4500,Northing = 190281.1000,Longitude = 0.2244347,Latitude = 51.590289
                 },
                 new AddressDetailed
                 {
-                    AddressID = "ABCDEFGHIJKLM2", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "LOCAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified", usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                    AddressKey = "ABCDEFGHIJKLM2", UPRN = 10024389298,USRN = 21320239,ParentUPRN = 10024389282,AddressStatus = "Approved Preferred",UnitName = "FLAT 16",UnitNumber = "",BuildingName = "HAZELNUT COURT",BuildingNumber = "1",Street = "FIRWOOD LANE",Postcode = "RM3 0FS",Locality = "",Gazetteer = "LOCAL",CommercialOccupier  = "",UsageDescription = "Unclassified, Awaiting Classification",UsagePrimary = "Unclassified", UsageCode = "UC",PropertyShell = false,HackneyGazetteerOutOfBoroughAddress = false,Easting = 554189.4500,Northing = 190281.1000,Longitude = 0.2244347,Latitude = 51.590289
                 }
             };
 
-            var postcode = "RM3 0FS";
-            var gazetteer = "LOCAL";
+            var Postcode = "RM3 0FS";
+            var Gazetteer = "LOCAL";
             var request = new SearchAddressRequest
             {
-                PostCode = postcode,
+                PostCode = Postcode,
                 Gazetteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
             };
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS") && i.Gazetteer == LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local), CancellationToken.None))
@@ -63,7 +63,7 @@ namespace LBHAddressesAPITest
             response.Should().NotBeNull();
             response.Addresses.Count().Should().Equals(1);
             response.TotalCount.Should().Equals(1);
-            //response.Addresses[0].gazetteer.Should().Equals(gazetteer);
+            //response.Addresses[0].Gazetteer.Should().Equals(Gazetteer);
         }
 
 
@@ -72,14 +72,14 @@ namespace LBHAddressesAPITest
         public async Task GivenValidInput_WhenGatewayRespondsWithNull_ThenResponseShouldBeNull()
         {
             //arrange
-            var postcode = "RM3 0FS";
+            var Postcode = "RM3 0FS";
             
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("ABCDEFGHIJKLMN")), CancellationToken.None))
                 .ReturnsAsync(null as PagedResults<AddressBase>);
 
             var request = new SearchAddressRequest
             {
-                PostCode = postcode
+                PostCode = Postcode
             };
             //act
             var response = await _classUnderTest.ExecuteAsync(request, CancellationToken.None);
@@ -94,18 +94,18 @@ namespace LBHAddressesAPITest
             {
                 new AddressDetailed
                 {
-                    AddressID = "ABCDEFGHIJKLMN", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "NATIONAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified",                usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                    AddressKey = "ABCDEFGHIJKLMN", UPRN = 10024389298,USRN = 21320239,ParentUPRN = 10024389282,AddressStatus = "Approved Preferred",UnitName = "FLAT 16",UnitNumber = "",BuildingName = "HAZELNUT COURT",BuildingNumber = "1",Street = "FIRWOOD LANE",Postcode = "RM3 0FS",Locality = "",Gazetteer = "NATIONAL",CommercialOccupier = "",UsageDescription = "Unclassified, Awaiting Classification",UsagePrimary = "Unclassified",                UsageCode = "UC",PropertyShell = false,HackneyGazetteerOutOfBoroughAddress = false,Easting = 554189.4500,Northing = 190281.1000,Longitude = 0.2244347,Latitude = 51.590289
                 },
                 new AddressDetailed
                 {
-                    AddressID = "ABCDEFGHIJKLM2", UPRN = 10024389298,USRN = 21320239,parentUPRN = 10024389282,addressStatus = "Approved Preferred",unitName = "FLAT 16",unitNumber = "",buildingName = "HAZELNUT COURT",buildingNumber = "1",street = "FIRWOOD LANE",postcode = "RM3 0FS",locality = "",gazetteer = "NATIONAL",commercialOccupier = "",royalMailPostTown = "",usageClassDescription = "Unclassified, Awaiting Classification",usageClassPrimary = "Unclassified",                usageClassCode = "UC",propertyShell = false,isNonLocalAddressInLocalGazetteer = false,easting = 554189.4500,northing = 190281.1000,longitude = 0.2244347,latitude = 51.590289
+                    AddressKey = "ABCDEFGHIJKLM2", UPRN = 10024389298,USRN = 21320239,ParentUPRN = 10024389282,AddressStatus = "Approved Preferred",UnitName = "FLAT 16",UnitNumber = "",BuildingName = "HAZELNUT COURT",BuildingNumber = "1",Street = "FIRWOOD LANE",Postcode = "RM3 0FS",Locality = "",Gazetteer = "NATIONAL",CommercialOccupier = "",UsageDescription = "Unclassified, Awaiting Classification",UsagePrimary = "Unclassified",                UsageCode = "UC",PropertyShell = false,HackneyGazetteerOutOfBoroughAddress = false,Easting = 554189.4500,Northing = 190281.1000,Longitude = 0.2244347,Latitude = 51.590289
                 }
             };
 
-            var postcode = "RM3 0FS";
+            var Postcode = "RM3 0FS";
             var request = new SearchAddressRequest
             {
-                PostCode = postcode
+                PostCode = Postcode
             };
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS")), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<AddressBase>
@@ -127,37 +127,36 @@ namespace LBHAddressesAPITest
             var addresses = new List<AddressBase>();
             var address = new AddressDetailed
             {
-                AddressID = "ABCDEFGHIJKLMN",
+                AddressKey = "ABCDEFGHIJKLMN",
                 UPRN = 10024389298,
                 USRN = 21320239,
-                parentUPRN = 10024389282,
-                addressStatus = "Approved Preferred",
-                unitName = "FLAT 16",
-                unitNumber = "",
-                buildingName = "HAZELNUT COURT",
-                buildingNumber = "1",
-                street = "FIRWOOD LANE",
-                postcode = "RM3 0FS",
-                locality = "",
-                gazetteer = "NATIONAL",
-                commercialOccupier = "",
-                royalMailPostTown = "",
-                usageClassDescription = "Unclassified, Awaiting Classification",
-                usageClassPrimary = "Unclassified",
-                usageClassCode = "UC",
-                propertyShell = false,
-                isNonLocalAddressInLocalGazetteer = false,
-                easting = 554189.4500,
-                northing = 190281.1000,
-                longitude = 0.2244347,
-                latitude = 51.590289
+                ParentUPRN = 10024389282,
+                AddressStatus = "Approved Preferred",
+                UnitName = "FLAT 16",
+                UnitNumber = "",
+                BuildingName = "HAZELNUT COURT",
+                BuildingNumber = "1",
+                Street = "FIRWOOD LANE",
+                Postcode = "RM3 0FS",
+                Locality = "",
+                Gazetteer = "NATIONAL",
+                CommercialOccupier = "",
+                UsageDescription = "Unclassified, Awaiting Classification",
+                UsagePrimary = "Unclassified",
+                UsageCode = "UC",
+                PropertyShell = false,
+                HackneyGazetteerOutOfBoroughAddress = false,
+                Easting = 554189.4500,
+                Northing = 190281.1000,
+                Longitude = 0.2244347,
+                Latitude = 51.590289
 
             };
             addresses.Add(address);
-            var postcode = "RM3 0FS";
+            var Postcode = "RM3 0FS";
             var request = new SearchAddressRequest
             {
-                PostCode = postcode
+                PostCode = Postcode
             };
             _fakeGateway.Setup(s => s.SearchAddressesAsync(It.Is<SearchAddressRequest>(i => i.PostCode.Equals("RM3 0FS")), CancellationToken.None))
                 .ReturnsAsync(new PagedResults<AddressBase>
@@ -170,42 +169,41 @@ namespace LBHAddressesAPITest
             response.Should().NotBeNull();
             var x = (AddressDetailed)response.Addresses[0];
 
-            x.AddressID.Should().BeEquivalentTo(address.AddressID);
-            x.postcode.Should().NotBeNullOrEmpty();
+            x.AddressKey.Should().BeEquivalentTo(address.AddressKey);
+            x.Postcode.Should().NotBeNullOrEmpty();
 
             x.UPRN.Should().Be(address.UPRN);
             x.USRN.Should().Be(address.USRN);
 
-            x.addressStatus.Should().NotBeNullOrEmpty();
-            x.addressStatus.Should().BeEquivalentTo(address.addressStatus);
+            x.AddressStatus.Should().NotBeNullOrEmpty();
+            x.AddressStatus.Should().BeEquivalentTo(address.AddressStatus);
 
-            x.unitName.Should().BeEquivalentTo(address.unitName);
-            x.unitNumber.Should().BeEquivalentTo(address.unitNumber);
-            x.buildingName.Should().BeEquivalentTo(address.buildingName);
-            x.buildingNumber.Should().BeEquivalentTo(address.buildingNumber);
+            x.UnitName.Should().BeEquivalentTo(address.UnitName);
+            x.UnitNumber.Should().BeEquivalentTo(address.UnitNumber);
+            x.BuildingName.Should().BeEquivalentTo(address.BuildingName);
+            x.BuildingNumber.Should().BeEquivalentTo(address.BuildingNumber);
 
-            x.street.Should().NotBeNullOrEmpty();
-            x.street.Should().BeEquivalentTo(address.street);
+            x.Street.Should().NotBeNullOrEmpty();
+            x.Street.Should().BeEquivalentTo(address.Street);
 
-            x.postcode.Should().BeEquivalentTo(address.postcode);
+            x.Postcode.Should().BeEquivalentTo(address.Postcode);
 
-            x.locality.Should().BeEquivalentTo(address.locality);
+            x.Locality.Should().BeEquivalentTo(address.Locality);
 
-            x.gazetteer.Should().NotBeNullOrEmpty();
-            x.gazetteer.Should().BeEquivalentTo(address.gazetteer);
+            x.Gazetteer.Should().NotBeNullOrEmpty();
+            x.Gazetteer.Should().BeEquivalentTo(address.Gazetteer);
 
-            x.commercialOccupier.Should().BeEquivalentTo(address.commercialOccupier);
-            x.royalMailPostTown.Should().BeEquivalentTo(address.royalMailPostTown);
-            x.usageClassDescription.Should().BeEquivalentTo(address.usageClassDescription);
-            x.usageClassPrimary.Should().BeEquivalentTo(address.usageClassPrimary);
-            x.usageClassCode.Should().BeEquivalentTo(address.usageClassCode);
-            x.propertyShell.Should().Be(address.propertyShell);
-            x.isNonLocalAddressInLocalGazetteer.Should().Be(address.isNonLocalAddressInLocalGazetteer);
-            x.easting.Should().Be(address.easting);
-            x.northing.Should().Be(address.northing);
+            x.CommercialOccupier.Should().BeEquivalentTo(address.CommercialOccupier);
+            x.UsageDescription.Should().BeEquivalentTo(address.UsageDescription);
+            x.UsagePrimary.Should().BeEquivalentTo(address.UsagePrimary);
+            x.UsageCode.Should().BeEquivalentTo(address.UsageCode);
+            x.PropertyShell.Should().Be(address.PropertyShell);
+            x.HackneyGazetteerOutOfBoroughAddress.Should().Be(address.HackneyGazetteerOutOfBoroughAddress);
+            x.Easting.Should().Be(address.Easting);
+            x.Northing.Should().Be(address.Northing);
 
-            x.longitude.Should().Be(address.longitude);
-            x.latitude.Should().Be(address.latitude);
+            x.Longitude.Should().Be(address.Longitude);
+            x.Latitude.Should().Be(address.Latitude);
         }
     }
 }

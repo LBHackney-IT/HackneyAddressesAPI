@@ -14,7 +14,6 @@ namespace LBHAddressesAPI.Models
         public string Postcode { get; set; }
 
         public Int64 UPRN { get; set; }
-        public string AddressID { get; set; }
 
     }
 }
