@@ -9,7 +9,7 @@ namespace LBHAddressesAPI.Models
         public string Line3 { get; set; }
         public string Line4 { get; set; }
 
-        public string City { get; set; }
+        public string Town { get; set; }
 
         public string Postcode { get; set; }
 
