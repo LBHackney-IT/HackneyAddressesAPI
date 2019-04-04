@@ -32,7 +32,7 @@ namespace LBHAddressesAPI.Helpers
         {
             string selectedColumns = string.Empty;
             string selectDetailedColumns = " lpi_key as addressKey, uprn as uprn, usrn as usrn, parent_uprn as parentUPRN, lpi_logical_status as addressStatus, sao_text as unitName, unit_number as unitNumber, pao_text as buildingName, building_number as buildingNumber, street_description as street, postcode as postcode, locality as locality, town as town, gazetteer as gazetteer, organisation as commercialOccupier, ward as ward, usage_description as usageDescription, usage_primary as usagePrimary, blpu_class as usageCode, planning_use_class as planningUseClass, property_shell as propertyShell, neverexport as hackneyGazetteerOutOfBoroughAddress, easting as easting, northing as northing, longitude as longitude, latitude as latitude, {0} ";
-            string selectSimpleColumns = " SAO_TEXT as Line1, trim(coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT) as Line2, trim(BUILDING_NUMBER + ' ' + STREET_DESCRIPTION) as Line3, LOCALITY as Line4 {0}, TOWN as Town";
+            string selectSimpleColumns = " Line1, Line2, Line3, Line4 {0}, TOWN as Town";
             GlobalConstants.Format format = request.Format;
             if (isCountQuery)
             {
