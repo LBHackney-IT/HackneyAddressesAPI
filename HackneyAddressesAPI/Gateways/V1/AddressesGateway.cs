@@ -104,7 +104,7 @@ namespace LBHAddressesAPI.Gateways.V1
                 //open connection explicity
                 conn.Open();
                 var all = await conn.QueryAsync<AddressCrossReference>(query,
-                    new { uprn = request.uprn }
+                    new { UPRN = request.uprn }
                 ).ConfigureAwait(false);
 
                 result = all.ToList();

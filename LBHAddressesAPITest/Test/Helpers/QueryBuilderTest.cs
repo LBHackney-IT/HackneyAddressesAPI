@@ -24,7 +24,7 @@ namespace LBHAddressesAPITest.Test.Helpers
             };
 
             string response = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            response.Replace("  ", " ").Should().Contain("SAO_TEXT as Line1, trim(coalesce(UNIT_NUMBER,'') + ' ' + PAO_TEXT) as Line2, trim(BUILDING_NUMBER + ' ' + STREET_DESCRIPTION) as Line3, LOCALITY as Line4 , Postcode, UPRN , TOWN as Town  ".Replace("  ", " "));
+            response.Replace("  ", " ").Should().Contain("Line1, Line2, Line3, Line4 , Postcode, UPRN , TOWN as Town  ".Replace("  ", " "));
         }
 
         [Fact]

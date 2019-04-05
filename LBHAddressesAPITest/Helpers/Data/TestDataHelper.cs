@@ -10,99 +10,44 @@ namespace LBHAddressesAPITest.Helpers.Data
 {
     public static class TestDataHelper
     {
-        public static void InsertAddress(Address address, SqlConnection db)
+        public static void InsertAddress(string key, SqlConnection db)
         {
-            var commandText = "insert into [dbo].[hackney_address] ([LPI_KEY], [LPI_LOGICAL_STATUS], [LPI_OFFICIAL_FLAG], [LPI_START_DATE], [LPI_END_DATE], [LPI_LAST_UPDATE_DATE], [USRN], [UPRN], [PARENT_UPRN], [BLPU_START_DATE], [BLPU_END_DATE], [BLPU_STATE], [BLPU_STATE_DATE], [BLPU_CLASS], [USAGE_DESCRIPTION], [USAGE_PRIMARY], [PROPERTY_SHELL], [EASTING], [NORTHING], [RPA], [ORGANISATION], [SAO_TEXT], [UNIT_NUMBER], [LPI_LEVEL], [PAO_TEXT], [BUILDING_NUMBER], [STREET_DESCRIPTION], [STREET_ADMIN], [LOCALITY], [WARD], [POSTALLY_ADDRESSABLE], [NEVEREXPORT], [TOWN], [POSTCODE], [POSTCODE_NOSPACE], [LONGITUDE], [LATITUDE], [GAZETTEER]) ";
-            commandText += " VALUES(@LPI_KEY,@LPI_LOGICAL_STATUS,@LPI_OFFICIAL_FLAG,@LPI_START_DATE,@LPI_END_DATE,@LPI_LAST_UPDATE_DATE,@USRN,@UPRN,@PARENT_UPRN,@BLPU_START_DATE,@BLPU_END_DATE,@BLPU_STATE,@BLPU_STATE_DATE,@BLPU_CLASS,@USAGE_DESCRIPTION,@USAGE_PRIMARY,@PROPERTY_SHELL,@EASTING,@NORTHING,@RPA,@ORGANISATION,@SAO_TEXT,@UNIT_NUMBER,@LPI_LEVEL,@PAO_TEXT,@BUILDING_NUMBER,@STREET_DESCRIPTION,@STREET_ADMIN,@LOCALITY,@WARD,@POSTALLY_ADDRESSABLE,@NEVEREXPORT,@TOWN,@POSTCODE,@POSTCODE_NOSPACE,@LONGITUDE,@LATITUDE,@GAZETTEER);";
+            //var commandText = "insert into [dbo].[hackney_address] ([LPI_KEY], [LPI_LOGICAL_STATUS], [LPI_OFFICIAL_FLAG], [LPI_START_DATE], [LPI_END_DATE], [LPI_LAST_UPDATE_DATE], [USRN], [UPRN], [PARENT_UPRN], [BLPU_START_DATE], [BLPU_END_DATE], [BLPU_STATE], [BLPU_STATE_DATE], [BLPU_CLASS], [USAGE_DESCRIPTION], [USAGE_PRIMARY], [PROPERTY_SHELL], [EASTING], [NORTHING], [RPA], [ORGANISATION], [SAO_TEXT], [UNIT_NUMBER], [LPI_LEVEL], [PAO_TEXT], [BUILDING_NUMBER], [STREET_DESCRIPTION], [STREET_ADMIN], [LOCALITY], [WARD], [POSTALLY_ADDRESSABLE], [NEVEREXPORT], [TOWN], [POSTCODE], [POSTCODE_NOSPACE], [LONGITUDE], [LATITUDE], [GAZETTEER]) ";
+            //commandText += " VALUES(@LPI_KEY,@LPI_LOGICAL_STATUS,@LPI_OFFICIAL_FLAG,@LPI_START_DATE,@LPI_END_DATE,@LPI_LAST_UPDATE_DATE,@USRN,@UPRN,@PARENT_UPRN,@BLPU_START_DATE,@BLPU_END_DATE,@BLPU_STATE,@BLPU_STATE_DATE,@BLPU_CLASS,@USAGE_DESCRIPTION,@USAGE_PRIMARY,@PROPERTY_SHELL,@EASTING,@NORTHING,@RPA,@ORGANISATION,@SAO_TEXT,@UNIT_NUMBER,@LPI_LEVEL,@PAO_TEXT,@BUILDING_NUMBER,@STREET_DESCRIPTION,@STREET_ADMIN,@LOCALITY,@WARD,@POSTALLY_ADDRESSABLE,@NEVEREXPORT,@TOWN,@POSTCODE,@POSTCODE_NOSPACE,@LONGITUDE,@LATITUDE,@GAZETTEER);";
+
+            var commandText = "INSERT [dbo].[hackney_address] ([lpi_key], [lpi_logical_status], [lpi_start_date], [lpi_end_date], [lpi_last_update_date], [usrn], [uprn], [parent_uprn], [blpu_start_date], [blpu_end_date], [blpu_state], [blpu_state_date], [blpu_class], [usage_description], [usage_primary], [property_shell], [easting], [northing], [organisation], [sao_text], [unit_number], [lpi_level], [pao_text], [building_number], [street_description], [locality], [ward], [town], [county], [postcode], [postcode_nospace], [planning_use_class], [neverexport], [longitude], [latitude], [gazetteer], [line1], [line2], [line3], [line4]) VALUES (@LPI_KEY, N'Historical', 20060214, 20060824, 20080623, 20900579, 10008227619, 100023650149, 20060214, 20090821, NULL, 0, N'RD', N'Residential, Dwellings', N'Residential', 0, CAST(533580.0000 AS Numeric(12, 4)), CAST(184945.0000 AS Numeric(12, 4)), NULL, NULL, N'37-38', NULL, N'DALSTON CROSS SHOPPING CENTRE', N'64', N'KINGSLAND HIGH STREET', N'HACKNEY', N'DALSTON WARD', N'LONDON', N'HACKNEY', N'E8 2LX', N'E82LX', NULL, 0, -0.074904309495184729, 51.54759585320371, N'LOCAL', N'37-38 DALSTON CROSS SHOPPING CENTRE', N'64 KINGSLAND HIGH STREET', N'LONDON', N'')";
  
             var command = new SqlCommand(commandText, db);
 
             command.Parameters.Add("@LPI_KEY", SqlDbType.VarChar );
-            command.Parameters.Add("@LPI_LOGICAL_STATUS", SqlDbType.VarChar );
-            command.Parameters.Add("@LPI_OFFICIAL_FLAG", SqlDbType.VarChar );
-            command.Parameters.Add("@LPI_START_DATE", SqlDbType.Int );
-            command.Parameters.Add("@LPI_END_DATE", SqlDbType.Int );
-            command.Parameters.Add("@LPI_LAST_UPDATE_DATE", SqlDbType.Int );
-            command.Parameters.Add("@USRN", SqlDbType.Int );
-            command.Parameters.Add("@UPRN", SqlDbType.Float );
-            command.Parameters.Add("@PARENT_UPRN", SqlDbType.Float );
-            command.Parameters.Add("@BLPU_START_DATE", SqlDbType.Int );
-            command.Parameters.Add("@BLPU_END_DATE", SqlDbType.Int );
-            command.Parameters.Add("@BLPU_STATE", SqlDbType.SmallInt );
-            command.Parameters.Add("@BLPU_STATE_DATE", SqlDbType.Int );
-            command.Parameters.Add("@BLPU_CLASS", SqlDbType.VarChar );
-            command.Parameters.Add("@USAGE_DESCRIPTION", SqlDbType.VarChar );
-            command.Parameters.Add("@USAGE_PRIMARY", SqlDbType.VarChar );
-            command.Parameters.Add("@PROPERTY_SHELL", SqlDbType.Bit );
-            command.Parameters.Add("@EASTING", SqlDbType.Decimal );
-            command.Parameters.Add("@NORTHING", SqlDbType.Decimal );
-            command.Parameters.Add("@RPA", SqlDbType.TinyInt );
-            command.Parameters.Add("@ORGANISATION", SqlDbType.NVarChar );
-            command.Parameters.Add("@SAO_TEXT", SqlDbType. NVarChar);
-            command.Parameters.Add("@UNIT_NUMBER", SqlDbType.NVarChar );
-            command.Parameters.Add("@LPI_LEVEL", SqlDbType.NVarChar );
-            command.Parameters.Add("@PAO_TEXT", SqlDbType.NVarChar );
-            command.Parameters.Add("@BUILDING_NUMBER", SqlDbType.NVarChar );
-            command.Parameters.Add("@STREET_DESCRIPTION", SqlDbType.NVarChar );
-            command.Parameters.Add("@STREET_ADMIN", SqlDbType.VarChar );
-            command.Parameters.Add("@LOCALITY", SqlDbType.NVarChar );
-            command.Parameters.Add("@WARD", SqlDbType.NVarChar );
-            command.Parameters.Add("@POSTALLY_ADDRESSABLE", SqlDbType.VarChar );
-            command.Parameters.Add("@NEVEREXPORT", SqlDbType.Bit );
-            command.Parameters.Add("@TOWN", SqlDbType.NVarChar );
-            command.Parameters.Add("@POSTCODE", SqlDbType.VarChar );
-            command.Parameters.Add("@POSTCODE_NOSPACE", SqlDbType.VarChar );
-            command.Parameters.Add("@LONGITUDE", SqlDbType.Float );
-            command.Parameters.Add("@LATITUDE", SqlDbType.Float );
-            command.Parameters.Add("@GAZETTEER", SqlDbType.VarChar );
+            command.Parameters["@LPI_KEY"].Value = key;
+           
+            command.ExecuteNonQuery();
+            command.Dispose();
+        }
 
-            command.Parameters["@LPI_KEY"].Value = address.LPI_KEY;
-            command.Parameters["@LPI_LOGICAL_STATUS"].Value = address.LPI_LOGICAL_STATUS;
-            command.Parameters["@LPI_OFFICIAL_FLAG"].Value = address.LPI_OFFICIAL_FLAG;
-            command.Parameters["@LPI_START_DATE"].Value = address.LPI_START_DATE;
-            command.Parameters["@LPI_END_DATE"].Value = address.LPI_END_DATE;
-            command.Parameters["@LPI_LAST_UPDATE_DATE"].Value = address.LPI_LAST_UPDATE_DATE;
-            command.Parameters["@USRN"].Value = address.USRN;
-            command.Parameters["@UPRN"].Value = address.UPRN;
-            command.Parameters["@PARENT_UPRN"].Value = address.PARENT_UPRN;
-            command.Parameters["@BLPU_START_DATE"].Value = address.BLPU_START_DATE;
-            command.Parameters["@BLPU_END_DATE"].Value = address.BLPU_END_DATE;
-            command.Parameters["@BLPU_STATE"].Value = address.BLPU_STATE;
-            command.Parameters["@BLPU_STATE_DATE"].Value = address.BLPU_STATE_DATE;
-            command.Parameters["@BLPU_CLASS"].Value = address.BLPU_CLASS;
-            command.Parameters["@USAGE_DESCRIPTION"].Value = address.USAGE_DESCRIPTION;
-            command.Parameters["@USAGE_PRIMARY"].Value = address.USAGE_PRIMARY;
-            command.Parameters["@PROPERTY_SHELL"].Value = address.PROPERTY_SHELL;
-            command.Parameters["@EASTING"].Value = address.EASTING;
-            command.Parameters["@NORTHING"].Value = address.NORTHING;
-            command.Parameters["@RPA"].Value = address.RPA;
-            command.Parameters["@ORGANISATION"].Value = address.ORGANISATION;
-            command.Parameters["@SAO_TEXT"].Value = address.SAO_TEXT;
-            command.Parameters["@UNIT_NUMBER"].Value = address.UNIT_NUMBER;
-            command.Parameters["@LPI_LEVEL"].Value = address.LPI_LEVEL;
-            command.Parameters["@PAO_TEXT"].Value = address.PAO_TEXT;
-            command.Parameters["@BUILDING_NUMBER"].Value = address.BUILDING_NUMBER;
-            command.Parameters["@STREET_DESCRIPTION"].Value = address.STREET_DESCRIPTION;
-            command.Parameters["@STREET_ADMIN"].Value = address.STREET_ADMIN;
-            command.Parameters["@LOCALITY"].Value = address.LOCALITY;
-            command.Parameters["@WARD"].Value = address.WARD;
-            command.Parameters["@POSTALLY_ADDRESSABLE"].Value = address.POSTALLY_ADDRESSABLE;
-            command.Parameters["@NEVEREXPORT"].Value = address.NEVEREXPORT;
-            command.Parameters["@TOWN"].Value = address.POSTTOWN;
-            command.Parameters["@POSTCODE"].Value = address.POSTCODE;
-            command.Parameters["@POSTCODE_NOSPACE"].Value = address.POSTCODE_NOSPACE;
-            command.Parameters["@LONGITUDE"].Value = address.LONGITUDE;
-            command.Parameters["@LATITUDE"].Value = address.LATITUDE;
-            command.Parameters["@GAZETTEER"].Value = address.GAZETTEER;           
+        internal static void DeleteCrossRef(int uprn, SqlConnection db)
+        {
+            var commandText = "delete from [dbo].[hackney_xref] WHERE uprn = @uprn ";
+            var command = new SqlCommand(commandText, db);
+            command.Parameters.Add("@uprn", SqlDbType.VarChar);
+            command.Parameters["@uprn"].Value = uprn;
+            command.ExecuteNonQuery();
+        }
 
-
+        internal static void DeleteAddress(string key, SqlConnection db)
+        {
+            var commandText = "delete from [dbo].[hackney_address] WHERE LPI_KEY = @LPI_KEY ";
+            var command = new SqlCommand(commandText, db);
+            command.Parameters.Add("@LPI_KEY", SqlDbType.VarChar);
+            command.Parameters["@LPI_KEY"].Value = key;
             command.ExecuteNonQuery();
         }
 
         public static void InsertCrossRef (int uprn, SqlConnection db)
         {
             var commandText = "insert into [dbo].[hackney_xref] ([xref_key],[uprn],[xref_code],[xref_name],[xref_value],[xref_end_date]) ";
-            commandText += " VALUES(@XREF_KEY,@UPRN,XREF_CODE,XREF_NAME,XREF_VALUE,XREF_END_DATE);";
+            commandText += " VALUES(@XREF_KEY,@UPRN,@XREF_CODE,@XREF_NAME,@XREF_VALUE,@XREF_END_DATE);";
 
             var command = new SqlCommand(commandText, db);
 
