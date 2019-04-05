@@ -33,9 +33,9 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
         [Fact]
         public async Task can_retrieve_using_address_id()
         {
-            string key = "0123456789abcd";
-            var expectedAddress = Fake.GenerateAddressProvidingKey(key);
-            TestDataHelper.InsertAddress(expectedAddress, _databaseFixture.Db);
+            string key = "xxxxxxxxxxxxxx";
+            //var expectedAddress = Fake.GenerateAddressProvidingKey(key);
+            TestDataHelper.InsertAddress(key, _databaseFixture.Db);
 
             var response = await _classUnderTest.GetSingleAddressAsync(new GetAddressRequest
             {
@@ -43,63 +43,26 @@ namespace LBHAddressesAPITest.Test.Gateways.V1
             }, CancellationToken.None);
 
             response.Should().NotBeNull();
-            response.AddressID.Should().BeEquivalentTo(key);
+            response.AddressKey.Should().BeEquivalentTo(key);
+
+            TestDataHelper.DeleteAddress(key, _databaseFixture.Db);
         }
 
-        //[Fact]
-        //public async Task GetCorrectQuery()
-        //{
-            
-        //    SearchAddressRequest request = new SearchAddressRequest { Format = GlobalConstants.Format.Detailed, PostCode = "RM3 0FS", Page=0, PageSize=50 };
+        [Fact]
+        public async Task can_retrieve_crossref_using_uprn()
+        {
+            int uprn = 1234578912;
+            TestDataHelper.InsertCrossRef(uprn,_databaseFixture.Db);
 
-        //    var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
+            var response = await _classUnderTest.GetAddressCrossReferenceAsync(new GetAddressCrossReferenceRequest
+            {
+                uprn = uprn
+            }, CancellationToken.None);
+            response.Should().NotBeNull();
+            response[0].UPRN.Should().Equals(uprn);
 
-        //    //detailed no parent shells
-        //    string query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-        //    Debug.WriteLine("--detailed no parent shells");
-        //    Debug.WriteLine(query);
+            TestDataHelper.DeleteCrossRef(uprn,_databaseFixture.Db);
 
-        //    //detailed no parent shells count
-        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-        //    Debug.WriteLine("--detailed no parent shells count");
-        //    Debug.WriteLine(query);
-
-        //    //simple no parent shells 
-        //    request.Format = GlobalConstants.Format.Simple;
-        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-        //    Debug.WriteLine("--simple no parent shells");
-        //    Debug.WriteLine(query);
-
-        //    //simple no parent shells count
-        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-        //    Debug.WriteLine("--simple no parent shells count");
-        //    Debug.WriteLine(query);
-            
-        //    //simple parent shells            
-        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-        //    Debug.WriteLine("--simple parent shells");
-        //    Debug.WriteLine(query);
-
-        //    //simple parent shells count
-        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-        //    Debug.WriteLine("--simple parent shells count");
-        //    Debug.WriteLine(query);
-
-        //    //detailed parent shells
-        //    request.Format = GlobalConstants.Format.Detailed;
-        //    request.PropertyClassPrimary = GlobalConstants.PropertyClassPrimary.ParentShell;
-        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-        //    Debug.WriteLine("--detailed parent shells");
-        //    Debug.WriteLine(query);
-
-        //    //detailed parent shells count
-        //    query = QueryBuilder.GetSearchAddressQuery(request, true, true, true, ref dbArgs);
-        //    Debug.WriteLine("--detailed parent shells count");
-        //    Debug.WriteLine(query);
-            
-        //}
-        
-
-
+        }
     }
 }

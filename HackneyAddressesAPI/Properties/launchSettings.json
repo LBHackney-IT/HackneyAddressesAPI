@@ -1,6 +1,6 @@
 {
   "iisSettings": {
-    "windowsAuthentication": false,
+    "windowsAuthentication": true,
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:59389/",
@@ -13,6 +13,7 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
+        "LLPGConnectionString": "server=localhost,6666; database=StubAdd; User Id=sa;Password=Rooty-Tooty;",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
