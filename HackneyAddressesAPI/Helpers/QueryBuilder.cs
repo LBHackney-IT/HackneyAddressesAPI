@@ -143,6 +143,18 @@ namespace LBHAddressesAPI.Helpers
                 clause += " AND POSTCODE_NOSPACE LIKE @postcode  ";
             }
 
+            if (!string.IsNullOrEmpty(request.BuildingNumber))
+            {
+                dbArgs.Add("@buildingnumber", request.BuildingNumber + "%");
+                clause += " AND BUILDING_NUMBER LIKE @buildingnumber  ";
+            }
+
+            if (!string.IsNullOrEmpty(request.Street))
+            {
+                dbArgs.Add("@street", "%" + request.Street + "%");
+                clause += " AND STREET_DESCRIPTION LIKE @street  ";
+            }
+
             if (!string.IsNullOrEmpty(request.AddressStatus)) //AddressStatus/LPI_LOGICAL_STATUS
             {
                 string[] addressStatuses = request.AddressStatus.ToString().Split();

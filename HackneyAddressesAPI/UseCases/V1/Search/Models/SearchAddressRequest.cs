@@ -23,6 +23,16 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         public string PostCode { get; set; }
 
         /// <summary>
+        /// Building number search 
+        /// </summary>
+        public string BuildingNumber { get; set; }
+
+        /// <summary>
+        /// Wildcard street name search
+        /// </summary>
+        public string Street { get; set; }
+               
+        /// <summary>
         /// LOCAL/NATIONAL/BOTH (Defaults to LOCAL)
         /// </summary>
         public GlobalConstants.Gazetteer Gazetteer { get; set; }
