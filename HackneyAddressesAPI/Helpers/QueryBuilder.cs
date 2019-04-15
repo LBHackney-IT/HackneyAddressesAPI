@@ -152,7 +152,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.Street))
             {
-                dbArgs.Add("@street", "%" + request.Street + "%");
+                dbArgs.Add("@street", request.Street + "%");
                 clause += " AND STREET_DESCRIPTION LIKE @street  ";
             }
 
