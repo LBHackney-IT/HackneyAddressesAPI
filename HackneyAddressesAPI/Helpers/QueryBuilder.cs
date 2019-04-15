@@ -2,6 +2,7 @@
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -139,7 +140,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PostCode))
             {
-                dbArgs.Add("@postcode", request.PostCode.Replace(" ", "") + "%");
+                dbArgs.Add("@postcode", request.PostCode.Replace(" ", "") + "%", DbType.AnsiString);
                 clause += " AND POSTCODE_NOSPACE LIKE @postcode  ";
             }
 
@@ -160,19 +161,19 @@ namespace LBHAddressesAPI.Helpers
                 string[] addressStatuses = request.AddressStatus.ToString().Split();
                 if (addressStatuses.Count() == 1)
                 {
-                    dbArgs.Add("@addressStatus", request.AddressStatus.ToString());
+                    dbArgs.Add("@addressStatus", request.AddressStatus.ToString(), DbType.AnsiString);
                     clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
                 }
                 else
                 {
                     //need to convert address statuses
-                    dbArgs.Add("@addressStatus", addressStatuses);
+                    dbArgs.Add("@addressStatus", addressStatuses, DbType.AnsiString);
                     clause += " AND LPI_LOGICAL_STATUS IN @addressStatus ";
                 }
             }
             else // No address status default it to approved preferred
             {
-                dbArgs.Add("@addressStatus", "Approved Preferred");
+                dbArgs.Add("@addressStatus", "Approved Preferred", DbType.AnsiString);
                 clause += " AND LPI_LOGICAL_STATUS = @addressStatus ";
             }
 
@@ -194,12 +195,12 @@ namespace LBHAddressesAPI.Helpers
                 string[] propertyClasses = request.PropertyClassPrimary.ToString().Split();
                 if (propertyClasses.Count() == 1)
                 {
-                    dbArgs.Add("@primaryClass", request.PropertyClassPrimary);
+                    dbArgs.Add("@primaryClass", request.PropertyClassPrimary, DbType.AnsiString);
                     clause += " AND USAGE_PRIMARY = @primaryClass ";
                 }
                 else
                 {
-                    dbArgs.Add("@primaryClass", propertyClasses);
+                    dbArgs.Add("@primaryClass", propertyClasses, DbType.AnsiString);
                     clause += " AND USAGE_PRIMARY IN @primaryClass ";
                 }
             }
@@ -209,19 +210,19 @@ namespace LBHAddressesAPI.Helpers
                 string[] classCodes = request.PropertyClassCode.Split(',');
                 if (classCodes.Count() == 1)
                 {
-                    dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%");
+                    dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%", DbType.AnsiString);
                     clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
                 }
                 else
                 {
-                    dbArgs.Add("@propertyClassCode", classCodes);
+                    dbArgs.Add("@propertyClassCode", classCodes, DbType.AnsiString);
                     clause += " AND BLPU_CLASS IN @propertyClassCode ";
                 }
             }
 
             if (request.Gazetteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
             {
-                dbArgs.Add("@gazetteer", request.Gazetteer.ToString());
+                dbArgs.Add("@gazetteer", request.Gazetteer.ToString(), DbType.AnsiString);
                 clause += " AND Gazetteer = @gazetteer ";
             }
 
