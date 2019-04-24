@@ -2,6 +2,8 @@
 using LBHAddressesAPI.Infrastructure.V1.Validation;
 using LBHAddressesAPI.Helpers;
 using System;
+using System.Collections.Generic;
+using FluentValidation.Results;
 
 namespace LBHAddressesAPI.UseCases.V1.Search.Models
 {
@@ -92,6 +94,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// </summary>
         public int PageSize { get; set; }
 
+        public List<ValidationError> Errors { get; set; }
 
         /// <summary>
         /// Responsible for validating itself.
@@ -109,6 +112,25 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
             var castedRequest = request as SearchAddressRequest;
             if (castedRequest == null)
                 return new RequestValidationResponse(false);
+            if(castedRequest.Errors !=null)
+            {
+                if (castedRequest.Errors.Count > 0)
+                {
+                    ValidationResult valRes = new ValidationResult();
+                    foreach(var error in castedRequest.Errors)
+                    {
+                        valRes.Errors.Add(new ValidationFailure(error.FieldName,error.Message));
+                    }
+
+                    return new RequestValidationResponse(valRes);
+                }
+            }
+
+            if(castedRequest.UPRN == null && castedRequest.USRN == null && castedRequest.PostCode == null && castedRequest.Street == null && castedRequest.BuildingNumber == null)
+            {
+                return new RequestValidationResponse(false, "No filter parameters have been provided");
+            }
+
             var validationResult = validator.Validate(castedRequest);
             //Using 1 based paging (to make it easier for Front Ends to page) so defaults to 1 instead of 0
             //Later down the stack we revert to 0 based paging
