@@ -2,6 +2,9 @@
 using LBHAddressesAPI.Infrastructure.V1.Validation;
 using LBHAddressesAPI.Helpers;
 using System;
+using System.Collections.Generic;
+using FluentValidation.Results;
+using System.Linq;
 
 namespace LBHAddressesAPI.UseCases.V1.Search.Models
 {
@@ -92,6 +95,15 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// </summary>
         public int PageSize { get; set; }
 
+        /// <summary>
+        /// List of fields passed in as part of the request
+        /// </summary>
+        internal List<string> RequestFields { get; set; }
+
+        /// <summary>
+        /// List of errors that have been generated as part of ModeState
+        /// </summary>
+        internal List<ValidationError> Errors { get; set; }
 
         /// <summary>
         /// Responsible for validating itself.
@@ -109,6 +121,37 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
             var castedRequest = request as SearchAddressRequest;
             if (castedRequest == null)
                 return new RequestValidationResponse(false);
+            ValidationResult valRes = new ValidationResult();
+            if (castedRequest.Errors !=null)
+            {
+                if (castedRequest.Errors.Count > 0)
+                {
+                    //ValidationResult valRes = new ValidationResult();
+                    foreach(var error in castedRequest.Errors)
+                    {
+                        valRes.Errors.Add(new ValidationFailure(error.FieldName,error.Message));
+                    }
+
+                    return new RequestValidationResponse(valRes);
+                }
+            }
+
+            if(castedRequest.UPRN == null && castedRequest.USRN == null && castedRequest.PostCode == null && castedRequest.Street == null && castedRequest.BuildingNumber == null)
+            {
+                return new RequestValidationResponse(false, "No filter parameters have been provided");
+            }
+
+            //List<string> invalidFields = InvalidFields(castedRequest.RequestFields);
+
+            //if (invalidFields.Count > 0)
+            //{
+            //    foreach(string field in invalidFields)
+            //    {
+            //        valRes.Errors.Add(new ValidationFailure(field, string.Format("{0} is not a valid filter field", field)));
+            //    }
+            //    return new RequestValidationResponse(valRes);
+            //}
+
             var validationResult = validator.Validate(castedRequest);
             //Using 1 based paging (to make it easier for Front Ends to page) so defaults to 1 instead of 0
             //Later down the stack we revert to 0 based paging
@@ -119,6 +162,13 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
                 castedRequest.PageSize = 50;
             return new RequestValidationResponse(validationResult);
         }
-        
+
+        private List<string> InvalidFields(List<string> requestFields)
+        {
+            //possibly make this smarter and compare to the SearchAddressRequest fields??
+            List<string> ClassFields = new List<string>() { "postcode","buildingnumber","street","gazetteer", "uprn", "usrn", "propertyclassprimary", "propertyclasscode", "format", "addressstatus" };
+
+            return requestFields.Except(ClassFields).ToList();
+        }
     }
 }
