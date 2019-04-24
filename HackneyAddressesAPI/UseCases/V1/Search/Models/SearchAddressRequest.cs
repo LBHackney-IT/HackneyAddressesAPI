@@ -141,16 +141,16 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
                 return new RequestValidationResponse(false, "No filter parameters have been provided");
             }
 
-            List<string> invalidFields = InvalidFields(castedRequest.RequestFields);
+            //List<string> invalidFields = InvalidFields(castedRequest.RequestFields);
 
-            if (invalidFields.Count > 0)
-            {
-                foreach(string field in invalidFields)
-                {
-                    valRes.Errors.Add(new ValidationFailure(field, string.Format("{0} is not a valid filter field", field)));
-                }
-                return new RequestValidationResponse(valRes);
-            }
+            //if (invalidFields.Count > 0)
+            //{
+            //    foreach(string field in invalidFields)
+            //    {
+            //        valRes.Errors.Add(new ValidationFailure(field, string.Format("{0} is not a valid filter field", field)));
+            //    }
+            //    return new RequestValidationResponse(valRes);
+            //}
 
             var validationResult = validator.Validate(castedRequest);
             //Using 1 based paging (to make it easier for Front Ends to page) so defaults to 1 instead of 0
