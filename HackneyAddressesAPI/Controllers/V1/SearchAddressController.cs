@@ -51,12 +51,18 @@ namespace LBHAddressesAPI.Controllers.V1
                         err.FieldName = state.Key;
                         err.Message = error.ErrorMessage;
                         errors.Add(err);
-                        //errors.Add(error.ErrorMessage);
                     }
                 }
-                request.Errors = errors;
-                //throw new Exception("An error has occured");
+                request.Errors = errors;                
             }
+            var requestFields = new List<string>();
+            foreach(var qs in Request.Query)
+            {
+                requestFields.Add(qs.Key);
+            }
+
+            request.RequestFields = requestFields;
+
             var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
             return HandleResponse(response);
         }
