@@ -102,7 +102,7 @@ namespace LBHAddressesAPI
                 c.RoutePrefix = "swagger";
             });
 
-            app.UseCors("AllowAny");
+            app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
 
             app.UseMvc();   
         }

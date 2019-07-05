@@ -6,7 +6,6 @@ using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Extensions.Controller;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using LBHAddressesAPI.Helpers;
-using System.Web.Http.Cors;
 
 namespace LBHAddressesAPI.Controllers.V1
 {
@@ -15,7 +14,6 @@ namespace LBHAddressesAPI.Controllers.V1
     [Route("api/v1/addresses")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
-    [EnableCors(origins: "*", headers: "*", methods: "GET")]
     public class SearchAddressController : BaseController
     {
         private readonly ISearchAddressUseCase _searchAddressUseCase;

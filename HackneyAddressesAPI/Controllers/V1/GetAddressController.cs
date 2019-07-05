@@ -5,7 +5,6 @@ using LBHAddressesAPI.Models;
 using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Extensions.Controller;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
-using System.Web.Http.Cors;
 
 namespace LBHAddressesAPI.Controllers.V1
 {
@@ -14,7 +13,6 @@ namespace LBHAddressesAPI.Controllers.V1
     [Route("api/v1/addresses")]
     [ProducesResponseType(typeof(APIResponse<object>), 400)]
     [ProducesResponseType(typeof(APIResponse<object>), 500)]
-    [EnableCors(origins: "*", headers: "*", methods: "GET")]
     public class GetAddressController : BaseController
     {
         private readonly IGetSingleAddressUseCase _getAddressUseCase;
@@ -40,6 +38,17 @@ namespace LBHAddressesAPI.Controllers.V1
             return HandleResponse(response);
         }
 
+        /////<summary>
+        /////return options
+        ///// </summary>
+        //[HttpOptions]
+        //public IActionResult Options()
+        //{
+        //    Response.Headers.Add("Access-Control-Allow-Methods", "GET,OPTIONS");
+        //    Response.Headers.Add("Access-Control-Origin", "*");
+        //    Response.Headers.Add("Access-Control-Allow-Headers","*");
+        //    return HandleResponse("OK");
+        //}
       
 
     }
