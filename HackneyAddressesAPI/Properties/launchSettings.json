@@ -16,7 +16,6 @@
         "LLPGConnectionStringx": "server=localhost,6666; database=StubAdd; User Id=sa;Password=Rooty-Tooty;",
         "NEW_RELIC_LICENSE_KEY": "0d32e73e3f0a3af7af955009117b97e77cd10752",
         "NEW_RELIC_APP_NAME": "AddressAPI",
-        "LLPGConnectionString": "server=10.160.0.237\\MSSQL2017; database=ADDRESSES_API_TEST; User Id=addressesAPI_test;Password=LLPGtest;",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },

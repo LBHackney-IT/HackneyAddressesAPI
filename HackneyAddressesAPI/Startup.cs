@@ -49,7 +49,7 @@ namespace LBHAddressesAPI
             {
                 option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-
+            
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
