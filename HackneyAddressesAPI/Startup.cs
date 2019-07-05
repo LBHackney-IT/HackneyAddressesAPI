@@ -49,7 +49,7 @@ namespace LBHAddressesAPI
             {
                 option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-
+            
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
@@ -102,7 +102,7 @@ namespace LBHAddressesAPI
                 c.RoutePrefix = "swagger";
             });
 
-            app.UseCors("AllowAny");
+            app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
 
             app.UseMvc();   
         }

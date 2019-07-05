@@ -6,6 +6,7 @@ using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Extensions.Controller;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using LBHAddressesAPI.Helpers;
+using System.Web.Http.Cors;
 using System;
 using System.Collections.Generic;
 using LBHAddressesAPI.Infrastructure.V1.Validation;

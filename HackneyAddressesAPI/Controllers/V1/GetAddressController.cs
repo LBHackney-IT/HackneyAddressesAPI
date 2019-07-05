@@ -38,6 +38,17 @@ namespace LBHAddressesAPI.Controllers.V1
             return HandleResponse(response);
         }
 
+        /////<summary>
+        /////return options
+        ///// </summary>
+        //[HttpOptions]
+        //public IActionResult Options()
+        //{
+        //    Response.Headers.Add("Access-Control-Allow-Methods", "GET,OPTIONS");
+        //    Response.Headers.Add("Access-Control-Origin", "*");
+        //    Response.Headers.Add("Access-Control-Allow-Headers","*");
+        //    return HandleResponse("OK");
+        //}
       
 
     }
