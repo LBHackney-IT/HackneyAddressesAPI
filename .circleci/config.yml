@@ -45,13 +45,22 @@ jobs:
       - run:
           name: Run tests
           command: docker-compose run -e LLPGConnectionString="Data Source=tcp:stubaddressdb;Initial Catalog=StubAdd;Integrated Security=False;User ID=sa;Password=Rooty-Tooty" lbhaddressesapitest
+  
+  deploy-to-development:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - deploy-env:
+          cluster-name: 'hackney-apps-development'
+          service-name: 'address-api-development'
+          image-tag: "$CIRCLE_SHA1"
 
   deploy-to-staging:
     docker:
       - image: circleci/python:3.7
     steps:
       - deploy-env:
-          cluster-name: 'ecs-hackney-apps'
+          cluster-name: 'hackney-apps-staging'
           service-name: 'address-api-staging'
           image-tag: "$CIRCLE_SHA1"
 
@@ -82,10 +91,25 @@ workflows:
             branches:
               only: master
 
-      - deploy-to-staging:
+      - deploy-to-development:
           requires:
             - check
             - build_and_push_image
+          filters:
+            branches:
+              only: master
+
+      - permit-staging-release:
+          type: approval
+          requires:
+            - deploy-to-development
+          filters:
+            branches:
+              only: master
+
+      - deploy-to-staging:
+          requires:
+            - permit-staging-release
           filters:
             branches:
               only: master
