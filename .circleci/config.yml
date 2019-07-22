@@ -51,7 +51,7 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - deploy-env:
-          cluster-name: 'hackney-apps-staging'
+          cluster-name: 'ecs-hackney-apps'
           service-name: 'address-api-staging'
           image-tag: "$CIRCLE_SHA1"
 
