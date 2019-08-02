@@ -6,10 +6,12 @@ using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Extensions.Controller;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using LBHAddressesAPI.Helpers;
+using FluentValidation;
 using System.Web.Http.Cors;
 using System;
 using System.Collections.Generic;
 using LBHAddressesAPI.Infrastructure.V1.Validation;
+using LBHAddressesAPI.Validation;
 
 namespace LBHAddressesAPI.Controllers.V1
 {
@@ -41,31 +43,42 @@ namespace LBHAddressesAPI.Controllers.V1
         [HttpGet, MapToApiVersion("1")]       
         public async Task<IActionResult> GetAddresses([FromQuery] SearchAddressRequest request)
         {
-            if (!ModelState.IsValid)
+            var aa = new SearchAddressValidator();
+
+            var validationResults = aa.Validate(request);
+
+            if (validationResults.IsValid)
             {
-                var errors = new List<ValidationError>();
-                foreach (var state in ModelState)
+                if (!ModelState.IsValid)
                 {
-                    ValidationError err = new ValidationError();
-                    foreach (var error in state.Value.Errors)
+                    var errors = new List<ValidationError>();
+                    foreach (var state in ModelState)
                     {
-                        err.FieldName = state.Key;
-                        err.Message = error.ErrorMessage;
-                        errors.Add(err);
+                        ValidationError err = new ValidationError();
+                        foreach (var error in state.Value.Errors)
+                        {
+                            err.FieldName = state.Key;
+                            err.Message = error.ErrorMessage;
+                            errors.Add(err);
+                        }
                     }
+                    request.Errors = errors;
                 }
-                request.Errors = errors;                
+                //var requestFields = new List<string>();
+                //foreach(var qs in Request.Query)
+                //{
+                //    requestFields.Add(qs.Key);
+                //}
+
+                //request.RequestFields = requestFields;
+
+                var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
+                return HandleResponse(response);
             }
-            //var requestFields = new List<string>();
-            //foreach(var qs in Request.Query)
-            //{
-            //    requestFields.Add(qs.Key);
-            //}
-
-            //request.RequestFields = requestFields;
-
-            var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
-            return HandleResponse(response);
+            else
+            {
+                return new BadRequestResult();
+            }
         }
 
     }

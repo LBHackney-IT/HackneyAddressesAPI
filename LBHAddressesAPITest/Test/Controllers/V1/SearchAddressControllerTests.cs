@@ -54,5 +54,19 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
             var getAddresses = objectResult?.Value as APIResponse<SearchAddressResponse>;
             getAddresses.Should().NotBeNull();
         }
+
+        [Fact]
+        public async Task GivenInvalidSearchAddressRequest_WhenCallingGet_ThenShouldReturnBadRequestResponse()
+        {
+            //arrange
+            var request = new SearchAddressRequest() { AddressStatus = "Rubbish" };
+
+            //act
+            var response = await _classUnderTest.GetAddresses(request);
+
+            //assert
+            response.Should().NotBeNull();
+            response.Should().BeOfType<BadRequestResult>();
+        }
     }
 }
