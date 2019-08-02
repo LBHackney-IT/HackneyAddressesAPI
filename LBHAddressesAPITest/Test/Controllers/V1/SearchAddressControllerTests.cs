@@ -59,7 +59,7 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
         public async Task GivenInvalidSearchAddressRequest_WhenCallingGet_ThenShouldReturnBadRequestResponse()
         {
             //arrange
-            var request = new SearchAddressRequest() { AddressStatus = "Rubbish" };
+            var request = new SearchAddressRequest() { AddressStatus = null };
 
             //act
             var response = await _classUnderTest.GetAddresses(request);

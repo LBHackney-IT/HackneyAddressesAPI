@@ -46,7 +46,7 @@ namespace LBHAddressesAPITest.Validation
         public void GivenAWhitespaceOrEmptyAddressStatusValue_WhenCallingValidation_ItReturnsAnError(string addressStatusVal)
         {
             var request = new SearchAddressRequest() { AddressStatus = addressStatusVal };
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.AddressStatus, request).WithErrorMessage("Address Status should not be null or empty.");
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.AddressStatus, request);
         }
     }
 }

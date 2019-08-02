@@ -11,7 +11,7 @@ namespace LBHAddressesAPI.Validation
     {
         public SearchAddressValidator()
         {
-            throw new NotImplementedException();
+            RuleFor(r => r.AddressStatus).NotNull().NotEmpty();
         }
     }
 }
