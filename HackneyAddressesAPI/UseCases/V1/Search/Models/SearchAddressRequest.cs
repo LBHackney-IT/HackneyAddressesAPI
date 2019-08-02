@@ -15,6 +15,11 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
     public class SearchAddressRequest : IRequest, IPagedRequest
     {
 
+        public SearchAddressRequest()
+        {
+            this.AddressStatus = "approved preferred";
+        }
+
         //    [FromQuery]string PropertyClassCode = null/*,
         // Parent shells??
 

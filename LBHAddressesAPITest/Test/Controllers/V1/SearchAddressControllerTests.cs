@@ -23,6 +23,7 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
 
         public SearchAddressControllerTests()
         {
+            Environment.SetEnvironmentVariable("ALLOWED_ADDRESSSTATUS_VALUES", "historical;alternative;approved preferred;provisional");
             _mock = new Mock<ISearchAddressUseCase>();
             _classUnderTest = new SearchAddressController(_mock.Object);
         }
