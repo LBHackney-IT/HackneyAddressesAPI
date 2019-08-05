@@ -192,7 +192,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
             {
-                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split();
+                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split().Distinct().ToArray();
                 if (propertyClasses.Count() == 1)
                 {
                     dbArgs.Add("@primaryClass", request.PropertyClassPrimary, DbType.AnsiString);
@@ -200,14 +200,14 @@ namespace LBHAddressesAPI.Helpers
                 }
                 else
                 {
-                    dbArgs.Add("@primaryClass", propertyClasses, DbType.AnsiString);
+                    dbArgs.Add("@primaryClass", propertyClasses);
                     clause += " AND USAGE_PRIMARY IN @primaryClass ";
                 }
             }
 
             if (!string.IsNullOrEmpty(request.PropertyClassCode))
             {
-                string[] classCodes = request.PropertyClassCode.Split(',');
+                string[] classCodes = request.PropertyClassCode.Split(',').Distinct().ToArray();
                 if (classCodes.Count() == 1)
                 {
                     dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%", DbType.AnsiString);
@@ -215,7 +215,7 @@ namespace LBHAddressesAPI.Helpers
                 }
                 else
                 {
-                    dbArgs.Add("@propertyClassCode", classCodes, DbType.AnsiString);
+                    dbArgs.Add("@propertyClassCode", classCodes);
                     clause += " AND BLPU_CLASS IN @propertyClassCode ";
                 }
             }
