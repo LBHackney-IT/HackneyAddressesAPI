@@ -158,7 +158,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.AddressStatus)) //AddressStatus/LPI_LOGICAL_STATUS
             {
-                string[] addressStatuses = request.AddressStatus.ToString().Split();
+                string[] addressStatuses = request.AddressStatus.ToString().Split(",");
                 if (addressStatuses.Count() == 1)
                 {
                     dbArgs.Add("@addressStatus", request.AddressStatus.ToString(), DbType.AnsiString);
@@ -167,7 +167,7 @@ namespace LBHAddressesAPI.Helpers
                 else
                 {
                     //need to convert address statuses
-                    dbArgs.Add("@addressStatus", addressStatuses, DbType.AnsiString);
+                    dbArgs.Add("@addressStatus", addressStatuses);
                     clause += " AND LPI_LOGICAL_STATUS IN @addressStatus ";
                 }
             }
