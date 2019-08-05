@@ -158,7 +158,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.AddressStatus)) //AddressStatus/LPI_LOGICAL_STATUS
             {
-                string[] addressStatuses = request.AddressStatus.ToString().Split(",");
+                string[] addressStatuses = request.AddressStatus.ToString().Split(",").Distinct().ToArray();
                 if (addressStatuses.Count() == 1)
                 {
                     dbArgs.Add("@addressStatus", request.AddressStatus.ToString(), DbType.AnsiString);
