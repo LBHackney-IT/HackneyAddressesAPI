@@ -234,14 +234,16 @@ namespace LBHAddressesAPI.Helpers
                 lower = page == 0 || page == 1 ? 0 : page * pageSize;
                 // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
 
-                if (request.Format == GlobalConstants.Format.Detailed)
-                {
-                    clause += " ORDER BY street_description, building_number DESC ";
-                }
-                else
-                {
-                    clause += " ORDER BY Line2, Line1 DESC ";
-                }
+                clause += @" ORDER BY town,
+                                     postcode,
+                                     street_description, 
+                                     (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END), 
+                                     paon_start_num, (CASE WHEN building_number IS NULL THEN 1 ELSE 0 END),
+                                     building_number,
+                                     (CASE WHEN unit_number IS NULL THEN 1 ELSE 0 END),
+                                     unit_number,
+                                     (CASE WHEN sao_text IS NULL THEN 1 ELSE 0 END),
+                                     sao_text ";
 
 
                 clause += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
