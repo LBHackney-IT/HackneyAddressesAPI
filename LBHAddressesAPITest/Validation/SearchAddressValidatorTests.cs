@@ -52,6 +52,95 @@ namespace LBHAddressesAPITest.Validation
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.AddressStatus, request);
         }
 
+        [TestCase("CR1 3ED")]
+        [TestCase("NE7")]
+        public void GivenAPostCodeValueInUpperCase_WhenCallingValidation_ItReturnsNoErrors(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
+        }
+
+        [TestCase("w2 5jq")]
+        [TestCase("ne7")]
+        public void GivenAPostCodeValueInLowerCase_WhenCallingValidation_ItReturnsNoErrors(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
+        }
+
+        [TestCase("w2 5JQ")]
+        [TestCase("E11 5ra")]
+        public void GivenAPostCodeValueInLowerCaseAndUpperCase_WhenCallingValidation_ItReturnsNoErrors(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
+        }
+
+        [TestCase("CR13ED")]
+        [TestCase("RE15AD")]
+        public void GivenPostCodeValueWithoutSpaces_WhenCallingValidation_ItReturnsNoErrors(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
+        }
+
+        [TestCase("NW")]
+        [TestCase("E")]
+        public void GivenOnlyAnAreaPartOfThePostCode_WhenCallingValidation_ItReturnsAnError(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request).WithErrorMessage("Must provide at least the first part of the postcode.");
+        }
+
+        [TestCase("17 9LL")]
+        [TestCase("8 1LA")]
+        public void GivenOnlyAnIncodeAndADistrictPartsOfThePostCode_WhenCallingValidation_ItReturnsAnError(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request).WithErrorMessage("Must provide at least the first part of the postcode.");
+        }
+
+        [TestCase("NW 9LL")]
+        [TestCase("NR1LW")]
+        public void GivenOnlyAnIncodeAndAnAreaPartsOfThePostCode_WhenCallingValidation_ItReturnsAnError(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request).WithErrorMessage("Must provide at least the first part of the postcode.");
+        }
+
+        [TestCase("1LL")]
+        [TestCase(" 6BQ")]
+        public void GivenOnlyAnIncodePartOfThePostCode_WhenCallingValidation_ItReturnsAnError(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request).WithErrorMessage("Must provide at least the first part of the postcode.");
+        }
+
+        [TestCase("NW9")]
+        [TestCase("RH5 ")]
+        public void GivenOnlyAnOutcodePartOfPostCode_WhenCallingValidation_ItReturnsNoErrors(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
+        }
+
+        [TestCase("E8 1LL")]
+        [TestCase("SW17 1JK")]
+        public void GivenBothPartsOfPostCode_WhenCallingValidation_ItReturnsNoErrors(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
+        }
+
+        [TestCase(" ")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void GivenAWhitespaceOrEmptyPostCodeValue_WhenCallingValidation_ItReturnsAnError(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request);
+        }
+
         [Test]
         public void GivenThereIsNoEnvironmentVariableForAddressStatus_WhenValidationIsInvoked_TheErrorIsReturned()
         {
