@@ -27,19 +27,7 @@ namespace LBHAddressesAPITest
 
             _classUnderTest = new SearchAddressUseCase(_fakeGateway.Object);
         }
-
-        [Fact]
-        public async Task GivenInvalidInput_WhenExecuteAsync_ThenReturnError()
-        {
-            var request = new SearchAddressRequest
-            {                
-                Gazetteer = LBHAddressesAPI.Helpers.GlobalConstants.Gazetteer.Local
-            };
-            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _classUnderTest.ExecuteAsync(request, CancellationToken.None));
-            Assert.Equal("No filter parameters have been provided", exception.ValidationResponse.ValidationErrors.FirstOrDefault().Message);
-        }
-
-
+                
         [Fact]
         public async Task GivenLocalGazetteer_WhenExecuteAsync_ThenOnlyLocalAddressesShouldBeReturned()
         {
