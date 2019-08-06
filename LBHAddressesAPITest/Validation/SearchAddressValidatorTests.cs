@@ -53,6 +53,11 @@ namespace LBHAddressesAPITest.Validation
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.AddressStatus, request);
         }
         #endregion
+        // Below explanations all use the postcodes IG11 7QD and E5 3XW 
+        //"Incode" refers to the whole second part of the postcode (i.e. 3XW, 7QD)
+        //"Outcode" refers to the whole first part of the postcode (Letter(s) and number(s) - i.e. IG11, E5)
+        //"Area" refers to the first letter(s) of the postcode (i.e.  IG, E)
+        //"District" refers to first number(s) to appear in the postcode (i.e. 11, 5)
         #region Postcode validation
         [TestCase("CR1 3ED")]
         [TestCase("NE7")]
@@ -135,48 +140,40 @@ namespace LBHAddressesAPITest.Validation
         }
 
         #endregion
-
         #region Request object validation
                 
-        [Test]
-        public void GivenARequestWithJustUPRN_WhenCallingValidation_ItReturnsNoErrors()
+        [TestCase(12345)]
+        public void GivenARequestWithOnlyAUPRN_WhenCallingValidation_ItReturnsNoError(int uprn)
         {
-            var request = new SearchAddressRequest() { UPRN=12345  };
-            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.UPRN,request);
-        }
-
-        [Test]
-        public void GivenARequestWithOnlyAUPRN_WhenCallingValidation_ItReturnsNoError()
-        {
-            var request = new SearchAddressRequest() { UPRN = 12345 };
+            var request = new SearchAddressRequest() { UPRN = uprn };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
-        [Test]
-        public void GivenARequestWithOnlyAUSRN_WhenCallingValidation_ItReturnsNoError()
+        [TestCase(12345)]
+        public void GivenARequestWithOnlyAUSRN_WhenCallingValidation_ItReturnsNoError(int usrn)
         {
-            var request = new SearchAddressRequest() { USRN = 12345 };
+            var request = new SearchAddressRequest() { USRN = usrn };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
-        [Test]
-        public void GivenARequestWithOnlyAPostCode_WhenCallingValidation_ItReturnsNoError()
+        [TestCase("SW1A 1AA")]
+        public void GivenARequestWithOnlyAPostCode_WhenCallingValidation_ItReturnsNoError(string postcode)
         {
-            var request = new SearchAddressRequest() { PostCode = "SW1A 1AA" };
+            var request = new SearchAddressRequest() { PostCode = postcode };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
-        [Test]
-        public void GivenARequestWithOnlyAStreet_WhenCallingValidation_ItReturnsNoError()
+        [TestCase("Sesame street")]
+        public void GivenARequestWithOnlyAStreet_WhenCallingValidation_ItReturnsNoError(string street)
         {
-            var request = new SearchAddressRequest() { Street = "Sesame street" };
+            var request = new SearchAddressRequest() { Street = street };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
-        [Test]
-        public void GivenARequestWithBuildingNumberAndNoMandatoryFields_WhenCallingValidation_ItReturnsAnError()
+        [TestCase("12345")]
+        public void GivenARequestWithBuildingNumberAndNoMandatoryFields_WhenCallingValidation_ItReturnsAnError(string buildingNumber)
         {
-            var request = new SearchAddressRequest() { BuildingNumber = "12345" };
+            var request = new SearchAddressRequest() { BuildingNumber = buildingNumber };
             _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (UPRN, USRN, Post code, Street)");
         }
 
