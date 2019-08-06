@@ -43,7 +43,7 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
 
             var request = new SearchAddressRequest
             {
-                PostCode = "",
+                PostCode = "RM3 0FS",
                 Gazetteer = GlobalConstants.Gazetteer.Local
             };
             //act
@@ -57,7 +57,7 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
         }
 
         [Fact]
-        public async Task GivenInvalidSearchAddressRequest_WhenCallingGet_ThenShouldReturnBadRequestResponse()
+        public async Task GivenInvalidSearchAddressRequest_WhenCallingGet_ThenShouldReturnBadRequestObjectResponse()
         {
             //arrange
             var request = new SearchAddressRequest() { AddressStatus = null };
@@ -67,7 +67,7 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
 
             //assert
             response.Should().NotBeNull();
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
     }
 }

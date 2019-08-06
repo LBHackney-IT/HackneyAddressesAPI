@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using LBHAddressesAPI.Infrastructure.V1.Validation;
 using LBHAddressesAPI.Validation;
+using LBHAddressesAPI.Infrastructure.V1.Exceptions;
 
 namespace LBHAddressesAPI.Controllers.V1
 {
@@ -40,6 +41,7 @@ namespace LBHAddressesAPI.Controllers.V1
         /// <param name="request"></param>
         /// <returns></returns>
         [ProducesResponseType(typeof(APIResponse<SearchAddressResponse>), 200)]
+        [ProducesResponseType(typeof(APIResponse<BadRequestException>), 400)]
         [HttpGet, MapToApiVersion("1")]       
         public async Task<IActionResult> GetAddresses([FromQuery] SearchAddressRequest request)
         {
@@ -70,7 +72,7 @@ namespace LBHAddressesAPI.Controllers.V1
             }
             else
             {
-                return new BadRequestResult();
+                return new BadRequestObjectResult(new APIResponse<BadRequestException>(new BadRequestException(new RequestValidationResponse(validationResults))));
             }
         }
 
