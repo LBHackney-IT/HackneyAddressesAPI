@@ -158,7 +158,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.AddressStatus)) //AddressStatus/LPI_LOGICAL_STATUS
             {
-                string[] addressStatuses = request.AddressStatus.ToString().Split();
+                string[] addressStatuses = request.AddressStatus.ToString().Split(",").Distinct().ToArray();
                 if (addressStatuses.Count() == 1)
                 {
                     dbArgs.Add("@addressStatus", request.AddressStatus.ToString(), DbType.AnsiString);
@@ -167,7 +167,7 @@ namespace LBHAddressesAPI.Helpers
                 else
                 {
                     //need to convert address statuses
-                    dbArgs.Add("@addressStatus", addressStatuses, DbType.AnsiString);
+                    dbArgs.Add("@addressStatus", addressStatuses);
                     clause += " AND LPI_LOGICAL_STATUS IN @addressStatus ";
                 }
             }
@@ -192,7 +192,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
             {
-                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split();
+                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split(",").Distinct().ToArray();
                 if (propertyClasses.Count() == 1)
                 {
                     dbArgs.Add("@primaryClass", request.PropertyClassPrimary, DbType.AnsiString);
@@ -200,14 +200,14 @@ namespace LBHAddressesAPI.Helpers
                 }
                 else
                 {
-                    dbArgs.Add("@primaryClass", propertyClasses, DbType.AnsiString);
+                    dbArgs.Add("@primaryClass", propertyClasses);
                     clause += " AND USAGE_PRIMARY IN @primaryClass ";
                 }
             }
 
             if (!string.IsNullOrEmpty(request.PropertyClassCode))
             {
-                string[] classCodes = request.PropertyClassCode.Split(',');
+                string[] classCodes = request.PropertyClassCode.Split(',').Distinct().ToArray();
                 if (classCodes.Count() == 1)
                 {
                     dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%", DbType.AnsiString);
@@ -215,7 +215,7 @@ namespace LBHAddressesAPI.Helpers
                 }
                 else
                 {
-                    dbArgs.Add("@propertyClassCode", classCodes, DbType.AnsiString);
+                    dbArgs.Add("@propertyClassCode", classCodes);
                     clause += " AND BLPU_CLASS IN @propertyClassCode ";
                 }
             }
@@ -234,14 +234,16 @@ namespace LBHAddressesAPI.Helpers
                 lower = page == 0 || page == 1 ? 0 : page * pageSize;
                 // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
 
-                if (request.Format == GlobalConstants.Format.Detailed)
-                {
-                    clause += " ORDER BY street_description, building_number DESC ";
-                }
-                else
-                {
-                    clause += " ORDER BY Line2, Line1 DESC ";
-                }
+                clause += @" ORDER BY town,
+                                     postcode,
+                                     street_description, 
+                                     (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END), 
+                                     paon_start_num, (CASE WHEN building_number IS NULL THEN 1 ELSE 0 END),
+                                     building_number,
+                                     (CASE WHEN unit_number IS NULL THEN 1 ELSE 0 END),
+                                     unit_number,
+                                     (CASE WHEN sao_text IS NULL THEN 1 ELSE 0 END),
+                                     sao_text ";
 
 
                 clause += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
