@@ -192,7 +192,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
             {
-                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split().Distinct().ToArray();
+                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split(",").Distinct().ToArray();
                 if (propertyClasses.Count() == 1)
                 {
                     dbArgs.Add("@primaryClass", request.PropertyClassPrimary, DbType.AnsiString);
