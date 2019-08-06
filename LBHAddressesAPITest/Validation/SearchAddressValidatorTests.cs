@@ -139,9 +139,25 @@ namespace LBHAddressesAPITest.Validation
             _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
         }
 
+        [TestCase("IG117QDfdsfdsfd")]
+        [TestCase("E1llolol")]
+        public void GivenAValidPostcodeFolowedByRandomCharacters_WhenCallingValidation_ItReturnsAnError(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request).WithErrorMessage("Must provide at least the first part of the postcode.");
+        }
+
+        [TestCase("EEE")]
+        [TestCase("THE")]
+        public void GivenThreeCharacters_WhenCallingValidation_ItReturnsAnError(string postCode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postCode };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request).WithErrorMessage("Must provide at least the first part of the postcode.");
+        }
+
         #endregion
         #region Request object validation
-                
+
         [TestCase(12345)]
         public void GivenARequestWithOnlyAUPRN_WhenCallingValidation_ItReturnsNoError(int uprn)
         {
