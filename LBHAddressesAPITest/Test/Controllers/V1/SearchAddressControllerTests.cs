@@ -28,8 +28,11 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
             _classUnderTest = new SearchAddressController(_mock.Object);
         }
 
-        [Fact]
-        public async Task GivenValidSearchAddressRequest_WhenCallingGet_ThenShouldReturnAPIResponseListOfAddresses()
+
+        [Theory]
+        [InlineData("RM3 0FS", GlobalConstants.Gazetteer.Local)]
+        [InlineData("IG11 7QD", GlobalConstants.Gazetteer.Both)]
+        public async Task GivenValidSearchAddressRequest_WhenCallingGet_ThenShouldReturnAPIResponseListOfAddresses(string postcode, GlobalConstants.Gazetteer gazetteer)
         {
             //arrange
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchAddressRequest>(), CancellationToken.None))
@@ -43,8 +46,8 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
 
             var request = new SearchAddressRequest
             {
-                PostCode = "RM3 0FS",
-                Gazetteer = GlobalConstants.Gazetteer.Local
+                PostCode = postcode,
+                Gazetteer = gazetteer
             };
             //act
             var response = await _classUnderTest.GetAddresses(request).ConfigureAwait(false);
