@@ -64,13 +64,6 @@ namespace LBHAddressesAPI.Controllers.V1
                     }
                     request.Errors = errors;
                 }
-                //var requestFields = new List<string>();
-                //foreach(var qs in Request.Query)
-                //{
-                //    requestFields.Add(qs.Key);
-                //}
-
-                //request.RequestFields = requestFields;
 
                 var response = await _searchAddressUseCase.ExecuteAsync(request, HttpContext.GetCancellationToken()).ConfigureAwait(false);
                 return HandleResponse(response);

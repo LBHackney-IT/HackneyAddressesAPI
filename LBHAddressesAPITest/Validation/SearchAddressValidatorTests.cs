@@ -24,6 +24,7 @@ namespace LBHAddressesAPITest.Validation
             _classUnderTest = new SearchAddressValidator();
         }
 
+        #region Address status validation
         [TestCase("cat")]
         [TestCase("provizional")]
         [TestCase("alternative,hystorical")]
@@ -51,7 +52,8 @@ namespace LBHAddressesAPITest.Validation
             var request = new SearchAddressRequest() { AddressStatus = addressStatusVal };
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.AddressStatus, request);
         }
-
+        #endregion
+        #region Postcode validation
         [TestCase("CR1 3ED")]
         [TestCase("NE7")]
         public void GivenAPostCodeValueInUpperCase_WhenCallingValidation_ItReturnsNoErrors(string postCode)
@@ -132,15 +134,55 @@ namespace LBHAddressesAPITest.Validation
             _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PostCode, request);
         }
 
-        [TestCase(" ")]
-        [TestCase("")]
-        [TestCase(null)]
-        public void GivenAWhitespaceOrEmptyPostCodeValue_WhenCallingValidation_ItReturnsAnError(string postCode)
+        #endregion
+
+        #region Request object validation
+                
+        [Test]
+        public void GivenARequestWithJustUPRN_WhenCallingValidation_ItReturnsNoErrors()
         {
-            var request = new SearchAddressRequest() { PostCode = postCode };
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PostCode, request);
+            var request = new SearchAddressRequest() { UPRN=12345  };
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.UPRN,request);
         }
 
+        [Test]
+        public void GivenARequestWithOnlyAUPRN_WhenCallingValidation_ItReturnsNoError()
+        {
+            var request = new SearchAddressRequest() { UPRN = 12345 };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [Test]
+        public void GivenARequestWithOnlyAUSRN_WhenCallingValidation_ItReturnsNoError()
+        {
+            var request = new SearchAddressRequest() { USRN = 12345 };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [Test]
+        public void GivenARequestWithOnlyAPostCode_WhenCallingValidation_ItReturnsNoError()
+        {
+            var request = new SearchAddressRequest() { PostCode = "SW1A 1AA" };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [Test]
+        public void GivenARequestWithOnlyAStreet_WhenCallingValidation_ItReturnsNoError()
+        {
+            var request = new SearchAddressRequest() { Street = "Sesame street" };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [Test]
+        public void GivenARequestWithBuildingNumberAndNoMandatoryFields_WhenCallingValidation_ItReturnsAnError()
+        {
+            var request = new SearchAddressRequest() { BuildingNumber = "12345" };
+            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (UPRN, USRN, Post code, Street)");
+        }
+
+        #endregion
+
+        //Keep this at the end....
         [Test]
         public void GivenThereIsNoEnvironmentVariableForAddressStatus_WhenValidationIsInvoked_TheErrorIsReturned()
         {

@@ -139,12 +139,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
 
                     return new RequestValidationResponse(valRes);
                 }
-            }
-
-            if(castedRequest.UPRN == null && castedRequest.USRN == null && castedRequest.PostCode == null && castedRequest.Street == null && castedRequest.BuildingNumber == null)
-            {
-                return new RequestValidationResponse(false, "No filter parameters have been provided");
-            }
+            }            
 
             //List<string> invalidFields = InvalidFields(castedRequest.RequestFields);
 
