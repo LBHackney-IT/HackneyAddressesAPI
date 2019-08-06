@@ -23,12 +23,16 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
 
         public SearchAddressControllerTests()
         {
+            Environment.SetEnvironmentVariable("ALLOWED_ADDRESSSTATUS_VALUES", "historical;alternative;approved preferred;provisional");
             _mock = new Mock<ISearchAddressUseCase>();
             _classUnderTest = new SearchAddressController(_mock.Object);
         }
 
-        [Fact]
-        public async Task GivenValidSearchAddressRequest_WhenCallingGet_ThenShouldReturnAPIResponseListOfAddresses()
+
+        [Theory]
+        [InlineData("RM3 0FS", GlobalConstants.Gazetteer.Local)]
+        [InlineData("IG11 7QD", GlobalConstants.Gazetteer.Both)]
+        public async Task GivenValidSearchAddressRequest_WhenCallingGet_ThenShouldReturnAPIResponseListOfAddresses(string postcode, GlobalConstants.Gazetteer gazetteer)
         {
             //arrange
             _mock.Setup(s => s.ExecuteAsync(It.IsAny<SearchAddressRequest>(), CancellationToken.None))
@@ -42,8 +46,8 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
 
             var request = new SearchAddressRequest
             {
-                PostCode = "",
-                Gazetteer = GlobalConstants.Gazetteer.Local
+                PostCode = postcode,
+                Gazetteer = gazetteer
             };
             //act
             var response = await _classUnderTest.GetAddresses(request).ConfigureAwait(false);
@@ -53,6 +57,20 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
             var objectResult = response as ObjectResult;
             var getAddresses = objectResult?.Value as APIResponse<SearchAddressResponse>;
             getAddresses.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task GivenInvalidSearchAddressRequest_WhenCallingGet_ThenShouldReturnBadRequestObjectResponse()
+        {
+            //arrange
+            var request = new SearchAddressRequest() { AddressStatus = null };
+
+            //act
+            var response = await _classUnderTest.GetAddresses(request);
+
+            //assert
+            response.Should().NotBeNull();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
     }
 }

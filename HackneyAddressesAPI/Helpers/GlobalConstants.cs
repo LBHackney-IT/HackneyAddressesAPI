@@ -32,7 +32,6 @@ namespace LBHAddressesAPI.Helpers
         public enum Gazetteer
         {
             Local,
-            National,
             Both
         };
 
