@@ -6,6 +6,7 @@ using FluentValidation;
 using LBHAddressesAPI.UseCases.V1.Search.Models;
 using LBHAddressesAPI.Exceptions;
 using System.Text.RegularExpressions;
+using LBHAddressesAPI.Infrastructure.V1.Validation;
 
 namespace LBHAddressesAPI.Validation
 {
@@ -25,7 +26,23 @@ namespace LBHAddressesAPI.Validation
 
             RuleFor(r => r).Must(CheckForAtLeastOneMandatoryFilterProperty).WithMessage("You must provide at least one of (UPRN, USRN, Post code, Street)");
 
+            //RuleFor(r => r.RequestFields).Must(CheckForInvalidProperties).WithMessage("Invalid properties have been provided");
         }
+
+        //private bool CheckForInvalidProperties(List<string> requestFields)
+        //{
+        //    List<string> allProperties = typeof(SearchAddressRequest).GetProperties().Where(prop => prop.Name != "Errors" || prop.Name != "RequestFields").Select(prop => prop.Name).ToList();
+        //    IEnumerable<string> exceptions = requestFields.Except(allProperties, StringComparer.OrdinalIgnoreCase);
+        //    if (exceptions.Count() > 0)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+
+        //}
 
         private bool CheckForAtLeastOneMandatoryFilterProperty(SearchAddressRequest request)
         {

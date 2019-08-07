@@ -156,6 +156,28 @@ namespace LBHAddressesAPITest.Validation
         }
 
         #endregion
+        #region QueryParameterValidation
+
+        [TestCase("asdfghjk", "postcode", "RM3 0FS")]
+        [TestCase("ccvbbvv", "postcode", "E5 0DW")]
+        public void GivenAnInvalidFilterParameterAndMandatoryParameter_WhenCallingValidation_ItReturnsAnError(string queryParameter1, string queryParameter2, string postcode)
+        {
+            var queryStringParameters = new List<string>() { queryParameter1, queryParameter2 };
+            var request = new SearchAddressRequest() { PostCode=postcode, RequestFields = queryStringParameters };
+
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.RequestFields, request).WithErrorMessage("Invalid properties have been provided.");
+        }
+
+        [TestCase("uprn", "postcode", "RM3 0FS")]
+        [TestCase("usrn", "postcode", "E5 0DW")]
+        public void GivenOnlyValidFilterParameters_WhenCallingValidation_ItReturnsNoErrors(string queryParameter1, string queryParameter2, string postcode)
+        {
+            var queryStringParameters = new List<string>() { queryParameter1, queryParameter2 };
+            var request = new SearchAddressRequest() { PostCode=postcode, RequestFields = queryStringParameters };
+
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.RequestFields, request);
+        }
+        #endregion
         #region Request object validation
 
         [TestCase(12345)]
