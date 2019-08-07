@@ -158,7 +158,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.AddressStatus)) //AddressStatus/LPI_LOGICAL_STATUS
             {
-                string[] addressStatuses = request.AddressStatus.ToString().Split(",").Distinct().ToArray();
+                string[] addressStatuses = request.AddressStatus.ToString().Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
                 if (addressStatuses.Count() == 1)
                 {
                     dbArgs.Add("@addressStatus", request.AddressStatus.ToString(), DbType.AnsiString);
@@ -192,7 +192,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
             {
-                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split(",").Distinct().ToArray();
+                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
                 if (propertyClasses.Count() == 1)
                 {
                     dbArgs.Add("@primaryClass", request.PropertyClassPrimary, DbType.AnsiString);
@@ -207,7 +207,7 @@ namespace LBHAddressesAPI.Helpers
 
             if (!string.IsNullOrEmpty(request.PropertyClassCode))
             {
-                string[] classCodes = request.PropertyClassCode.Split(',').Distinct().ToArray();
+                string[] classCodes = request.PropertyClassCode.Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
                 if (classCodes.Count() == 1)
                 {
                     dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%", DbType.AnsiString);
