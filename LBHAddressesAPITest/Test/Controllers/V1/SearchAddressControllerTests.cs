@@ -14,6 +14,7 @@ using LBHAddressesAPI.Models;
 using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Helpers;
 using LBHAddressesAPI.Validation;
+using Microsoft.AspNetCore.Http;
 
 namespace LBHAddressesAPITest.Test.Controllers.V1
 {
@@ -29,6 +30,11 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
             _mock = new Mock<ISearchAddressUseCase>();
             _validator = new SearchAddressValidator();
             _classUnderTest = new SearchAddressController(_mock.Object, _validator);
+
+            _classUnderTest.ControllerContext = new ControllerContext();
+            _classUnderTest.ControllerContext.HttpContext = new DefaultHttpContext();
+            _classUnderTest.ControllerContext.HttpContext.Request.QueryString = new QueryString("");
+
         }
 
 

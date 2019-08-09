@@ -103,7 +103,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// <summary>
         /// List of fields passed in as part of the request
         /// </summary>
-        internal List<string> RequestFields { get; set; }
+        public List<string> RequestFields { get; set; }
 
         /// <summary>
         /// List of errors that have been generated as part of ModeState
