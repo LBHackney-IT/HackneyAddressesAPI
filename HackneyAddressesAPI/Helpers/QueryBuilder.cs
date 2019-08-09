@@ -88,7 +88,7 @@ namespace LBHAddressesAPI.Helpers
         {
             if (!string.IsNullOrEmpty(request.usagePrimary))
             {
-                if (request.usagePrimary.Replace(" ", "").Contains("ParentShell"))
+                if (request.usagePrimary.ToLower().Replace(" ", "").Contains("parentshell"))
                 {
                     return true;
                 }
