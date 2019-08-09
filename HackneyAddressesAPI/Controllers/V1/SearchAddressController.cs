@@ -10,6 +10,7 @@ using FluentValidation;
 using System.Web.Http.Cors;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LBHAddressesAPI.Infrastructure.V1.Validation;
 using LBHAddressesAPI.Validation;
 using LBHAddressesAPI.Infrastructure.V1.Exceptions;
@@ -46,7 +47,8 @@ namespace LBHAddressesAPI.Controllers.V1
         public async Task<IActionResult> GetAddresses([FromQuery] SearchAddressRequest request)
         {
             var aa = new SearchAddressValidator();
-
+            request.RequestFields = Request.Query.Keys.ToList();
+            
             var validationResults = aa.Validate(request);
 
             if (validationResults.IsValid)
