@@ -49,7 +49,7 @@ namespace LBHAddressesAPITest.Test.Helpers
             {
                 Format = GlobalConstants.Format.Simple,
                 PostCode = "RM12PR",
-                PropertyClassPrimary = "ParentShell"
+                usagePrimary = "ParentShell"
             };
 
             string response = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);

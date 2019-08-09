@@ -68,7 +68,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// Unclassified
         /// ALL (default) 
         /// </summary>
-        public string PropertyClassPrimary  { get; set; }
+        public string usagePrimary  { get; set; }
 
         /// <summary>
         /// Identifies land and property usage according to this system of classification: https://www.geoplace.co.uk/documents/10181/38204/Appendix+C+-+Classifications/ ; this is a textual description

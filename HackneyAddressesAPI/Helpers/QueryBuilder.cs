@@ -86,9 +86,9 @@ namespace LBHAddressesAPI.Helpers
         /// <returns>whether to include parent shells or not</returns>
         private static bool IncludeParentShell(SearchAddressRequest request)
         {
-            if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
+            if (!string.IsNullOrEmpty(request.usagePrimary))
             {
-                if (request.PropertyClassPrimary.Replace(" ", "").Contains("ParentShell"))
+                if (request.usagePrimary.Replace(" ", "").Contains("ParentShell"))
                 {
                     return true;
                 }
@@ -190,12 +190,12 @@ namespace LBHAddressesAPI.Helpers
                 clause += " AND USRN = @usrn ";
             }
 
-            if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
+            if (!string.IsNullOrEmpty(request.usagePrimary))
             {
-                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
+                string[] propertyClasses = request.usagePrimary.ToString().Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
                 if (propertyClasses.Count() == 1)
                 {
-                    dbArgs.Add("@primaryClass", request.PropertyClassPrimary, DbType.AnsiString);
+                    dbArgs.Add("@primaryClass", request.usagePrimary, DbType.AnsiString);
                     clause += " AND USAGE_PRIMARY = @primaryClass ";
                 }
                 else
