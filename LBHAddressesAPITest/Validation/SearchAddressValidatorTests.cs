@@ -238,11 +238,25 @@ namespace LBHAddressesAPITest.Validation
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
+        [TestCase("someValue")]
+        public void GivenARequestWithOnlyUsagePrimary_WhenCallingValidation_ItReturnsNoError(string UsagePrimary)
+        {
+            var request = new SearchAddressRequest() { usagePrimary = UsagePrimary };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [TestCase("otherValue")]
+        public void GivenARequestWithOnlyUsageCode_WhenCallingValidation_ItReturnsNoError(string UsageCode)
+        {
+            var request = new SearchAddressRequest() { usageCode = UsageCode };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
         [TestCase("12345")]
         public void GivenARequestWithBuildingNumberAndNoMandatoryFields_WhenCallingValidation_ItReturnsAnError(string buildingNumber)
         {
             var request = new SearchAddressRequest() { BuildingNumber = buildingNumber };
-            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (UPRN, USRN, Post code, Street)");
+            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode, street, usagePrimary, usageCode).");
         }
 
         #endregion

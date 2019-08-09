@@ -23,13 +23,13 @@ namespace LBHAddressesAPI.Validation
 
             RuleFor(r => r.PostCode).Matches(new Regex("^((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]))))( )?(([0-9][A-Za-z]?[A-Za-z]?)?))$")).WithMessage("Must provide at least the first part of the postcode.");
 
-            RuleFor(r => r).Must(CheckForAtLeastOneMandatoryFilterProperty).WithMessage("You must provide at least one of (UPRN, USRN, Post code, Street)");
+            RuleFor(r => r).Must(CheckForAtLeastOneMandatoryFilterProperty).WithMessage("You must provide at least one of (uprn, usrn, postcode, street, usagePrimary, usageCode).");
 
         }
 
         private bool CheckForAtLeastOneMandatoryFilterProperty(SearchAddressRequest request)
         {
-            if (request.UPRN == null && request.USRN == null && request.PostCode == null && request.Street == null)
+            if (request.UPRN == null && request.USRN == null && request.PostCode == null && request.Street == null && request.usagePrimary == null && request.usageCode == null)
             {
                 return false;
             }
