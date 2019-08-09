@@ -73,7 +73,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// <summary>
         /// Identifies land and property usage according to this system of classification: https://www.geoplace.co.uk/documents/10181/38204/Appendix+C+-+Classifications/ ; this is a textual description
         /// </summary>
-        public string PropertyClassCode { get; set; }
+        public string usageCode { get; set; }
 
         /// <summary>
         /// Allows a switch between simple and detailed address

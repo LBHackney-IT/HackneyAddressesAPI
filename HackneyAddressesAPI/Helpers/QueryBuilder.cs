@@ -205,12 +205,12 @@ namespace LBHAddressesAPI.Helpers
                 }
             }
 
-            if (!string.IsNullOrEmpty(request.PropertyClassCode))
+            if (!string.IsNullOrEmpty(request.usageCode))
             {
-                string[] classCodes = request.PropertyClassCode.Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
+                string[] classCodes = request.usageCode.Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
                 if (classCodes.Count() == 1)
                 {
-                    dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%", DbType.AnsiString);
+                    dbArgs.Add("@propertyClassCode", request.usageCode + "%", DbType.AnsiString);
                     clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
                 }
                 else
