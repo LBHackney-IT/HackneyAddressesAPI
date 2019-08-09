@@ -86,9 +86,9 @@ namespace LBHAddressesAPI.Helpers
         /// <returns>whether to include parent shells or not</returns>
         private static bool IncludeParentShell(SearchAddressRequest request)
         {
-            if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
+            if (!string.IsNullOrEmpty(request.usagePrimary))
             {
-                if (request.PropertyClassPrimary.Replace(" ", "").Contains("ParentShell"))
+                if (request.usagePrimary.ToLower().Replace(" ", "").Contains("parentshell"))
                 {
                     return true;
                 }
@@ -190,12 +190,12 @@ namespace LBHAddressesAPI.Helpers
                 clause += " AND USRN = @usrn ";
             }
 
-            if (!string.IsNullOrEmpty(request.PropertyClassPrimary))
+            if (!string.IsNullOrEmpty(request.usagePrimary))
             {
-                string[] propertyClasses = request.PropertyClassPrimary.ToString().Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
+                string[] propertyClasses = request.usagePrimary.ToString().Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
                 if (propertyClasses.Count() == 1)
                 {
-                    dbArgs.Add("@primaryClass", request.PropertyClassPrimary, DbType.AnsiString);
+                    dbArgs.Add("@primaryClass", request.usagePrimary, DbType.AnsiString);
                     clause += " AND USAGE_PRIMARY = @primaryClass ";
                 }
                 else
@@ -205,12 +205,12 @@ namespace LBHAddressesAPI.Helpers
                 }
             }
 
-            if (!string.IsNullOrEmpty(request.PropertyClassCode))
+            if (!string.IsNullOrEmpty(request.usageCode))
             {
-                string[] classCodes = request.PropertyClassCode.Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
+                string[] classCodes = request.usageCode.Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
                 if (classCodes.Count() == 1)
                 {
-                    dbArgs.Add("@propertyClassCode", request.PropertyClassCode + "%", DbType.AnsiString);
+                    dbArgs.Add("@propertyClassCode", request.usageCode + "%", DbType.AnsiString);
                     clause += " AND BLPU_CLASS LIKE @propertyClassCode ";
                 }
                 else
@@ -235,10 +235,12 @@ namespace LBHAddressesAPI.Helpers
                 // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
 
                 clause += @" ORDER BY town,
+                                     (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END),
                                      postcode,
                                      street_description, 
                                      (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END), 
-                                     paon_start_num, (CASE WHEN building_number IS NULL THEN 1 ELSE 0 END),
+                                     paon_start_num,
+                                     (CASE WHEN building_number IS NULL THEN 1 ELSE 0 END),
                                      building_number,
                                      (CASE WHEN unit_number IS NULL THEN 1 ELSE 0 END),
                                      unit_number,
