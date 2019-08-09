@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using LBHAddressesAPI.Models;
 using LBHAddressesAPI.Infrastructure.V1.API;
 using LBHAddressesAPI.Helpers;
+using LBHAddressesAPI.Validation;
 
 namespace LBHAddressesAPITest.Test.Controllers.V1
 {
@@ -20,12 +21,14 @@ namespace LBHAddressesAPITest.Test.Controllers.V1
     {
         private SearchAddressController _classUnderTest;
         private Mock<ISearchAddressUseCase> _mock;
+        private SearchAddressValidator _validator;
 
         public SearchAddressControllerTests()
         {
             Environment.SetEnvironmentVariable("ALLOWED_ADDRESSSTATUS_VALUES", "historical;alternative;approved preferred;provisional");
             _mock = new Mock<ISearchAddressUseCase>();
-            _classUnderTest = new SearchAddressController(_mock.Object);
+            _validator = new SearchAddressValidator();
+            _classUnderTest = new SearchAddressController(_mock.Object, _validator);
         }
 
 

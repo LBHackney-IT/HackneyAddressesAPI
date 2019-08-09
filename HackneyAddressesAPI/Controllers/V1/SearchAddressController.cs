@@ -24,11 +24,13 @@ namespace LBHAddressesAPI.Controllers.V1
     public class SearchAddressController : BaseController
     {
         private readonly ISearchAddressUseCase _searchAddressUseCase;
+        private readonly ISearchAddressValidator _searchAddressValidator;
 
 
-        public SearchAddressController(ISearchAddressUseCase searchAddressUseCase)
+        public SearchAddressController(ISearchAddressUseCase searchAddressUseCase, ISearchAddressValidator searchAddressValidator)
         {
             _searchAddressUseCase = searchAddressUseCase;
+            _searchAddressValidator = searchAddressValidator;
         }
 
 
@@ -45,9 +47,7 @@ namespace LBHAddressesAPI.Controllers.V1
         [HttpGet, MapToApiVersion("1")]       
         public async Task<IActionResult> GetAddresses([FromQuery] SearchAddressRequest request)
         {
-            var aa = new SearchAddressValidator();
-
-            var validationResults = aa.Validate(request);
+            var validationResults = _searchAddressValidator.Validate(request);
 
             if (validationResults.IsValid)
             {
