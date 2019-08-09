@@ -235,10 +235,12 @@ namespace LBHAddressesAPI.Helpers
                 // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
 
                 clause += @" ORDER BY town,
+                                     (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END),
                                      postcode,
                                      street_description, 
                                      (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END), 
-                                     paon_start_num, (CASE WHEN building_number IS NULL THEN 1 ELSE 0 END),
+                                     paon_start_num,
+                                     (CASE WHEN building_number IS NULL THEN 1 ELSE 0 END),
                                      building_number,
                                      (CASE WHEN unit_number IS NULL THEN 1 ELSE 0 END),
                                      unit_number,
