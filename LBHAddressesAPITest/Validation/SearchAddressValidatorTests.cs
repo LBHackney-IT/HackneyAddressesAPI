@@ -9,6 +9,7 @@ using LBHAddressesAPI.Validation;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using LBHAddressesAPI.Exceptions;
+using LBHAddressesAPI.Helpers;
 
 namespace LBHAddressesAPITest.Validation
 {
@@ -256,7 +257,7 @@ namespace LBHAddressesAPITest.Validation
         [TestCase(12345)]
         public void GivenARequestWithOnlyUPRN_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(int uprn)
         {
-            var request = new SearchAddressRequest() { UPRN = uprn };
+            var request = new SearchAddressRequest() { UPRN = uprn, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
@@ -270,7 +271,7 @@ namespace LBHAddressesAPITest.Validation
         [TestCase(12345)]
         public void GivenARequestWithOnlyUSRN_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(int usrn)
         {
-            var request = new SearchAddressRequest() { USRN = usrn };
+            var request = new SearchAddressRequest() { USRN = usrn, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
@@ -284,7 +285,7 @@ namespace LBHAddressesAPITest.Validation
         [TestCase("SW1A 1AA")]
         public void GivenARequestWithOnlyAPostCode_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string postcode)
         {
-            var request = new SearchAddressRequest() { PostCode = postcode };
+            var request = new SearchAddressRequest() { PostCode = postcode, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
@@ -298,7 +299,7 @@ namespace LBHAddressesAPITest.Validation
         [TestCase("Sesame street")]
         public void GivenARequestWithOnlyAStreet_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string street)
         {
-            var request = new SearchAddressRequest() { Street = street };
+            var request = new SearchAddressRequest() { Street = street, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
@@ -312,7 +313,7 @@ namespace LBHAddressesAPITest.Validation
         [TestCase("someValue")]
         public void GivenARequestWithOnlyUsagePrimary_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string UsagePrimary)
         {
-            var request = new SearchAddressRequest() { usagePrimary = UsagePrimary };
+            var request = new SearchAddressRequest() { usagePrimary = UsagePrimary, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
@@ -326,7 +327,7 @@ namespace LBHAddressesAPITest.Validation
         [TestCase("otherValue")]
         public void GivenARequestWithOnlyUsageCode_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string UsageCode)
         {
-            var request = new SearchAddressRequest() { usageCode = UsageCode };
+            var request = new SearchAddressRequest() { usageCode = UsageCode, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
@@ -340,7 +341,7 @@ namespace LBHAddressesAPITest.Validation
         [TestCase("12345")]
         public void GivenARequestWithNoMandatoryFields_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsAnError(string buildingNumber)
         {
-            var request = new SearchAddressRequest() { BuildingNumber = buildingNumber };
+            var request = new SearchAddressRequest() { BuildingNumber = buildingNumber, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode, street, usagePrimary, usageCode), when gazeteer is 'local'.");
         }
 
