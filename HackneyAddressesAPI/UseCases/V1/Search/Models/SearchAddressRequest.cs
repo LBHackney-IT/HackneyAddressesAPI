@@ -18,6 +18,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         public SearchAddressRequest()
         {
             this.AddressStatus = "approved preferred";
+            this.Gazetteer = GlobalConstants.Gazetteer.Both;
         }
 
         //    [FromQuery]string PropertyClassCode = null/*,
