@@ -290,10 +290,11 @@ namespace LBHAddressesAPI.Helpers
                 }
             }
 
-            if (request.Gazetteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
+            if (request.Gazetteer == GlobalConstants.Gazetteer.Local)//Gazetteer
             {
                 dbArgs.Add("@gazetteer", request.Gazetteer.ToString(), DbType.AnsiString);
                 clause += " AND Gazetteer = @gazetteer ";
+                clause += " AND neverexport = 0 ";
             }
 
             if (includePaging)//paging
