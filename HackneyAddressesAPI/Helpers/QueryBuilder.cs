@@ -53,9 +53,10 @@ namespace LBHAddressesAPI.Helpers
                 }
             }
             if (IncludeParentShell(request))
-            {
+            {                
                 //if parent shells are needed we need to take into account parents with no postcode hence query changes
-                return string.Format(" ;WITH SEED AS (SELECT * FROM dbo.combined_address L {0} UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) {1} from SEED S {2} ", GetSearchAddressClause(request, false, false, ref dbArgs), isCountQuery ? selectedColumns : "SELECT DISTINCT " + selectedColumns, isCountQuery ? GetSearchAddressClause(request, false, false, ref dbArgs) : GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs));
+                //return string.Format(" ;WITH SEED AS (SELECT * FROM dbo.combined_address L {0} UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) {1} from SEED S {2} ", GetSearchAddressClause(request, false, false, ref dbArgs), isCountQuery ? selectedColumns : "SELECT DISTINCT " + selectedColumns, isCountQuery ? GetSearchAddressClause(request, false, false, ref dbArgs) : GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs));
+                return string.Format(GetParentShellAddressClause(request,isCountQuery, ref dbArgs));
             }
             else
             {
@@ -70,6 +71,71 @@ namespace LBHAddressesAPI.Helpers
                     return "SELECT " + selectedColumns + GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs);
                 }
             }
+        }
+
+        private static string GetParentShellAddressClause(SearchAddressRequest request, bool isCountQuery, ref DynamicParameters dbArgs)
+        {
+            string parentShellQuery = string.Empty;
+            parentShellQuery += " ;WITH SEED AS ";
+            parentShellQuery += " (";
+
+            parentShellQuery += " SELECT * FROM dbo.combined_address L ";
+            parentShellQuery += GetSearchAddressClause(request, false, false, ref dbArgs);
+
+            parentShellQuery += " UNION ALL ";
+            parentShellQuery += " SELECT L.* FROM dbo.combined_address L ";
+            parentShellQuery += " JOIN SEED S ON S.PARENT_UPRN = L.UPRN ";
+            parentShellQuery += ") ";
+
+            if (isCountQuery)
+            {
+                parentShellQuery += " select count(1) from( ";
+            }
+            else
+            {
+
+                if (request.Format == GlobalConstants.Format.Detailed)
+                {
+                    parentShellQuery += " select t.* from( ";
+                }
+                else
+                {
+                    parentShellQuery += " select t.Line1, t.Line2, t.Line3, t.Line4, t.POSTCODE, t.UPRN, t.TOWN as Town  from( ";
+                }
+            }
+            parentShellQuery += " SELECT distinct ";
+            parentShellQuery += " lpi_key as addressKey,  uprn as uprn, ";
+            parentShellQuery += " usrn as usrn, parent_uprn as parentUPRN, lpi_logical_status as addressStatus, sao_text as unitName, ";
+            parentShellQuery += " unit_number as unitNumber, pao_text as buildingName, building_number as buildingNumber, street_description as street, ";
+            parentShellQuery += " postcode as postcode, locality as locality, gazetteer as gazetteer, organisation as commercialOccupier, ward as ward, ";
+            parentShellQuery += " usage_description as usageDescription, usage_primary as usagePrimary, blpu_class as usageCode, planning_use_class as planningUseClass, ";
+            parentShellQuery += " property_shell as propertyShell, neverexport as hackneyGazetteerOutOfBoroughAddress, easting as easting, northing as northing, ";
+            parentShellQuery += " longitude as longitude, latitude as latitude,  Line1, Line2, Line3, Line4 , town as town, paon_start_num ";
+
+            parentShellQuery += " from SEED S  ";
+            parentShellQuery += GetSearchAddressClause(request, false, false, ref dbArgs);
+
+            parentShellQuery += " ) t";
+            if (!isCountQuery && request.Format == GlobalConstants.Format.Detailed)
+            {
+                parentShellQuery += " ORDER BY town,                                    ";
+                parentShellQuery += " (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END), ";
+                parentShellQuery += " postcode, ";
+                parentShellQuery += " street,                                     ";
+                parentShellQuery += " (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END),  paon_start_num,   ";
+                parentShellQuery += " (CASE WHEN buildingNumber IS NULL THEN 1 ELSE 0 END), buildingNumber,   ";
+                parentShellQuery += " (CASE WHEN unitNumber IS NULL THEN 1 ELSE 0 END),  unitNumber,                                     ";
+                parentShellQuery += " (CASE WHEN unitName IS NULL THEN 1 ELSE 0 END), unitName  ";
+            }
+            if (!isCountQuery && request.Format == GlobalConstants.Format.Simple)
+            {
+                parentShellQuery += " order by Line1, Line2, Line3, Line4, Town ";
+            }
+            if (!isCountQuery)
+            {
+                parentShellQuery += " OFFSET 0 ROWS FETCH NEXT 50 ROWS ONLY  OPTION(RECOMPILE) ;";
+            }
+            return parentShellQuery;
         }
 
         public static string GetCrossReferences(GetAddressCrossReferenceRequest request)
@@ -193,15 +259,19 @@ namespace LBHAddressesAPI.Helpers
             if (!string.IsNullOrEmpty(request.usagePrimary))
             {
                 string[] propertyClasses = request.usagePrimary.ToString().Split(",").Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray();
-                if (propertyClasses.Count() == 1)
+                propertyClasses = propertyClasses.Where(x => x.ToLower() != "parent shell").ToArray();
+                if (propertyClasses.Count() != 0)
                 {
-                    dbArgs.Add("@primaryClass", request.usagePrimary, DbType.AnsiString);
-                    clause += " AND USAGE_PRIMARY = @primaryClass ";
-                }
-                else
-                {
-                    dbArgs.Add("@primaryClass", propertyClasses);
-                    clause += " AND USAGE_PRIMARY IN @primaryClass ";
+                    if (propertyClasses.Count() == 1)
+                    {
+                        dbArgs.Add("@primaryClass", request.usagePrimary, DbType.AnsiString);
+                        clause += " AND USAGE_PRIMARY = @primaryClass ";
+                    }
+                    else
+                    {
+                        dbArgs.Add("@primaryClass", propertyClasses);
+                        clause += " AND USAGE_PRIMARY IN @primaryClass ";
+                    }
                 }
             }
 
