@@ -53,7 +53,7 @@ namespace LBHAddressesAPITest.Test.Helpers
             };
 
             string response = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            response.Replace("  ", " ").Should().Contain(";WITH SEED AS (SELECT * FROM dbo.combined_address L".Replace("  ", " "));            
+            response.Replace(" ", "").Should().Contain(";WITH SEED AS (SELECT * FROM dbo.combined_address L".Replace(" ", ""));            
         }
 
         [Fact]
