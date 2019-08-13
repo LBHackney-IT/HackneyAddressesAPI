@@ -14,6 +14,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
     /// </summary>
     public class SearchAddressRequest : IRequest, IPagedRequest
     {
+        private GlobalConstants.Gazetteer _gazetteer;
 
         public SearchAddressRequest()
         {
@@ -44,7 +45,23 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// <summary>
         /// LOCAL/NATIONAL/BOTH (Defaults to LOCAL)
         /// </summary>
-        public GlobalConstants.Gazetteer Gazetteer { get; set; }
+        public GlobalConstants.Gazetteer Gazetteer
+        {
+            get { return _gazetteer; }
+            set
+            {
+                _gazetteer = value;
+
+                if (_gazetteer == GlobalConstants.Gazetteer.Local)
+                {
+                    HackneyGazetteerOutOfBoroughAddress = false;
+                }
+                else if (_gazetteer == GlobalConstants.Gazetteer.Both)
+                {
+                    HackneyGazetteerOutOfBoroughAddress = null;
+                }
+            }
+        }
 
         /// <summary>
         /// Filter by UPRN (unique property reference number - unique identifier of the BLPU (Basic Land and Property Unit); a UPRN can have more than one LPI/address. )
@@ -99,7 +116,7 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         ///precedence over the national gazetteer
         ///version.
         /// </summary>
-        public bool HackneyGazetteerOutOfBoroughAddress { get; set; }
+        public bool? HackneyGazetteerOutOfBoroughAddress { get; set; }
 
         /// <summary>
         /// Page defaults to 1 as paging is 1 index based not 0 index based
