@@ -7,6 +7,7 @@ using LBHAddressesAPI.UseCases.V1.Search.Models;
 using LBHAddressesAPI.Exceptions;
 using System.Text.RegularExpressions;
 using LBHAddressesAPI.Infrastructure.V1.Validation;
+using LBHAddressesAPI.Helpers;
 
 namespace LBHAddressesAPI.Validation
 {
@@ -24,7 +25,8 @@ namespace LBHAddressesAPI.Validation
 
             RuleFor(r => r.PostCode).Matches(new Regex("^((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]))))( )?(([0-9][A-Za-z]?[A-Za-z]?)?))$")).WithMessage("Must provide at least the first part of the postcode.");
 
-            RuleFor(r => r).Must(CheckForAtLeastOneMandatoryFilterProperty).WithMessage("You must provide at least one of (uprn, usrn, postcode, street, usagePrimary, usageCode).");
+            RuleFor(r => r).Must(CheckForAtLeastOneMandatoryFilterPropertyWithGazetteerLocal).WithMessage("You must provide at least one of (uprn, usrn, postcode, street, usagePrimary, usageCode), when gazeteer is 'local'.");
+            RuleFor(r => r).Must(CheckForAtLeastOneMandatoryFilterPropertyWithGazetteerBoth).WithMessage("You must provide at least one of (uprn, usrn, postcode), when gazetteer is 'both'.");
 
             RuleFor(r => r.RequestFields).Must(CheckForInvalidProperties).WithMessage("Invalid properties have been provided.");
         }
@@ -50,9 +52,19 @@ namespace LBHAddressesAPI.Validation
             }
         }
 
-        private bool CheckForAtLeastOneMandatoryFilterProperty(SearchAddressRequest request)
+        private bool CheckForAtLeastOneMandatoryFilterPropertyWithGazetteerLocal(SearchAddressRequest request)
         {
-            if (request.UPRN == null && request.USRN == null && request.PostCode == null && request.Street == null && request.usagePrimary == null && request.usageCode == null)
+            if(request.Gazetteer == GlobalConstants.Gazetteer.Local && request.UPRN == null && request.USRN == null && request.PostCode == null && request.Street == null && request.usagePrimary == null && request.usageCode == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckForAtLeastOneMandatoryFilterPropertyWithGazetteerBoth(SearchAddressRequest request)
+        {
+            if(request.Gazetteer == GlobalConstants.Gazetteer.Both && request.UPRN == null && request.USRN == null && request.PostCode == null)
             {
                 return false;
             }

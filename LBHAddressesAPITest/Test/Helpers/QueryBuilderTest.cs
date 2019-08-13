@@ -57,22 +57,6 @@ namespace LBHAddressesAPITest.Test.Helpers
         }
 
         [Fact]
-        public async Task GivenValidSearchAddressRequest_WhenCallingQueryBuilderWithNoGazetteer_ThenShouldReturnQueryForLLPG()
-        {
-            var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query
-            SearchAddressRequest request = new SearchAddressRequest
-            {
-                Format = GlobalConstants.Format.Simple,
-                PostCode = "RM12PR"
-            };
-
-            string response = QueryBuilder.GetSearchAddressQuery(request, true, true, false, ref dbArgs);
-            response.Replace("  ", " ").Should().Contain("AND Gazetteer = @gazetteer".Replace("  ", " "));
-            string gazetteer = dbArgs.Get<dynamic>("gazetteer");
-            gazetteer.Should().Equals("Local");
-        }
-
-        [Fact]
         public async Task GivenValidSearchAddressRequest_WhenCallingQueryBuilderWithisCountQuery_ThenShouldReturnQueryForCount()
         {
             var dbArgs = new DynamicParameters();//dynamically add parameters to Dapper query

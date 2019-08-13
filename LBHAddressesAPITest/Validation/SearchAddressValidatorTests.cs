@@ -9,6 +9,7 @@ using LBHAddressesAPI.Validation;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using LBHAddressesAPI.Exceptions;
+using LBHAddressesAPI.Helpers;
 
 namespace LBHAddressesAPITest.Validation
 {
@@ -254,52 +255,101 @@ namespace LBHAddressesAPITest.Validation
         #region Request object validation
 
         [TestCase(12345)]
-        public void GivenARequestWithOnlyAUPRN_WhenCallingValidation_ItReturnsNoError(int uprn)
+        public void GivenARequestWithOnlyUPRN_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(int uprn)
+        {
+            var request = new SearchAddressRequest() { UPRN = uprn, Gazetteer = GlobalConstants.Gazetteer.Local };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [TestCase(12345)]
+        public void GivenARequestWithOnlyUPRN_IfGazetteerIsBoth_WhenCallingValidation_ItReturnsNoError(int uprn)
         {
             var request = new SearchAddressRequest() { UPRN = uprn };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
         [TestCase(12345)]
-        public void GivenARequestWithOnlyAUSRN_WhenCallingValidation_ItReturnsNoError(int usrn)
+        public void GivenARequestWithOnlyUSRN_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(int usrn)
+        {
+            var request = new SearchAddressRequest() { USRN = usrn, Gazetteer = GlobalConstants.Gazetteer.Local };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [TestCase(12345)]
+        public void GivenARequestWithOnlyUSRN_IfGazetteerIsBoth_WhenCallingValidation_ItReturnsNoError(int usrn)
         {
             var request = new SearchAddressRequest() { USRN = usrn };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
         [TestCase("SW1A 1AA")]
-        public void GivenARequestWithOnlyAPostCode_WhenCallingValidation_ItReturnsNoError(string postcode)
+        public void GivenARequestWithOnlyAPostCode_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string postcode)
+        {
+            var request = new SearchAddressRequest() { PostCode = postcode, Gazetteer = GlobalConstants.Gazetteer.Local };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [TestCase("SW1A 1AA")]
+        public void GivenARequestWithOnlyAPostCode_IfGazetteerIsBoth_WhenCallingValidation_ItReturnsNoError(string postcode)
         {
             var request = new SearchAddressRequest() { PostCode = postcode };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
         [TestCase("Sesame street")]
-        public void GivenARequestWithOnlyAStreet_WhenCallingValidation_ItReturnsNoError(string street)
+        public void GivenARequestWithOnlyAStreet_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string street)
+        {
+            var request = new SearchAddressRequest() { Street = street, Gazetteer = GlobalConstants.Gazetteer.Local };
+            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+        }
+
+        [TestCase("Sesame street")]
+        public void GivenARequestWithOnlyAStreet_IfGazetteerIsBoth_WhenCallingValidation_ItReturnsAnError(string street)
         {
             var request = new SearchAddressRequest() { Street = street };
+            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode), when gazetteer is 'both'.");
+        }
+
+        [TestCase("someValue")]
+        public void GivenARequestWithOnlyUsagePrimary_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string UsagePrimary)
+        {
+            var request = new SearchAddressRequest() { usagePrimary = UsagePrimary, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
         [TestCase("someValue")]
-        public void GivenARequestWithOnlyUsagePrimary_WhenCallingValidation_ItReturnsNoError(string UsagePrimary)
+        public void GivenARequestWithOnlyUsagePrimary_IfGazetteerIsBoth_WhenCallingValidation_ItReturnsAnError(string UsagePrimary)
         {
             var request = new SearchAddressRequest() { usagePrimary = UsagePrimary };
+            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode), when gazetteer is 'both'.");
+        }
+
+        [TestCase("otherValue")]
+        public void GivenARequestWithOnlyUsageCode_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsNoError(string UsageCode)
+        {
+            var request = new SearchAddressRequest() { usageCode = UsageCode, Gazetteer = GlobalConstants.Gazetteer.Local };
             _classUnderTest.TestValidate(request).ShouldNotHaveError();
         }
 
         [TestCase("otherValue")]
-        public void GivenARequestWithOnlyUsageCode_WhenCallingValidation_ItReturnsNoError(string UsageCode)
+        public void GivenARequestWithOnlyUsageCode_IfGazetteerIsBoth_WhenCallingValidation_ItReturnsAnError(string UsageCode)
         {
             var request = new SearchAddressRequest() { usageCode = UsageCode };
-            _classUnderTest.TestValidate(request).ShouldNotHaveError();
+            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode), when gazetteer is 'both'.");
         }
 
         [TestCase("12345")]
-        public void GivenARequestWithBuildingNumberAndNoMandatoryFields_WhenCallingValidation_ItReturnsAnError(string buildingNumber)
+        public void GivenARequestWithNoMandatoryFields_IfGazetteerIsLocal_WhenCallingValidation_ItReturnsAnError(string buildingNumber)
+        {
+            var request = new SearchAddressRequest() { BuildingNumber = buildingNumber, Gazetteer = GlobalConstants.Gazetteer.Local };
+            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode, street, usagePrimary, usageCode), when gazeteer is 'local'.");
+        }
+
+        [TestCase("12345")]
+        public void GivenARequestWithNoMandatoryFields_IfGazetteerIsBoth_WhenCallingValidation_ItReturnsAnError(string buildingNumber)
         {
             var request = new SearchAddressRequest() { BuildingNumber = buildingNumber };
-            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode, street, usagePrimary, usageCode).");
+            _classUnderTest.TestValidate(request).ShouldHaveError().WithErrorMessage("You must provide at least one of (uprn, usrn, postcode), when gazetteer is 'both'.");
         }
 
         #endregion
