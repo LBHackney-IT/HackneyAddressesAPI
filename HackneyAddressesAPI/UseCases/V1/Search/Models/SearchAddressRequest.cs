@@ -91,6 +91,15 @@ namespace LBHAddressesAPI.UseCases.V1.Search.Models
         /// </summary>
         public string AddressStatus { get; set; }
 
+        /// <summary>
+        ///  	wether or not out of borough addresses
+        ///that are present in the local gazetteer
+        ///for services reasons should be returned.
+        ///If yes, the local gazetteer version takes
+        ///precedence over the national gazetteer
+        ///version.
+        /// </summary>
+        public bool HackneyGazetteerOutOfBoroughAddress { get; set; }
 
         /// <summary>
         /// Page defaults to 1 as paging is 1 index based not 0 index based
