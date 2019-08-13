@@ -120,7 +120,7 @@ namespace LBHAddressesAPI.Helpers
             {
                 parentShellQuery += " ORDER BY town,                                    ";
                 parentShellQuery += " (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END), ";
-                parentShellQuery += " postcode, ";
+                //parentShellQuery += " postcode, ";
                 parentShellQuery += " street,                                     ";
                 parentShellQuery += " (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END),  paon_start_num,   ";
                 parentShellQuery += " (CASE WHEN buildingNumber IS NULL THEN 1 ELSE 0 END), buildingNumber,   ";
@@ -305,8 +305,7 @@ namespace LBHAddressesAPI.Helpers
                 // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
 
                 clause += @" ORDER BY town,
-                                     (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END),
-                                     postcode,
+                                     (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END),                                     
                                      street_description, 
                                      (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END), 
                                      paon_start_num,
