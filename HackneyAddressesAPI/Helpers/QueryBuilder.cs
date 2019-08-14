@@ -56,7 +56,7 @@ namespace LBHAddressesAPI.Helpers
             {                
                 //if parent shells are needed we need to take into account parents with no postcode hence query changes
                 //return string.Format(" ;WITH SEED AS (SELECT * FROM dbo.combined_address L {0} UNION ALL SELECT L.* FROM dbo.combined_address L JOIN SEED S ON S.PARENT_UPRN = L.UPRN) {1} from SEED S {2} ", GetSearchAddressClause(request, false, false, ref dbArgs), isCountQuery ? selectedColumns : "SELECT DISTINCT " + selectedColumns, isCountQuery ? GetSearchAddressClause(request, false, false, ref dbArgs) : GetSearchAddressClause(request, includePaging, includeRecompile, ref dbArgs));
-                return string.Format(GetParentShellAddressClause(request,isCountQuery, ref dbArgs));
+                return string.Format(GetParentShellAddressClause(request,isCountQuery, ref dbArgs, includePaging));
             }
             else
             {
@@ -73,7 +73,7 @@ namespace LBHAddressesAPI.Helpers
             }
         }
 
-        private static string GetParentShellAddressClause(SearchAddressRequest request, bool isCountQuery, ref DynamicParameters dbArgs)
+        private static string GetParentShellAddressClause(SearchAddressRequest request, bool isCountQuery, ref DynamicParameters dbArgs, bool includePaging)
         {
             string parentShellQuery = string.Empty;
             parentShellQuery += " ;WITH SEED AS ";
@@ -120,7 +120,7 @@ namespace LBHAddressesAPI.Helpers
             {
                 parentShellQuery += " ORDER BY town,                                    ";
                 parentShellQuery += " (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END), ";
-                parentShellQuery += " postcode, ";
+                //parentShellQuery += " postcode, ";
                 parentShellQuery += " street,                                     ";
                 parentShellQuery += " (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END),  paon_start_num,   ";
                 parentShellQuery += " (CASE WHEN buildingNumber IS NULL THEN 1 ELSE 0 END), buildingNumber,   ";
@@ -131,11 +131,20 @@ namespace LBHAddressesAPI.Helpers
             {
                 parentShellQuery += " order by Line1, Line2, Line3, Line4, Town ";
             }
-            if (!isCountQuery)
+            if (!isCountQuery && includePaging)
             {
-                parentShellQuery += " OFFSET 0 ROWS FETCH NEXT 50 ROWS ONLY  OPTION(RECOMPILE) ;";
+                parentShellQuery += DoPaging(request);// " OFFSET 0 ROWS FETCH NEXT 50 ROWS ONLY  OPTION(RECOMPILE) ;";
             }
             return parentShellQuery;
+        }
+
+        private static string DoPaging(SearchAddressRequest request)
+        {
+            int page = request.Page;
+            int pageSize = request.PageSize;
+            int lower = 0;
+            lower = page == 0 || page == 1 ? 0 : (page - 1) * pageSize;
+            return string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
         }
 
         public static string GetCrossReferences(GetAddressCrossReferenceRequest request)
@@ -312,8 +321,7 @@ namespace LBHAddressesAPI.Helpers
                 // paging so if current page passed in is 1 then we set lower bound to be 0 (0 based index). Otherwise we multiply by the page size
 
                 clause += @" ORDER BY town,
-                                     (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END),
-                                     postcode,
+                                     (CASE WHEN postcode IS NULL THEN 1 ELSE 0 END),                                     
                                      street_description, 
                                      (CASE WHEN (paon_start_num IS NULL or paon_start_num = 0) THEN 1 ELSE 0 END), 
                                      paon_start_num,
@@ -325,7 +333,7 @@ namespace LBHAddressesAPI.Helpers
                                      sao_text ";
 
 
-                clause += string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
+                clause += DoPaging(request);// string.Format(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY ", lower, pageSize);
             }
             if (includeRecompile)//recompile
             {
