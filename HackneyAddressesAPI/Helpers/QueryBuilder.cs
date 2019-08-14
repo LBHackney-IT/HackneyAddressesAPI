@@ -290,10 +290,17 @@ namespace LBHAddressesAPI.Helpers
                 }
             }
 
-            if (request.Gazetteer == GlobalConstants.Gazetteer.Both ? false : true)//Gazetteer
+            if (request.Gazetteer == GlobalConstants.Gazetteer.Local)//Gazetteer
             {
                 dbArgs.Add("@gazetteer", request.Gazetteer.ToString(), DbType.AnsiString);
+                dbArgs.Add("@neverexport", request.HackneyGazetteerOutOfBoroughAddress, DbType.Boolean);
                 clause += " AND Gazetteer = @gazetteer ";
+                clause += " AND neverexport = @neverexport ";
+            }
+            else if(request.Gazetteer == GlobalConstants.Gazetteer.Both && request.HackneyGazetteerOutOfBoroughAddress != null)
+            {
+                dbArgs.Add("@neverexport", request.HackneyGazetteerOutOfBoroughAddress, DbType.Boolean);
+                clause += " AND neverexport = @neverexport ";
             }
 
             if (includePaging)//paging
