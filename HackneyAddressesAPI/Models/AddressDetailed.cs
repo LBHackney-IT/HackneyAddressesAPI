@@ -34,6 +34,12 @@ namespace LBHAddressesAPI.Models
         public double Northing { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
+        public int addressStartDate { get; set; }
+        public int addressEndDate { get; set; }
+        public int addressChangeDate { get; set; }
+        public int propertyStartDate { get; set; }
+        public int propertyEndDate { get; set; }
+        public int propertyChangeDate { get; set; }
         public string Line1 { get; set; }
         public string Line2 { get; set; }
         public string Line3 { get; set; }

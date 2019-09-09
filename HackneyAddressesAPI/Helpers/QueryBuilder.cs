@@ -32,7 +32,7 @@ namespace LBHAddressesAPI.Helpers
         private static string GetAddressesQuery(SearchAddressRequest request, bool includePaging, bool includeRecompile, bool isCountQuery, ref DynamicParameters dbArgs)
         {
             string selectedColumns = string.Empty;
-            string selectDetailedColumns = " lpi_key as addressKey, uprn as uprn, usrn as usrn, parent_uprn as parentUPRN, lpi_logical_status as addressStatus, sao_text as unitName, unit_number as unitNumber, pao_text as buildingName, building_number as buildingNumber, street_description as street, postcode as postcode, locality as locality, gazetteer as gazetteer, organisation as commercialOccupier, ward as ward, usage_description as usageDescription, usage_primary as usagePrimary, blpu_class as usageCode, planning_use_class as planningUseClass, property_shell as propertyShell, neverexport as hackneyGazetteerOutOfBoroughAddress, easting as easting, northing as northing, longitude as longitude, latitude as latitude, {0} ";
+            string selectDetailedColumns = " lpi_key as addressKey, uprn as uprn, usrn as usrn, parent_uprn as parentUPRN, lpi_logical_status as addressStatus, sao_text as unitName, unit_number as unitNumber, pao_text as buildingName, building_number as buildingNumber, street_description as street, postcode as postcode, locality as locality, gazetteer as gazetteer, organisation as commercialOccupier, ward as ward, usage_description as usageDescription, usage_primary as usagePrimary, blpu_class as usageCode, planning_use_class as planningUseClass, property_shell as propertyShell, neverexport as hackneyGazetteerOutOfBoroughAddress, easting as easting, northing as northing, longitude as longitude, latitude as latitude, lpi_start_date as addressStartDate, lpi_end_date as addressEndDate, lpi_last_update_date as addressChangeDate, blpu_start_date as propertyStartDate, blpu_end_date as propertyEndDate, blpu_last_update_date as propertyChangeDate, {0} ";
             string selectSimpleColumns = " Line1, Line2, Line3, Line4 {0}, TOWN as Town";
             GlobalConstants.Format format = request.Format;
             if (isCountQuery)
@@ -110,7 +110,7 @@ namespace LBHAddressesAPI.Helpers
             parentShellQuery += " postcode as postcode, locality as locality, gazetteer as gazetteer, organisation as commercialOccupier, ward as ward, ";
             parentShellQuery += " usage_description as usageDescription, usage_primary as usagePrimary, blpu_class as usageCode, planning_use_class as planningUseClass, ";
             parentShellQuery += " property_shell as propertyShell, neverexport as hackneyGazetteerOutOfBoroughAddress, easting as easting, northing as northing, ";
-            parentShellQuery += " longitude as longitude, latitude as latitude,  Line1, Line2, Line3, Line4 , town as town, paon_start_num ";
+            parentShellQuery += " longitude as longitude, latitude as latitude, lpi_start_date as addressStartDate, lpi_end_date as addressEndDate, lpi_last_update_date as addressChangeDate, blpu_start_date as propertyStartDate, blpu_end_date as propertyEndDate, blpu_last_update_date as propertyChangeDate,  Line1, Line2, Line3, Line4 , town as town, paon_start_num ";
 
             parentShellQuery += " from SEED S  ";
             parentShellQuery += GetSearchAddressClause(request, false, false, ref dbArgs);
