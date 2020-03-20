@@ -27,7 +27,6 @@ namespace LBHAddressesAPI
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseSentry(Environment.GetEnvironmentVariable("LLPG_SENTRY_URL"))
                 .UseStartup<Startup>()
                 .Build();
     }
