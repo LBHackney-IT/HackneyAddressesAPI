@@ -247,6 +247,7 @@ workflows:
              branches:
                only: development
       - terraform-init-and-apply-to-development:
+          context: api-assume-role-development-context
           requires:
               - assume-role-development
           filters: 
