@@ -41,7 +41,7 @@ module "development" {
   application_name            = local.application_name 
   security_group_name         = "address-api"
   vpc_name                    = local.vpc_name
-  port                        = 3000
+  host_port                        = 3000
   desired_number_of_ec2_nodes = 0
   lb_prefix                   = "nlb-development-apis"
   ecs_execution_role          = data.aws_iam_role.ecs_task_execution_role.arn
