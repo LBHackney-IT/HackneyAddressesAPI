@@ -203,7 +203,7 @@ jobs:
     steps:
       - build_and_push_image:
           dockerfile: ./HackneyAddressesAPI/Dockerfile
-          path: $PROJECT_PATH 
+          path: ./HackneyAddressesAPI 
           account-url: AWS_ECR_HOST_DEVELOPMENT
           repo: $AWS_ECR_PATH_DEV
           region: AWS_REGION
@@ -215,7 +215,7 @@ jobs:
     steps:
       - build_and_push_image:
           dockerfile: ./HackneyAddressesAPI/Dockerfile
-          path: $PROJECT_PATH 
+          path: ./HackneyAddressesAPI 
           account-url: AWS_ECR_HOST_STAGING
           repo: $AWS_ECR_PATH_STAGING
           region: AWS_REGION
@@ -227,7 +227,7 @@ jobs:
     steps:
       - build_and_push_image:
           dockerfile: ./HackneyAddressesAPI/Dockerfile
-          path: $PROJECT_PATH 
+          path: ./HackneyAddressesAPI 
           account-url: AWS_ECR_HOST_PRODUCTION
           repo: $AWS_ECR_PATH_PRODUCTION
           region: AWS_REGION
