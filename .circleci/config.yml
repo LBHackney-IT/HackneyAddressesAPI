@@ -282,6 +282,7 @@ workflows:
              branches:
                only: master
       - terraform-init-and-apply-to-staging:
+          context: api-assume-role-staging-context
           requires:
             - assume-role-staging
           filters:
@@ -313,6 +314,7 @@ workflows:
              branches:
                only: master      
       - terraform-init-and-apply-to-production:
+          context: api-assume-role-production-context
           requires:
             - assume-role-production
           filters:
