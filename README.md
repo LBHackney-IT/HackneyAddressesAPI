@@ -1,3 +1,5 @@
+*This project has now been replaced by the [Hackney Addresses API](https://github.com/LBHackney-IT/addresses-api).*
+
 # Hackney Addresses API (In development)
 
 We will use this API when developing applications and services for the London Borough of Hackney. This ensures consistency and enables linking of data across the organisation (via the [Unique Property Reference Number](https://www.geoplace.co.uk/addresses/uprn)).
